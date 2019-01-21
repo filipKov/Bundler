@@ -245,3 +245,4 @@ nunit-*.xml
 GitHubVS.sln.DotSettings
 
 *.VC.db
+*.VC.opendb

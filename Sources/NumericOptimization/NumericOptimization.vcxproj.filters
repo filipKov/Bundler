@@ -39,6 +39,12 @@
     <ClInclude Include="GaussJordanElimination.h">
       <Filter>LinearSolver</Filter>
     </ClInclude>
+    <ClInclude Include="IPreconditioner.h">
+      <Filter>LinearSolver\Preconditioning</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobiPreconditioner.h">
+      <Filter>LinearSolver\Preconditioning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Optimization">
@@ -55,6 +61,9 @@
     </Filter>
     <Filter Include="DifferentiatingNumbers">
       <UniqueIdentifier>{00f1a3f2-6302-47c1-af79-632f5a40a017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Preconditioning">
+      <UniqueIdentifier>{663a7004-5aa4-4b17-8a0e-14420d8b63e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

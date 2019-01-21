@@ -8,6 +8,9 @@
 #include "ConjugateGradientsSolver.h"
 #include "GaussJordanElimination.h"
 
+#include "IPreconditioner.h"
+#include "JacobiPreconditioner.h"
+
 // Residuals, Cost functions
 #include "IResidual.h"
 #include "ILeastSquaresCostFunction.h"

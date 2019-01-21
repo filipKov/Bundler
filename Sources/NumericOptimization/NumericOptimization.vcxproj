@@ -32,7 +32,9 @@
     <ClInclude Include="IOptimizationMethod.h" />
     <ClInclude Include="ILeastSquaresCostFunction.h" />
     <ClInclude Include="ILinearSolver.h" />
+    <ClInclude Include="IPreconditioner.h" />
     <ClInclude Include="IResidual.h" />
+    <ClInclude Include="JacobiPreconditioner.h" />
     <ClInclude Include="LeastSquaresCostFunctionSimple.h" />
     <ClInclude Include="LeastSquaresCostFunctionABC.h" />
     <ClInclude Include="LevenbergMarquardtMethod.h" />

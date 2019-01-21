@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="LinearAlgebraLib.h" />
+    <ClInclude Include="DynamicMatrix.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMatrixOperators.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMatrix.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMatrixOperators.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticVectorOperators.h">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticVector.h">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicVectorOperators.h">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicVector.h">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="HelperMacros.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Matrix">
+      <UniqueIdentifier>{014bfdb2-63b7-481a-9924-ec1353575b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vector">
+      <UniqueIdentifier>{835c1d38-9347-4f50-b6fa-0874a2b84956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{354722a1-52b7-40b8-aa1a-d4bbcae75928}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

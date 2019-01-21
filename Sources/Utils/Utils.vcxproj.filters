@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UtilsLib.h" />
+    <ClInclude Include="Buffer.h">
+      <Filter>DataContainers</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAllocator.h">
+      <Filter>MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Copy.h">
+      <Filter>MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h" />
+    <ClInclude Include="StreamUtils.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryHeap.h">
+      <Filter>DataContainers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>DataContainers</Filter>
+    </ClInclude>
+    <ClInclude Include="PagedVector.h">
+      <Filter>DataContainers</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalTypes.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeUtils.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartObject.h">
+      <Filter>MemoryManagement</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DataContainers">
+      <UniqueIdentifier>{fa6ec1a9-f2a6-466f-8c67-dc3af7b0ac0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryManagement">
+      <UniqueIdentifier>{190b8fc1-3017-44ae-9262-9d24e1e362aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{3f24231e-6b72-47f0-9f7c-df820e90d480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stream">
+      <UniqueIdentifier>{56e590aa-9c67-44b2-bb4f-18ce1cf2a010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{9bdbe85d-f61e-4a39-bc6b-7839c69a36a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{af6f8809-73c9-4b40-a8fb-fbc23074761e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

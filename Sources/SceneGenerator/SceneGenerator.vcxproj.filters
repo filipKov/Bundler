@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SceneVisualiser.cpp">
+      <Filter>Visualiser</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.cpp">
+      <Filter>Visualiser\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x4.cpp">
+      <Filter>Visualiser\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Visualiser\Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Visualiser\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Visualiser\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="GlRenderer.cpp">
+      <Filter>Visualiser\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableObject.cpp">
+      <Filter>Visualiser\Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="glslang.cpp">
+      <Filter>Visualiser</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="SceneGenerator.cpp">
+      <Filter>Generator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SceneVisualiser.h">
+      <Filter>Visualiser</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x3.h">
+      <Filter>Visualiser\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix4x4.h">
+      <Filter>Visualiser\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixNxN.h">
+      <Filter>Visualiser\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgebraLib.h">
+      <Filter>Visualiser\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Visualiser\Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Visualiser\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Visualiser\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="GlRenderer.h">
+      <Filter>Visualiser\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableObject.h">
+      <Filter>Visualiser\Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="glslang.h">
+      <Filter>Visualiser</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h">
+      <Filter>Visualiser</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGenerator.h">
+      <Filter>Generator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Visualiser">
+      <UniqueIdentifier>{b54a565a-5a3c-48e9-ad14-b85d567426ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\Math">
+      <UniqueIdentifier>{db4127ea-79d0-4f6f-be81-825f7e83b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\UserInterface">
+      <UniqueIdentifier>{e8237083-d0d4-446e-9ec0-69da99fb2156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\Rendering">
+      <UniqueIdentifier>{e30b5613-b9c4-4153-9536-cc8542e25292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\Scene">
+      <UniqueIdentifier>{c0324437-8a3a-47a5-af2a-d90e5c678bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\Scene\Camera">
+      <UniqueIdentifier>{106d54b7-b892-4b50-a276-ba53fd5a16d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Visualiser\Rendering\Objects">
+      <UniqueIdentifier>{d4dbd60d-8ed3-41ab-887b-97e0296ff5f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generator">
+      <UniqueIdentifier>{957c6073-6b65-4ccf-88bf-1d2868a8beae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

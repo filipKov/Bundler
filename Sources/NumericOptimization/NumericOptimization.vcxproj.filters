@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="DiffNum.h">
+      <Filter>DifferentiatingNumbers</Filter>
+    </ClInclude>
+    <ClInclude Include="IResidual.h">
+      <Filter>Optimization\CostFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericOptimizationLib.h" />
+    <ClInclude Include="ILinearSolver.h">
+      <Filter>LinearSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="ConjugateGradientsSolver.h">
+      <Filter>LinearSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussNewtonMethod.h">
+      <Filter>Optimization\Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="ILeastSquaresCostFunction.h">
+      <Filter>Optimization\CostFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="LeastSquaresCostFunctionABC.h">
+      <Filter>Optimization\CostFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="LeastSquaresCostFunctionSimple.h">
+      <Filter>Optimization\CostFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="IOptimizationMethod.h">
+      <Filter>Optimization\Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="LevenbergMarquardtMethod.h">
+      <Filter>Optimization\Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussJordanElimination.h">
+      <Filter>LinearSolver</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Optimization">
+      <UniqueIdentifier>{d56a2100-b200-4c3b-81c0-0eecaf1eb8c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Optimization\Methods">
+      <UniqueIdentifier>{ceb73394-a86e-46a3-8360-281806502654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Optimization\CostFunction">
+      <UniqueIdentifier>{ac092a64-23a8-4e29-baf9-7544d9da2a19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver">
+      <UniqueIdentifier>{85abb8a3-d615-4a8e-8048-5d97cfa9b63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DifferentiatingNumbers">
+      <UniqueIdentifier>{00f1a3f2-6302-47c1-af79-632f5a40a017}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

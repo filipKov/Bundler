@@ -10,7 +10,6 @@
 #include "../Utils/GlobalTypes.h"
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
-using namespace Utils::Containers;
 
 #include "../LinearAlgebra/LinearAlgebraLib.h"
 #include "../NumericOptimization/DiffNum.h"

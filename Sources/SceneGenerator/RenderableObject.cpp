@@ -7,6 +7,8 @@
 
 #include "RenderableObject.h"
 
+using namespace Containers;
+
 RenderablePointCloud::RenderablePointCloud() {
 	mPointCount = 0;
 	mVertexBufferId = 0;

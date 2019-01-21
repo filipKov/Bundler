@@ -8,5 +8,6 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="unittest1.cpp" />
+    <ClCompile Include="JacobiPreconditionerTest.cpp" />
   </ItemGroup>
 </Project>

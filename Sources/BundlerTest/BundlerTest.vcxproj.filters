@@ -10,4 +10,7 @@
     <ClCompile Include="unittest1.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="testMatrices.txt" />
+  </ItemGroup>
 </Project>

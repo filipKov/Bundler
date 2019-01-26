@@ -3,8 +3,8 @@
 namespace Visualiser {
 
 	struct Scene {
-		Buffer< RenderablePointCloud > pointClouds;
-		Buffer< RenderableWireframe > wireframes;
+		Utils::Containers::Buffer< RenderablePointCloud > pointClouds;
+		Utils::Containers::Buffer< RenderableWireframe > wireframes;
 		RenderableWireframe grid;
 
 		Camera viewportCamera;

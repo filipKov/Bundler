@@ -16,6 +16,8 @@
 
 #include "SceneVisualiser.h"
 
+using namespace Utils::Containers;
+
 namespace Visualiser {
 
 	SceneVisualiser* pVisualiserInstance;

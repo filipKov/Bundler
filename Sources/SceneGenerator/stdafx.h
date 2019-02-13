@@ -13,6 +13,7 @@ using namespace Utils;
 
 #include "../LinearAlgebra/LinearAlgebraLib.h"
 #include "../NumericOptimization/DiffNum.h"
+#include "../Bundler/NumericTypes.h"
 #include "../Bundler/BundlerDefs.h"
 
 // #define GLEW_STATIC

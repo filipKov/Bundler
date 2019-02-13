@@ -155,6 +155,7 @@
     <ClInclude Include="TestingUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -166,6 +167,20 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="testMatrices.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bundler\Bundler.vcxproj">
+      <Project>{c4cde5c9-deae-482f-a7aa-9ca1dab85e41}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">
+      <Project>{6d15bc33-ea80-476e-8fa9-e323c1ac208d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\NumericOptimization\NumericOptimization.vcxproj">
+      <Project>{4752ddd7-cd67-4240-a1d5-1de68ff47a7b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.vcxproj">
+      <Project>{6b3885a0-666b-4e5f-bbe9-46261efb59ac}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

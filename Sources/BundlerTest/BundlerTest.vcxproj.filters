@@ -9,8 +9,16 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="unittest1.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />
+    <ClCompile Include="CameraModel3DoFTest.cpp">
+      <Filter>CameraModels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="testMatrices.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CameraModels">
+      <UniqueIdentifier>{244806d2-d674-4d65-a9c6-0b19c37aef66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

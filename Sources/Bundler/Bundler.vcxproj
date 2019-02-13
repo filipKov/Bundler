@@ -128,19 +128,41 @@
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
+    <ClInclude Include="BundlerLib.h" />
+    <ClInclude Include="CameraModel3DoF.h" />
+    <ClInclude Include="NumericTypes.h" />
+    <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ReprojectionResiudal.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BundleImporter.cpp" />
-    <ClCompile Include="Bundler.cpp" />
-    <ClCompile Include="ReprojectionResiudal.cpp" />
+    <ClCompile Include="Bundler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="CameraModel3DoF.cpp" />
+    <ClCompile Include="ReprojectionResiudal.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">
+      <Project>{6d15bc33-ea80-476e-8fa9-e323c1ac208d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\NumericOptimization\NumericOptimization.vcxproj">
+      <Project>{4752ddd7-cd67-4240-a1d5-1de68ff47a7b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.vcxproj">
+      <Project>{6b3885a0-666b-4e5f-bbe9-46261efb59ac}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -76,13 +76,6 @@ namespace LinearAlgebra {
 		return C;
 	};
 
-	namespace Internal {
-		bool CheckATBDims( __in const uint aRows, __in const uint aCols, __in const uint bRows, __in const uint bCols, __in const uint resRows, __in const uint resCols ) 
-		{
-			return ( aRows == bRows ) && ( aCols == resRows ) && ( bCols == resCols );
-		}
-	}
-
 	template < typename Scalar >
 	void MultiplyATB(
 		__in const Matrix< Scalar, MatrixBase::Dynamic >& lhs,
@@ -94,7 +87,7 @@ namespace LinearAlgebra {
 		rhs.GetDimensions( rRows, rCols );
 		res.GetDimensions( resRows, resCols );
 
-		if ( !Internal::CheckATBDims( lRows, lCols, rRows, rCols, resRows, resCols ) ) {
+		if ( ( lRows != rRows ) || ( lCols != resRows ) || ( rCols != resCols ) ) {
 			throw InvalidDimensionsException();
 		}
 
@@ -121,7 +114,7 @@ namespace LinearAlgebra {
 		rhs.GetDimensions( rRows, rCols );
 		res.GetDimensions( resRows, resCols );
 
-		if ( !Internal::CheckATBDims( lCols, lRows, rCols, rRows, resRows, resCols ) ) {
+		if ( ( lCols != rCols ) || ( lRows != resRows ) || ( rRows != resCols ) ) {
 			throw InvalidDimensionsException();
 		}
 

@@ -39,6 +39,10 @@ namespace LinearAlgebra {
 			}
 		}
 
+		Matrix( __in const Scalar (&values)[ rows * columns ] ) {
+			ShallowCopy< Scalar >( values, rows * columns, m_pData );
+		}
+
 		Matrix( __in const Matrix<Scalar, rows, columns>& src ) {
 			Initialize();
 			ShallowCopy<Scalar>( src.m_pData, rows*columns, m_pData );
@@ -139,6 +143,28 @@ namespace LinearAlgebra {
 			for ( uint i = 0; i < ( rows * columns ); i++ ) {
 				*pDst -= *pSrc;
 				pSrc++;
+				pDst++;
+			}
+
+			return *this;
+		}
+
+		inline Matrix< Scalar, rows, columns >& operator+=( __in_ecount( rows * columns ) const Scalar* pMatrix ) {
+			Scalar* pDst = m_pData;
+			for ( uint i = 0; i < ( rows * columns ); i++ ) {
+				*pDst += *pMatrix;
+				pMatrix++;
+				pDst++;
+			}
+
+			return *this;
+		}
+
+		inline Matrix< Scalar, rows, columns >& operator-=( __in_ecount( rows * columns ) const Scalar* pMatrix ) {
+			Scalar* pDst = m_pData;
+			for ( uint i = 0; i < ( rows * columns ); i++ ) {
+				*pDst -= *pMatrix;
+				pMatrix++;
 				pDst++;
 			}
 

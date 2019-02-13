@@ -23,6 +23,10 @@ namespace LinearAlgebra {
 			ShallowCopy<Scalar>( elements.begin(), static_cast<uint>( elements.size() ), m_pData );
 		};
 
+		Vector( __in const Scalar (&values)[ dimension ] ) {
+			ShallowCopy< Scalar >( values, dimension, m_pData );
+		}
+
 		Vector( __in const Matrix< Scalar, dimension, 1 >& src ) : Matrix< Scalar, dimension, 1 >( src ) {};
 
 		virtual ~Vector() {};

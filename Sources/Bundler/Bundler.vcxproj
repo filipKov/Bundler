@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />

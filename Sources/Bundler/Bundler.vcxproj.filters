@@ -20,6 +20,9 @@
     <ClInclude Include="ReprojectionResiudal.h">
       <Filter>OldPrototype</Filter>
     </ClInclude>
+    <ClInclude Include="BasicCameraModel.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

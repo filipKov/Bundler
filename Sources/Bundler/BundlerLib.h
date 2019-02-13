@@ -5,4 +5,5 @@
 #include "BundlerDefs.h"
 
 #include "ICameraModel.h"
+#include "BasicCameraModel.h"
 #include "CameraModel3DoF.h"

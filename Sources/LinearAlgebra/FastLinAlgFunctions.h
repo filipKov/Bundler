@@ -1,7 +1,5 @@
 #pragma once
 
-#define ELEMENT( arrayPtr, index ) (*( arrayPtr + index ))
-
 namespace LinearAlgebra {
 
 	template < typename T1, typename T2, typename T3 >

@@ -40,6 +40,9 @@
     <ClInclude Include="SmartObject.h">
       <Filter>MemoryManagement</Filter>
     </ClInclude>
+    <ClInclude Include="ArrayUtils.h">
+      <Filter>DataContainers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

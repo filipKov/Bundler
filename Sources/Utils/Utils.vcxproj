@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayUtils.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="TypeUtils.h" />
     <ClInclude Include="Copy.h" />

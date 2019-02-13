@@ -7,6 +7,7 @@
 #include "MemoryAllocator.h"
 #include "Copy.h"
 
+#include "ArrayUtils.h"
 #include "Buffer.h"
 #include "Vector.h"
 #include "PagedVector.h"

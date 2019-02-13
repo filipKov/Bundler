@@ -39,6 +39,7 @@
     <ClInclude Include="Exceptions.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="FastLinAlgFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Matrix">

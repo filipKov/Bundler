@@ -4,6 +4,9 @@
 
 #include "BundlerDefs.h"
 
+#include "IRotationFormula.h"
+#include "RodriguesRotation.h"
+
 #include "ICameraModel.h"
 #include "BasicCameraModel.h"
 #include "CameraModel3DoF.h"

@@ -3,22 +3,42 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TestingUtils.h" />
-    <ClInclude Include="MatrixUtils.h" />
+    <ClInclude Include="MatrixUtils.h">
+      <Filter>Preconditioning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="unittest1.cpp" />
-    <ClCompile Include="JacobiPreconditionerTest.cpp" />
     <ClCompile Include="CameraModel3DoFTest.cpp">
       <Filter>CameraModels</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="testMatrices.txt" />
+    <ClCompile Include="RodriguesRotationTest.cpp">
+      <Filter>CameraModels</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobiPreconditionerTest.cpp">
+      <Filter>Preconditioning</Filter>
+    </ClCompile>
+    <ClCompile Include="unittest1.cpp">
+      <Filter>Preconditioning</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixBenchmark.cpp">
+      <Filter>Benchmarks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">
       <UniqueIdentifier>{244806d2-d674-4d65-a9c6-0b19c37aef66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Preconditioning">
+      <UniqueIdentifier>{1b3a35a2-895c-40b0-97b8-07513816365c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Benchmarks">
+      <UniqueIdentifier>{aa1a05b4-3d79-4d86-882b-d8895528a31e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="testMatrices.txt">
+      <Filter>Preconditioning</Filter>
+    </Text>
   </ItemGroup>
 </Project>

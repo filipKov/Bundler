@@ -23,6 +23,12 @@
     <ClInclude Include="BasicCameraModel.h">
       <Filter>CameraModels</Filter>
     </ClInclude>
+    <ClInclude Include="IRotationFormula.h">
+      <Filter>CameraModels\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="RodriguesRotation.h">
+      <Filter>CameraModels\Rotation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -48,6 +54,9 @@
     </Filter>
     <Filter Include="OldPrototype">
       <UniqueIdentifier>{3b4db40f-38c9-463d-8484-6683bbbe0547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CameraModels\Rotation">
+      <UniqueIdentifier>{5c020c72-9be5-47ff-97a9-64c49a7f3d61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

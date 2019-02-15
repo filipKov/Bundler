@@ -44,7 +44,6 @@ namespace LinearAlgebra {
 		}
 
 		Matrix( __in const Matrix<Scalar, rows, columns>& src ) {
-			Initialize();
 			ShallowCopy<Scalar>( src.m_pData, rows*columns, m_pData );
 		}
 
@@ -169,6 +168,17 @@ namespace LinearAlgebra {
 			}
 
 			return *this;
+		}
+
+		// -------------------------------------------------------------------------------------------------------
+		//    Other
+		// -------------------------------------------------------------------------------------------------------
+		inline void SetIdentity() {
+			Scalar* pDst = m_pData;
+			for ( uint i = 0; i < rows; i++ ) {
+				*pDst = Scalar( 1 );
+				pDst += ( columns + 1 ); 
+			}
 		}
 
 	protected:

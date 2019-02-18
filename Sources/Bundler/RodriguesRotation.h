@@ -13,15 +13,6 @@ namespace Bundler { namespace CameraModels {
 
 		inline void Initialize( __in const Scalar angle, __in_ecount( 3 ) const Scalar* pAxis ) 
 		{
-			// Matrix3x3 K( { 
-			// 	0,						-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
-			// 	ELEMENT( pAxis, 2 ),	0,						-ELEMENT( pAxis, 0 ),
-			// 	-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	0
-			// } );
-			// 
-			// mR.SetIdentity();
-			// mR += ( K * sin( angle ) ) + ( K * K * ( Scalar( 1 ) - cos( angle ) ) );
-
 			Scalar K[9] = {
 				0,						-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
 			 	ELEMENT( pAxis, 2 ),	0,						-ELEMENT( pAxis, 0 ),

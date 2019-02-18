@@ -51,6 +51,14 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
+	inline void V3MulC( __in_ecount( 3 ) const T1* inV, __in const T2 c, __out_ecount( 3 ) T3* outV )
+	{
+		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * c;
+		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * c;
+		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * c;
+	}
+
+	template < typename T1, typename T2, typename T3 >
 	inline void V4MulC( __in_ecount( 4 ) const T1* inV, __in const T2 c, __out_ecount( 4 ) T3* outV )
 	{
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * c;
@@ -122,6 +130,15 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2 >
+	inline auto V3DotV3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
+	{
+		return (
+			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
+			( ELEMENT( v1, 1 ) * ELEMENT( v2, 1 ) ) +
+			( ELEMENT( v1, 2 ) * ELEMENT( v2, 2 ) ) );
+	}
+
+	template < typename T1, typename T2 >
 	inline auto V4DotV4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
 	{
 		return ( 
@@ -132,10 +149,26 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1 >
+	inline auto V3Length( __in_ecount( 3 ) const T1* v ) {
+		return sqrt( V3DotV3( v, v ) );
+	}
+
+	template < typename T1 >
 	inline auto V4Length( __in_ecount( 4 ) const T1* v ) {
 		return sqrt( V4DotV4( v, v ) );
 	}
 
+	template < typename T1, typename T2 >
+	inline void V3Normalize( __in_ecount( 3 ) const T1* inV, __out_ecount( 3 ) T2* outV ) {
+		const T1 lengthInv = T1( 1 ) / V3Length( inV );
+
+		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
+
+		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
+		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
+		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * lengthInv;
+	}
+	
 	template < typename T1, typename T2 >
 	inline void V4Normalize( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
 		const T1 lengthInv = T1( 1 ) / V4Length( inV );

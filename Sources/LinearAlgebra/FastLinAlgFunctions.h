@@ -10,12 +10,30 @@ namespace LinearAlgebra {
 		ELEMENT( M, 8 ) = T( 1 );
 	}
 
+	template < typename T >
+	inline void IdentityM44( __out_ecount( 16 ) T* M ) {
+		ByteFill< T >( 0, 16, M );
+		ELEMENT( M, 0 ) = T( 1 );
+		ELEMENT( M, 5 ) = T( 1 );
+		ELEMENT( M, 10 ) = T( 1 );
+		ELEMENT( M, 15 ) = T( 1 );
+	}
+
 	template < typename T1, typename T2, typename T3 >
 	inline void AddV3V3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* ov )
 	{
 		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) + ELEMENT( v2, 0 );
 		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) + ELEMENT( v2, 1 );
 		ELEMENT( ov, 2 ) = ELEMENT( v1, 2 ) + ELEMENT( v2, 2 );
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void AddV4V4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2, __out_ecount( 4 ) T3* ov )
+	{
+		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) + ELEMENT( v2, 0 );
+		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) + ELEMENT( v2, 1 );
+		ELEMENT( ov, 2 ) = ELEMENT( v1, 2 ) + ELEMENT( v2, 2 );
+		ELEMENT( ov, 3 ) = ELEMENT( v1, 3 ) + ELEMENT( v2, 3 );
 	}
 
 	template < typename T1, typename T2, typename T3 >
@@ -30,6 +48,15 @@ namespace LinearAlgebra {
 		ELEMENT( oM, 6 ) = ELEMENT( M, 6 ) + ELEMENT( K, 6 );
 		ELEMENT( oM, 7 ) = ELEMENT( M, 7 ) + ELEMENT( K, 7 );
 		ELEMENT( oM, 8 ) = ELEMENT( M, 8 ) + ELEMENT( K, 8 );
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void MulV4C( __in_ecount( 4 ) const T1* inV, __in const T2 c, __out_ecount( 4 ) T3* outV )
+	{
+		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * c;
+		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * c;
+		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * c;
+		ELEMENT( outV, 3 ) = ELEMENT( inV, 3 ) * c;
 	}
 
 	template < typename T1, typename T2, typename T3 >
@@ -71,6 +98,52 @@ namespace LinearAlgebra {
 		ELEMENT( oM, 6 ) = ( ELEMENT( M, 6 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 8 ) * ELEMENT( K, 6 ) );
 		ELEMENT( oM, 7 ) = ( ELEMENT( M, 6 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 8 ) * ELEMENT( K, 7 ) );
 		ELEMENT( oM, 8 ) = ( ELEMENT( M, 6 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( K, 5 ) ) + ( ELEMENT( M, 8 ) * ELEMENT( K, 8 ) );
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void MulM34V4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
+	{
+		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
+
+		ELEMENT( outV, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( inV, 0 ) ) + ( ELEMENT( M, 1 ) * ELEMENT( inV, 1 ) ) + ( ELEMENT( M, 2 ) * ELEMENT( inV, 2 ) ) + ( ELEMENT( M, 3 ) * ELEMENT( inV, 3 ) );
+		ELEMENT( outV, 1 ) = ( ELEMENT( M, 4 ) * ELEMENT( inV, 0 ) ) + ( ELEMENT( M, 5 ) * ELEMENT( inV, 1 ) ) + ( ELEMENT( M, 6 ) * ELEMENT( inV, 2 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( inV, 3 ) );
+		ELEMENT( outV, 2 ) = ( ELEMENT( M, 8 ) * ELEMENT( inV, 0 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( inV, 1 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( inV, 2 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( inV, 3 ) );
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void MulM44V4( __in_ecount( 16 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 4 ) T3* outV )
+	{
+		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
+
+		ELEMENT( outV, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 1 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 2 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 3 ) * ELEMENT( inV, 3 ) );
+		ELEMENT( outV, 1 ) = ( ELEMENT( M, 4 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 5 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 6 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 7 ) * ELEMENT( inV, 3 ) );
+		ELEMENT( outV, 2 ) = ( ELEMENT( M, 8 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 9 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 10 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 11 ) * ELEMENT( inV, 3 ) );
+		ELEMENT( outV, 3 ) = ( ELEMENT( M, 12 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 13 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 14 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 15 ) * ELEMENT( inV, 3 ) );
+	}
+
+	template < typename T1, typename T2 >
+	inline auto DotV4V4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
+	{
+		return ( 
+			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
+			( ELEMENT( v1, 1 ) * ELEMENT( v2, 1 ) ) +
+			( ELEMENT( v1, 2 ) * ELEMENT( v2, 2 ) ) +
+			( ELEMENT( v1, 3 ) * ELEMENT( v2, 3 ) ) );
+	}
+
+	template < typename T1 >
+	inline auto LengthV4( __in_ecount( 4 ) const T1* v ) {
+		return sqrt( DotV4V4( v, v ) );
+	}
+
+	template < typename T1, typename T2 >
+	inline void NormalizeV4( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
+		const T1 lengthInv = T1( 1 ) / LengthV4( inV );
+
+		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
+		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
+		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * lengthInv;
+		ELEMENT( outV, 3 ) = ELEMENT( inV, 3 ) * lengthInv;
 	}
 
 }

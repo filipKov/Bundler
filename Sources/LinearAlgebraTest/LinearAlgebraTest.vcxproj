@@ -154,6 +154,7 @@
     <ClInclude Include="TestingUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FastLinearAlgebraTest.cpp" />
     <ClCompile Include="MatrixDynamicBaseTest.cpp" />
     <ClCompile Include="MatrixDynamicTest.cpp" />
     <ClCompile Include="MatrixStaticBaseTest.cpp" />

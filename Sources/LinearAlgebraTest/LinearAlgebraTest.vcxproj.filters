@@ -12,5 +12,6 @@
     <ClCompile Include="MatrixStaticTest.cpp" />
     <ClCompile Include="VectorDynamicBaseTest.cpp" />
     <ClCompile Include="VectorDynamicTest.cpp" />
+    <ClCompile Include="FastLinearAlgebraTest.cpp" />
   </ItemGroup>
 </Project>

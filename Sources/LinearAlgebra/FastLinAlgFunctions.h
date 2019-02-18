@@ -2,8 +2,13 @@
 
 namespace LinearAlgebra {
 
+	// ----------------------------------------------------
+	//   Matrix identities
+	// ----------------------------------------------------
+
 	template < typename T >
-	inline void M33Identity( __out_ecount( 9 ) T* M ) {
+	inline void M33Identity( __out_ecount( 9 ) T* M ) 
+	{
 		ByteFill< T >( 0, 9, M );
 		ELEMENT( M, 0 ) = T( 1 );
 		ELEMENT( M, 4 ) = T( 1 );
@@ -11,13 +16,19 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T >
-	inline void M44Identity( __out_ecount( 16 ) T* M ) {
+	inline void M44Identity( __out_ecount( 16 ) T* M ) 
+	{
 		ByteFill< T >( 0, 16, M );
 		ELEMENT( M, 0 ) = T( 1 );
 		ELEMENT( M, 5 ) = T( 1 );
 		ELEMENT( M, 10 ) = T( 1 );
 		ELEMENT( M, 15 ) = T( 1 );
 	}
+
+
+	// ----------------------------------------------------
+	//   Additions
+	// ----------------------------------------------------
 
 	template < typename T1, typename T2, typename T3 >
 	inline void V3AddV3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* ov )
@@ -50,6 +61,33 @@ namespace LinearAlgebra {
 		ELEMENT( oM, 8 ) = ELEMENT( M, 8 ) + ELEMENT( K, 8 );
 	}
 
+
+	// ----------------------------------------------------
+	//   Subtractions
+	// ----------------------------------------------------
+
+	template < typename T1, typename T2, typename T3 >
+	inline void V3SubV3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* ov )
+	{
+		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) - ELEMENT( v2, 0 );
+		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) - ELEMENT( v2, 1 );
+		ELEMENT( ov, 2 ) = ELEMENT( v1, 2 ) - ELEMENT( v2, 2 );
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void V4SubV4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2, __out_ecount( 4 ) T3* ov )
+	{
+		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) - ELEMENT( v2, 0 );
+		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) - ELEMENT( v2, 1 );
+		ELEMENT( ov, 2 ) = ELEMENT( v1, 2 ) - ELEMENT( v2, 2 );
+		ELEMENT( ov, 3 ) = ELEMENT( v1, 3 ) - ELEMENT( v2, 3 );
+	}
+
+
+	// ----------------------------------------------------
+	//   Matrix-Constant multiplication
+	// ----------------------------------------------------
+
 	template < typename T1, typename T2, typename T3 >
 	inline void V3MulC( __in_ecount( 3 ) const T1* inV, __in const T2 c, __out_ecount( 3 ) T3* outV )
 	{
@@ -68,7 +106,8 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void M33MulC( __in_ecount( 9 ) const T1* M, __in const T2 c, __out_ecount( 9 ) T3* oM ) {
+	inline void M33MulC( __in_ecount( 9 ) const T1* M, __in const T2 c, __out_ecount( 9 ) T3* oM ) 
+	{
 		ELEMENT( oM, 0 ) = ELEMENT( M, 0 ) * c;
 		ELEMENT( oM, 1 ) = ELEMENT( M, 1 ) * c;
 		ELEMENT( oM, 2 ) = ELEMENT( M, 2 ) * c;
@@ -79,6 +118,11 @@ namespace LinearAlgebra {
 		ELEMENT( oM, 7 ) = ELEMENT( M, 7 ) * c;
 		ELEMENT( oM, 8 ) = ELEMENT( M, 8 ) * c;
 	}
+
+
+	// ----------------------------------------------------
+	//   Matrix-Matrix multiplication
+	// ----------------------------------------------------
 
 	template < typename T1, typename T2, typename T3 >
 	inline void M33MulV3( __in_ecount( 9 ) const T1* M, __in_ecount( 3 ) const T2* iv, __out_ecount( 3 ) T3* ov ) 
@@ -129,6 +173,11 @@ namespace LinearAlgebra {
 		ELEMENT( outV, 3 ) = ( ELEMENT( M, 12 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 13 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 14 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 15 ) * ELEMENT( inV, 3 ) );
 	}
 
+
+	// ----------------------------------------------------
+	//   Vector dot product
+	// ----------------------------------------------------
+
 	template < typename T1, typename T2 >
 	inline auto V3Dot( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
 	{
@@ -149,17 +198,38 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1 >
-	inline auto V3Length( __in_ecount( 3 ) const T1* v ) {
+	inline auto V3Length( __in_ecount( 3 ) const T1* v ) 
+	{
 		return sqrt( V3Dot( v, v ) );
 	}
 
 	template < typename T1 >
-	inline auto V4Length( __in_ecount( 4 ) const T1* v ) {
+	inline auto V4Length( __in_ecount( 4 ) const T1* v ) 
+	{
 		return sqrt( V4Dot( v, v ) );
 	}
 
+
+	// ----------------------------------------------------
+	//   Vector cross product
+	// ----------------------------------------------------
+
+	template < typename T1, typename T2, typename T3 >
+	inline void V3Cross( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* outV )
+	{
+		ELEMENT( outV, 0 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 2 ) - ELEMENT( v1, 2 ) * ELEMENT( v2, 1 );
+		ELEMENT( outV, 1 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 0 ) - ELEMENT( v1, 0 ) * ELEMENT( v2, 2 );
+		ELEMENT( outV, 2 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 1 ) - ELEMENT( v1, 1 ) * ELEMENT( v2, 0 );
+	}
+
+
+	// ----------------------------------------------------
+	//   Vector normalization
+	// ----------------------------------------------------
+
 	template < typename T1, typename T2 >
-	inline void V3Normalize( __in_ecount( 3 ) const T1* inV, __out_ecount( 3 ) T2* outV ) {
+	inline void V3Normalize( __in_ecount( 3 ) const T1* inV, __out_ecount( 3 ) T2* outV ) 
+	{
 		const T1 lengthInv = T1( 1 ) / V3Length( inV );
 
 		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
@@ -170,7 +240,8 @@ namespace LinearAlgebra {
 	}
 	
 	template < typename T1, typename T2 >
-	inline void V4Normalize( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
+	inline void V4Normalize( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) 
+	{
 		const T1 lengthInv = T1( 1 ) / V4Length( inV );
 
 		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
@@ -181,12 +252,17 @@ namespace LinearAlgebra {
 		ELEMENT( outV, 3 ) = ELEMENT( inV, 3 ) * lengthInv;
 	}
 
-	template < typename T1, typename T2, typename T3 >
-	inline void V3Cross( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* outV )
-	{
-		ELEMENT( outV, 0 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 2 ) - ELEMENT( v1, 2 ) * ELEMENT( v2, 1 );
-		ELEMENT( outV, 1 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 0 ) - ELEMENT( v1, 0 ) * ELEMENT( v2, 2 );
-		ELEMENT( outV, 2 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 1 ) - ELEMENT( v1, 1 ) * ELEMENT( v2, 0 );
-	}
 
+	// ----------------------------------------------------
+	//   Vector projection
+	// ----------------------------------------------------
+
+	inline void V3Project( __in_ecount( 3 ) const float* srcV, __in_ecount( 3 ) const float* dstV, __out_ecount( 3 ) float* projected ) 
+	{
+		auto dot = V3Dot( srcV, dstV ) / V3Dot( dstV, dstV );
+
+		ELEMENT( projected, 0 ) = dot * ELEMENT( dstV, 0 );
+		ELEMENT( projected, 1 ) = dot * ELEMENT( dstV, 1 );
+		ELEMENT( projected, 2 ) = dot * ELEMENT( dstV, 2 );
+	}
 }

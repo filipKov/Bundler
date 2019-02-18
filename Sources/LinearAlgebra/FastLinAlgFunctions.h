@@ -140,6 +140,8 @@ namespace LinearAlgebra {
 	inline void V4Normalize( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
 		const T1 lengthInv = T1( 1 ) / V4Length( inV );
 
+		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
+
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
 		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * lengthInv;

@@ -47,5 +47,15 @@ namespace BundlerTest {
 		}
 	}
 
+	template < typename T, size_t N >
+	inline void AssertAreEqual( __in const T( &expected )[ N ], __in const T* actual, __in const T tolerance = T( 0 ) ) {
+		const T* pExpected = expected;
+		for ( size_t i = 0; i < N; i++ ) {
+			Assert::AreEqual( *pExpected, *actual, tolerance );
+			pExpected++;
+			actual++;
+		}
+	}
+
 
 }

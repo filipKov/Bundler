@@ -20,22 +20,22 @@ namespace Bundler { namespace CameraModels {
 			};
 			Scalar K2[ 9 ];
 
-			MulM33M33( K, K, K2 );
-			MulM33C( K2, ( Scalar( 1 ) - cos( angle ) ), K2 );
+			M33MulM33( K, K, K2 );
+			M33MulC( K2, ( Scalar( 1 ) - cos( angle ) ), K2 );
 
-			MulM33C( K, sin( angle ), K );
+			M33MulC( K, sin( angle ), K );
 
-			AddM33M33( K, K2, K );
+			M33AddM33( K, K2, K );
 
-			IdentityM33( mR );
-			AddM33M33( mR, K, mR );
+			M33Identity( mR );
+			M33AddM33( mR, K, mR );
 		}
 
 		inline void RotatePoint(
 			__in_ecount( 3 ) DScalar< totalParameterCount >* pInputPoint,
 			__out_ecount( 3 ) DScalar< totalParameterCount >* pOutputPoint ) const override 
 		{
-			MulM33V3( mR, pInputPoint, pOutputPoint );
+			M33MulV3( mR, pInputPoint, pOutputPoint );
 		}
 
 	protected:

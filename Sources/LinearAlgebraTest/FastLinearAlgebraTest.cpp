@@ -9,13 +9,13 @@ namespace LinearAlgebraTest {
 			float v1[ 4 ];
 			float v2[ 4 ];
 
-			AddV4V4( v1, v2, v1 );
-			auto d = DotV4V4( v1, v2 );
-			auto L = LengthV4( v1 );
-			MulM34V4( M, v1, v2 );
-			MulM44V4( M, v1, v2 );
-			MulV4C( v1, 10.0f, v2 );
-			NormalizeV4( v1, v1 );
+			V4AddV4( v1, v2, v1 );
+			auto d = V4DotV4( v1, v2 );
+			auto L = V4Length( v1 );
+			M34MulV4( M, v1, v2 );
+			M44MulV4( M, v1, v2 );
+			V4MulC( v1, 10.0f, v2 );
+			V4Normalize( v1, v1 );
 
 			Assert::IsTrue( true );
 		}

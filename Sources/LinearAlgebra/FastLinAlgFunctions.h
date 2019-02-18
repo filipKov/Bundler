@@ -3,7 +3,7 @@
 namespace LinearAlgebra {
 
 	template < typename T >
-	inline void IdentityM33( __out_ecount( 9 ) T* M ) {
+	inline void M33Identity( __out_ecount( 9 ) T* M ) {
 		ByteFill< T >( 0, 9, M );
 		ELEMENT( M, 0 ) = T( 1 );
 		ELEMENT( M, 4 ) = T( 1 );
@@ -11,7 +11,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T >
-	inline void IdentityM44( __out_ecount( 16 ) T* M ) {
+	inline void M44Identity( __out_ecount( 16 ) T* M ) {
 		ByteFill< T >( 0, 16, M );
 		ELEMENT( M, 0 ) = T( 1 );
 		ELEMENT( M, 5 ) = T( 1 );
@@ -20,7 +20,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void AddV3V3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* ov )
+	inline void V3AddV3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* ov )
 	{
 		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) + ELEMENT( v2, 0 );
 		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) + ELEMENT( v2, 1 );
@@ -28,7 +28,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void AddV4V4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2, __out_ecount( 4 ) T3* ov )
+	inline void V4AddV4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2, __out_ecount( 4 ) T3* ov )
 	{
 		ELEMENT( ov, 0 ) = ELEMENT( v1, 0 ) + ELEMENT( v2, 0 );
 		ELEMENT( ov, 1 ) = ELEMENT( v1, 1 ) + ELEMENT( v2, 1 );
@@ -37,7 +37,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void AddM33M33( __in_ecount( 9 ) const T1* M, __in_ecount( 9 ) const T2* K, __out_ecount( 3 ) T3* oM )
+	inline void M33AddM33( __in_ecount( 9 ) const T1* M, __in_ecount( 9 ) const T2* K, __out_ecount( 3 ) T3* oM )
 	{
 		ELEMENT( oM, 0 ) = ELEMENT( M, 0 ) + ELEMENT( K, 0 );
 		ELEMENT( oM, 1 ) = ELEMENT( M, 1 ) + ELEMENT( K, 1 );
@@ -51,7 +51,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void MulV4C( __in_ecount( 4 ) const T1* inV, __in const T2 c, __out_ecount( 4 ) T3* outV )
+	inline void V4MulC( __in_ecount( 4 ) const T1* inV, __in const T2 c, __out_ecount( 4 ) T3* outV )
 	{
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * c;
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * c;
@@ -60,7 +60,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void MulM33C( __in_ecount( 9 ) const T1* M, __in const T2 c, __out_ecount( 9 ) T3* oM ) {
+	inline void M33MulC( __in_ecount( 9 ) const T1* M, __in const T2 c, __out_ecount( 9 ) T3* oM ) {
 		ELEMENT( oM, 0 ) = ELEMENT( M, 0 ) * c;
 		ELEMENT( oM, 1 ) = ELEMENT( M, 1 ) * c;
 		ELEMENT( oM, 2 ) = ELEMENT( M, 2 ) * c;
@@ -73,7 +73,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void MulM33V3( __in_ecount( 9 ) const T1* M, __in_ecount( 3 ) const T2* iv, __out_ecount( 3 ) T3* ov ) 
+	inline void M33MulV3( __in_ecount( 9 ) const T1* M, __in_ecount( 3 ) const T2* iv, __out_ecount( 3 ) T3* ov ) 
 	{
 		_ASSERT_EXPR( iv != ov, "Input and output vectors must be different!" );
 
@@ -83,7 +83,7 @@ namespace LinearAlgebra {
 	}
 	
 	template < typename T1, typename T2, typename T3 >
-	inline void MulM33M33( __in_ecount( 9 ) const T1* M, __in_ecount( 9 ) const T2* K, __out_ecount( 3 ) T3* oM )
+	inline void M33MulM33( __in_ecount( 9 ) const T1* M, __in_ecount( 9 ) const T2* K, __out_ecount( 3 ) T3* oM )
 	{
 		_ASSERT_EXPR( ( M != oM ) && ( K != oM ), "Input and output matrices must be different!" );
 
@@ -101,7 +101,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void MulM34V4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
+	inline void M34MulV4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
 	{
 		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
 
@@ -111,7 +111,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2, typename T3 >
-	inline void MulM44V4( __in_ecount( 16 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 4 ) T3* outV )
+	inline void M44MulV4( __in_ecount( 16 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 4 ) T3* outV )
 	{
 		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
 
@@ -122,7 +122,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2 >
-	inline auto DotV4V4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
+	inline auto V4DotV4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
 	{
 		return ( 
 			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
@@ -132,13 +132,13 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1 >
-	inline auto LengthV4( __in_ecount( 4 ) const T1* v ) {
-		return sqrt( DotV4V4( v, v ) );
+	inline auto V4Length( __in_ecount( 4 ) const T1* v ) {
+		return sqrt( V4DotV4( v, v ) );
 	}
 
 	template < typename T1, typename T2 >
-	inline void NormalizeV4( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
-		const T1 lengthInv = T1( 1 ) / LengthV4( inV );
+	inline void V4Normalize( __in_ecount( 4 ) const T1* inV, __out_ecount( 4 ) T2* outV ) {
+		const T1 lengthInv = T1( 1 ) / V4Length( inV );
 
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;

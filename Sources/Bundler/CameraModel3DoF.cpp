@@ -14,7 +14,7 @@ namespace Bundler { namespace CameraModels {
 		__in_ecount( 3 ) const DScalar< totalParamCount >* pPoint,
 		__out_ecount( 3 ) DScalar< totalParamCount >* pRotatedPoint ) const
 	{
-		MulM33V3( m_pCamera->r.Elements(), pPoint, pRotatedPoint );
+		M33MulV3( m_pCamera->r.Elements(), pPoint, pRotatedPoint );
 	}
 
 	void CameraModel3DoF::TranslatePoint( __inout_ecount( 3 ) DScalar< totalParamCount >* pPoint ) const
@@ -28,7 +28,7 @@ namespace Bundler { namespace CameraModels {
 			DScalar< totalParamCount >( ELEMENT( pT, 2 ), 2 ),
 		};
 
-		AddV3V3( pPoint, translation, pPoint );
+		V3AddV3( pPoint, translation, pPoint );
 	}
 
 	void CameraModel3DoF::MultiplyByCalibration(
@@ -43,7 +43,7 @@ namespace Bundler { namespace CameraModels {
 			0,				0,				1
 		};
 
-		MulM33V3( K, pPoint, pCalibratedPoint );
+		M33MulV3( K, pPoint, pCalibratedPoint );
 	}
 
 } }

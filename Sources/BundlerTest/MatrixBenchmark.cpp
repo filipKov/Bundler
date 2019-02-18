@@ -10,8 +10,8 @@ namespace BundlerTest {
 
 	TEST_CLASS( _Benchmark_Matrix ) {
 
-		TEST_METHOD( MulM33V3Bench ) {
-			Logger::WriteMessage( "---- MulM33V3Bench Start ----" );
+		TEST_METHOD( M33MulV3Bench ) {
+			Logger::WriteMessage( "---- M33MulV3Bench Start ----" );
 
 			const uint BATCH_SIZE = 10000;
 
@@ -35,7 +35,7 @@ namespace BundlerTest {
 				}
 
 				tgFast.Start();
-				MulM33V3( mat.Elements(), vect.Elements(), sink.Elements() );
+				M33MulV3( mat.Elements(), vect.Elements(), sink.Elements() );
 				tgFast.SaveElapsed();
 
 				tgStruct.Start();
@@ -81,15 +81,15 @@ namespace BundlerTest {
 				};
 				Scalar K2[ 9 ];
 
-				MulM33M33( K, K, K2 );
-				MulM33C( K2, ( Scalar( 1 ) - cos( angle ) ), K2 );
+				M33MulM33( K, K, K2 );
+				M33MulC( K2, ( Scalar( 1 ) - cos( angle ) ), K2 );
 
-				MulM33C( K, sin( angle ), K );
+				M33MulC( K, sin( angle ), K );
 
-				AddM33M33( K, K2, K );
+				M33AddM33( K, K2, K );
 
-				IdentityM33( R );
-				AddM33M33( R, K, R );
+				M33Identity( R );
+				M33AddM33( R, K, R );
 			};
 
 			const uint BATCH_SIZE = 10000;

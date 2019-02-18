@@ -130,7 +130,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2 >
-	inline auto V3DotV3( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
+	inline auto V3Dot( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
 	{
 		return (
 			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
@@ -139,7 +139,7 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1, typename T2 >
-	inline auto V4DotV4( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
+	inline auto V4Dot( __in_ecount( 4 ) const T1* v1, __in_ecount( 4 ) const T2* v2 ) 
 	{
 		return ( 
 			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
@@ -150,12 +150,12 @@ namespace LinearAlgebra {
 
 	template < typename T1 >
 	inline auto V3Length( __in_ecount( 3 ) const T1* v ) {
-		return sqrt( V3DotV3( v, v ) );
+		return sqrt( V3Dot( v, v ) );
 	}
 
 	template < typename T1 >
 	inline auto V4Length( __in_ecount( 4 ) const T1* v ) {
-		return sqrt( V4DotV4( v, v ) );
+		return sqrt( V4Dot( v, v ) );
 	}
 
 	template < typename T1, typename T2 >
@@ -179,6 +179,14 @@ namespace LinearAlgebra {
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
 		ELEMENT( outV, 2 ) = ELEMENT( inV, 2 ) * lengthInv;
 		ELEMENT( outV, 3 ) = ELEMENT( inV, 3 ) * lengthInv;
+	}
+
+	template < typename T1, typename T2, typename T3 >
+	inline void V3Cross( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 3 ) T3* outV )
+	{
+		ELEMENT( outV, 0 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 2 ) - ELEMENT( v1, 2 ) * ELEMENT( v2, 1 );
+		ELEMENT( outV, 1 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 0 ) - ELEMENT( v1, 0 ) * ELEMENT( v2, 2 );
+		ELEMENT( outV, 2 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 1 ) - ELEMENT( v1, 1 ) * ELEMENT( v2, 0 );
 	}
 
 }

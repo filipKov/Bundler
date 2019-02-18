@@ -10,7 +10,7 @@ namespace LinearAlgebraTest {
 			float v2[ 3 ];
 
 			V3AddV3( v1, v2, v1 );
-			auto d = V3DotV3( v1, v2 );
+			auto d = V3Dot( v1, v2 );
 			auto L = V3Length( v1 );
 			M33MulV3( M, v1, v2 );
 			V3MulC( v1, 10.0f, v2 );
@@ -41,7 +41,7 @@ namespace LinearAlgebraTest {
 			float v1[ 3 ] = { 1, 2, 3 };
 			float v2[ 3 ] = { 0,0,0 };
 
-			float dot = V3DotV3( v1, v2 );
+			float dot = V3Dot( v1, v2 );
 			Assert::AreEqual( 0.0f, dot );
 		}
 
@@ -49,7 +49,7 @@ namespace LinearAlgebraTest {
 			float v1[ 3 ] = { 1, 2, 3 };
 			float v2[ 3 ] = { 2, 4, 7 };
 
-			float dot = V3DotV3( v1, v2 );
+			float dot = V3Dot( v1, v2 );
 			Assert::AreEqual( 31.0f, dot );
 		}
 
@@ -108,6 +108,29 @@ namespace LinearAlgebraTest {
 			Assert::AreEqual( 1.0f, V3Length( v1 ), 10e-5f );
 		}
 
+		TEST_METHOD( Cross0 ) {
+			float v1[ 3 ] = { 1, 0, 0 };
+			float v2[ 3 ] = { 0, 1, 0 };
+			float v3[ 3 ];
+
+			V3Cross( v1, v2, v3 );
+			
+			AssertAreEqual( { 0.0f, 0.0f, 1.0f }, v3, 10e-5f );
+			Assert::AreEqual( 0.0f, V3Dot( v1, v3 ), 10e-5f );
+			Assert::AreEqual( 0.0f, V3Dot( v2, v3 ), 10e-5f );
+		}
+
+		TEST_METHOD( Cross1 ) {
+			float v1[ 3 ] = { 3.85f, 5.21f, 12.43f };
+			float v2[ 3 ] = { 1.213f, 9.23f, 6.764f };
+			float v3[ 3 ];
+
+			V3Cross( v1, v2, v3 );
+
+			Assert::AreEqual( 0.0f, V3Dot( v1, v3 ), 10e-5f );
+			Assert::AreEqual( 0.0f, V3Dot( v2, v3 ), 10e-5f );
+		}
+
 		TEST_METHOD( MultiplyM33_0 ) {
 			float M[ 16 ] = {
 				1, 0, 0,
@@ -144,7 +167,7 @@ namespace LinearAlgebraTest {
 			float v2[ 4 ];
 
 			V4AddV4( v1, v2, v1 );
-			auto d = V4DotV4( v1, v2 );
+			auto d = V4Dot( v1, v2 );
 			auto L = V4Length( v1 );
 			M34MulV4( M, v1, v2 );
 			M44MulV4( M, v1, v2 );
@@ -176,7 +199,7 @@ namespace LinearAlgebraTest {
 			float v1[ 4 ] = { 1, 2, 3, 4 };
 			float v2[ 4 ] = { 0,0,0,0 };
 
-			float dot = V4DotV4( v1, v2 );
+			float dot = V4Dot( v1, v2 );
 			Assert::AreEqual( 0.0f, dot );
 		}
 
@@ -184,7 +207,7 @@ namespace LinearAlgebraTest {
 			float v1[ 4 ] = { 1, 2, 3, 4 };
 			float v2[ 4 ] = { 2, 4, 7, 13 };
 
-			float dot = V4DotV4( v1, v2 );
+			float dot = V4Dot( v1, v2 );
 			Assert::AreEqual( 83.0f, dot );
 		}
 

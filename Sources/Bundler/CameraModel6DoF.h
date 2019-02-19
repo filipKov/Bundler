@@ -13,14 +13,16 @@ namespace Bundler { namespace CameraModels {
 
 	public:
 
-		void Initialize( __in Camera* pCamera ) override {
+		void Initialize( __in Camera* pCamera ) override 
+		{
 			m_pCamera = pCamera;
-			mCurrentRotationCount = 0;
+			m_currentRotationCount = 0;
 
 			AddInitialRotation( pCamera->r.Elements() );
 		}
 
-		void UpdateCamera( __in_ecount( totalParamCount ) const Scalar* pDeltaParams ) override {
+		void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) override
+		{
 			AddRotation< false >( ELEMENT( pDeltaParams, rotationParamStartIx + 0 ), pDeltaParams + rotationParamStartIx + 1 );
 
 			V3AddV3( m_pCamera->t.Elements(), pDeltaParams + translationParamStartIx, m_pCamera->t.Elements() );
@@ -38,15 +40,15 @@ namespace Bundler { namespace CameraModels {
 			auto pt1 = tempPoint;
 			auto pt2 = pRotatedPoint;
 
-			for ( uint i = 0; i < mCurrentRotationCount; i++ ) {
-				M33MulV3( mIncrementalRotations[ i ].Elements(), pt1, pt2 );
+			for ( uint i = 0; i < m_currentRotationCount; i++ ) {
+				M33MulV3( m_incrementalRotations[ i ].Elements(), pt1, pt2 );
 
 				auto tmp = pt1;
 				pt1 = pt2;
 				pt2 = tmp;
 			}
 			
-			if ( mCurrentRotationCount % 2 == 0 ) {
+			if ( m_currentRotationCount % 2 == 0 ) {
 				ShallowCopy( tempPoint, 3, pRotatedPoint );
 			}
 		}
@@ -91,14 +93,14 @@ namespace Bundler { namespace CameraModels {
 
 		template < bool isFirst = false >
 		void AddRotation( __in const Scalar angle, __in_ecount( 3 ) const Scalar* pAxis ) {
-			RodriguesRotation::GetRotation< totalParamCount, rotationParamStartIx, isFirst >( angle, pAxis, mIncrementalRotations[ mCurrentRotationCount ].Elements() );
-			mCurrentRotationCount++;
+			RodriguesRotation::GetRotation< totalParamCount, rotationParamStartIx, isFirst >( angle, pAxis, m_incrementalRotations[ m_currentRotationCount ].Elements() );
+			m_currentRotationCount++;
 		}
 
 	protected:
 
-		DMatrix3x3< totalParamCount > mIncrementalRotations[ maxRotations ];
-		uint mCurrentRotationCount;
+		DMatrix3x3< totalParamCount > m_incrementalRotations[ maxRotations ];
+		uint m_currentRotationCount;
 
 	};
 

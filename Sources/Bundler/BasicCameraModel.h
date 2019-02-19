@@ -29,7 +29,7 @@ namespace Bundler { namespace CameraModels {
 			MultiplyByCalibration( pt2, pt1 );
 
 			ELEMENT( pResiduals, 0 ) = ( ELEMENT( pt1, 0 ) / ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 0 );
-			ELEMENT( pResiduals, 0 ) = ( ELEMENT( pt1, 1 ) / ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 1 );
+			ELEMENT( pResiduals, 1 ) = ( ELEMENT( pt1, 1 ) / ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 1 );
 		}
 
 	protected:

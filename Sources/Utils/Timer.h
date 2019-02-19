@@ -7,6 +7,8 @@
 
 namespace Utils {
 
+	// !!! DEPRECATED - USE "Utils::HighResolutionClock" INSTEAD !!!
+
 	struct TimeGroup {
 		LARGE_INTEGER lastRecordedPoint;
 		LARGE_INTEGER tempPoint;

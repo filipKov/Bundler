@@ -108,10 +108,11 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 		// -------------------------------------------------------------------------------------------------------
 		//    Scalar Comparators
 		// -------------------------------------------------------------------------------------------------------
+		
 		inline bool operator==( __in const BaseType& scalar ) const {
 			return m_real == scalar;
 		}
-		
+
 		inline bool operator!=( __in const BaseType& scalar ) const {
 			return m_real != scalar;
 		}

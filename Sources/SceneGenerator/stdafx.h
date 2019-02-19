@@ -7,7 +7,6 @@
 
 #include <Windows.h>
 
-#include "../Utils/GlobalTypes.h"
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
 

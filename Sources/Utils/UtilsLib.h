@@ -15,4 +15,6 @@
 
 #include "StreamUtils.h"
 
-#include "Timer.h"
+#include "Timer.h" // !!! DEPRECATED: Use "HighResolutionClock" instead
+#include "TimeConverter.h"
+#include "HighResolutionClock.h"

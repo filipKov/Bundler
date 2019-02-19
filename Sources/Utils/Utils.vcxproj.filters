@@ -43,6 +43,12 @@
     <ClInclude Include="ArrayUtils.h">
       <Filter>DataContainers</Filter>
     </ClInclude>
+    <ClInclude Include="HighResolutionClock.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeConverter.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

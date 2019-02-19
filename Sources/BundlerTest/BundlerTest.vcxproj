@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraModel3DoFTest.cpp" />
+    <ClCompile Include="CameraModel6DoFTest.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />
     <ClCompile Include="MatrixBenchmark.cpp" />
     <ClCompile Include="RodriguesRotationTest.cpp" />

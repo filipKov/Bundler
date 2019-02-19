@@ -23,11 +23,11 @@
     <ClInclude Include="BasicCameraModel.h">
       <Filter>CameraModels</Filter>
     </ClInclude>
-    <ClInclude Include="IRotationFormula.h">
-      <Filter>CameraModels\Rotation</Filter>
-    </ClInclude>
     <ClInclude Include="RodriguesRotation.h">
       <Filter>CameraModels\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel6DoF.h">
+      <Filter>CameraModels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

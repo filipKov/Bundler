@@ -127,7 +127,7 @@ namespace LinearAlgebra {
 	template < typename T1, typename T2, typename T3 >
 	inline void M33MulV3( __in_ecount( 9 ) const T1* M, __in_ecount( 3 ) const T2* iv, __out_ecount( 3 ) T3* ov ) 
 	{
-		_ASSERT_EXPR( iv != ov, "Input and output vectors must be different!" );
+		// _ASSERT_EXPR( iv != ov, "Input and output vectors must be different!" );
 
 		ELEMENT( ov, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( iv, 0 ) ) + ( ELEMENT( M, 1 ) * ELEMENT( iv, 1 ) ) + ( ELEMENT( M, 2 ) * ELEMENT( iv, 2 ) );
 		ELEMENT( ov, 1 ) = ( ELEMENT( M, 3 ) * ELEMENT( iv, 0 ) ) + ( ELEMENT( M, 4 ) * ELEMENT( iv, 1 ) ) + ( ELEMENT( M, 5 ) * ELEMENT( iv, 2 ) );
@@ -137,7 +137,7 @@ namespace LinearAlgebra {
 	template < typename T1, typename T2, typename T3 >
 	inline void M33MulM33( __in_ecount( 9 ) const T1* M, __in_ecount( 9 ) const T2* K, __out_ecount( 3 ) T3* oM )
 	{
-		_ASSERT_EXPR( ( M != oM ) && ( K != oM ), "Input and output matrices must be different!" );
+		// _ASSERT_EXPR( ( M != oM ) && ( K != oM ), "Input and output matrices must be different!" );
 
 		ELEMENT( oM, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 1 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 2 ) * ELEMENT( K, 6 ) );
 		ELEMENT( oM, 1 ) = ( ELEMENT( M, 0 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 1 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 2 ) * ELEMENT( K, 7 ) );
@@ -155,7 +155,7 @@ namespace LinearAlgebra {
 	template < typename T1, typename T2, typename T3 >
 	inline void M34MulV4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
 	{
-		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
+		// _ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
 
 		ELEMENT( outV, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( inV, 0 ) ) + ( ELEMENT( M, 1 ) * ELEMENT( inV, 1 ) ) + ( ELEMENT( M, 2 ) * ELEMENT( inV, 2 ) ) + ( ELEMENT( M, 3 ) * ELEMENT( inV, 3 ) );
 		ELEMENT( outV, 1 ) = ( ELEMENT( M, 4 ) * ELEMENT( inV, 0 ) ) + ( ELEMENT( M, 5 ) * ELEMENT( inV, 1 ) ) + ( ELEMENT( M, 6 ) * ELEMENT( inV, 2 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( inV, 3 ) );
@@ -165,7 +165,7 @@ namespace LinearAlgebra {
 	template < typename T1, typename T2, typename T3 >
 	inline void M44MulV4( __in_ecount( 16 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 4 ) T3* outV )
 	{
-		_ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
+		// _ASSERT_EXPR( inV != outV, "Input and output vectors must be different!" );
 
 		ELEMENT( outV, 0 ) = ( ELEMENT( M, 0 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 1 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 2 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 3 ) * ELEMENT( inV, 3 ) );
 		ELEMENT( outV, 1 ) = ( ELEMENT( M, 4 ) * ELEMENT( inV, 0 ) )	+ ( ELEMENT( M, 5 ) * ELEMENT( inV, 1 ) )	+ ( ELEMENT( M, 6 ) * ELEMENT( inV, 2 ) )	+ ( ELEMENT( M, 7 ) * ELEMENT( inV, 3 ) );
@@ -222,7 +222,6 @@ namespace LinearAlgebra {
 		ELEMENT( outV, 2 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 1 ) - ELEMENT( v1, 1 ) * ELEMENT( v2, 0 );
 	}
 
-
 	// ----------------------------------------------------
 	//   Vector normalization
 	// ----------------------------------------------------
@@ -232,7 +231,7 @@ namespace LinearAlgebra {
 	{
 		const T1 lengthInv = T1( 1 ) / V3Length( inV );
 
-		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
+		// _ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
 
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
@@ -244,7 +243,7 @@ namespace LinearAlgebra {
 	{
 		const T1 lengthInv = T1( 1 ) / V4Length( inV );
 
-		_ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
+		// _ASSERT_EXPR( lengthInv != T1( 0 ), "Cannot normalize a nullvector" );
 
 		ELEMENT( outV, 0 ) = ELEMENT( inV, 0 ) * lengthInv;
 		ELEMENT( outV, 1 ) = ELEMENT( inV, 1 ) * lengthInv;
@@ -257,12 +256,43 @@ namespace LinearAlgebra {
 	//   Vector projection
 	// ----------------------------------------------------
 
-	inline void V3Project( __in_ecount( 3 ) const float* srcV, __in_ecount( 3 ) const float* dstV, __out_ecount( 3 ) float* projected ) 
+	template < typename T1, typename T2, typename T3 >
+	inline void V3Project( __in_ecount( 3 ) const T1* srcV, __in_ecount( 3 ) const T2* dstV, __out_ecount( 3 ) T3* projected ) 
 	{
 		auto dot = V3Dot( srcV, dstV ) / V3Dot( dstV, dstV );
 
 		ELEMENT( projected, 0 ) = dot * ELEMENT( dstV, 0 );
 		ELEMENT( projected, 1 ) = dot * ELEMENT( dstV, 1 );
 		ELEMENT( projected, 2 ) = dot * ELEMENT( dstV, 2 );
+	}
+
+	// ----------------------------------------------------
+	//   Matrix trace
+	// ----------------------------------------------------
+
+	template< typename T1 >
+	inline T1 M33Trace( __in_ecount( 9 ) const T1* M ) 
+	{
+		return ELEMENT( M, 0 ) + ELEMENT( M, 4 ) + ELEMENT( M, 8 );
+	}
+
+	// ----------------------------------------------------
+	//   Vector outer product
+	// ----------------------------------------------------
+
+	template < typename T1, typename T2, typename T3 >
+	inline void V3OuterProduct( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2, __out_ecount( 9 ) T3* M ) 
+	{
+		ELEMENT( M, 0 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 0 );
+		ELEMENT( M, 1 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 1 );
+		ELEMENT( M, 2 ) = ELEMENT( v1, 0 ) * ELEMENT( v2, 2 );
+
+		ELEMENT( M, 3 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 0 );
+		ELEMENT( M, 4 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 1 );
+		ELEMENT( M, 5 ) = ELEMENT( v1, 1 ) * ELEMENT( v2, 2 );
+
+		ELEMENT( M, 6 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 0 );
+		ELEMENT( M, 7 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 1 );
+		ELEMENT( M, 8 ) = ELEMENT( v1, 2 ) * ELEMENT( v2, 2 );
 	}
 }

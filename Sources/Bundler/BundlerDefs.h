@@ -3,9 +3,9 @@
 namespace Bundler {
 	
 	struct CameraCalibration {
-		ScalarType fScale;
-		ScalarType k1;
-		ScalarType k2;
+		Scalar fScale;
+		Scalar k1;
+		Scalar k2;
 	};
 
 	struct Camera {

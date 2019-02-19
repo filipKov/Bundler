@@ -131,7 +131,7 @@
     <ClInclude Include="BundlerDefs.h" />
     <ClInclude Include="BundlerLib.h" />
     <ClInclude Include="CameraModel3DoF.h" />
-    <ClInclude Include="IRotationFormula.h" />
+    <ClInclude Include="CameraModel6DoF.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ReprojectionResiudal.h" />

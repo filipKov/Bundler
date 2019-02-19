@@ -7,7 +7,7 @@ namespace Bundler { namespace CameraModels {
 	{
 	public:
 
-		void Initialize( __in Camera* pCamera ) {
+		virtual void Initialize( __in Camera* pCamera ) {
 			m_pCamera = pCamera;
 		}
 

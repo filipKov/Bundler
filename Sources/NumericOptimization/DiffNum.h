@@ -105,6 +105,34 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 			return N;
 		};
 
+		// -------------------------------------------------------------------------------------------------------
+		//    Scalar Comparators
+		// -------------------------------------------------------------------------------------------------------
+		inline bool operator==( __in const BaseType& scalar ) const {
+			return m_real == scalar;
+		}
+		
+		inline bool operator!=( __in const BaseType& scalar ) const {
+			return m_real != scalar;
+		}
+
+		inline bool operator<( __in const BaseType& scalar ) const {
+			return m_real < scalar;
+		}
+
+		inline bool operator>( __in const BaseType& scalar ) const {
+			return m_real > scalar;
+		}
+
+		inline bool operator<=( __in const BaseType& scalar ) const {
+			return m_real <= scalar;
+		}
+
+		inline bool operator>=( __in const BaseType& scalar ) const {
+			return m_real >= scalar;
+		}
+		
+
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Basic operators

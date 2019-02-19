@@ -15,3 +15,5 @@
 #include "StaticVector.h"
 #include "StaticVectorOperators.h"
 
+#include "FastLinAlgFunctions.h"
+

@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayUtils.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="HighResolutionClock.h" />
+    <ClInclude Include="TimeConverter.h" />
     <ClInclude Include="TypeUtils.h" />
     <ClInclude Include="Copy.h" />
     <ClInclude Include="Exception.h" />

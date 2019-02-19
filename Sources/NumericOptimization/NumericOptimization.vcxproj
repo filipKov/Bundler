@@ -42,6 +42,9 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">
+      <Project>{6d15bc33-ea80-476e-8fa9-e323c1ac208d}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.vcxproj">
       <Project>{6b3885a0-666b-4e5f-bbe9-46261efb59ac}</Project>
     </ProjectReference>

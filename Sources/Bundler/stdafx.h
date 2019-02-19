@@ -20,6 +20,8 @@ using namespace Utils;
 using namespace NumericOptimization::AutomaticDifferentiation;
 using namespace NumericOptimization::LinearSolver;
 
+#include "NumericTypes.h"
+
 #include "BundlerDefs.h"
 
 // TODO: reference additional headers your program requires here

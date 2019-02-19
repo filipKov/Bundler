@@ -22,7 +22,6 @@
     </ClCompile>
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <StructMemberAlignment>1Byte</StructMemberAlignment>
       <OpenMPSupport>true</OpenMPSupport>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <CompileAs>CompileAsCpp</CompileAs>

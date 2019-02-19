@@ -7,12 +7,12 @@
 
 #include <Windows.h>
 
-#include "../Utils/GlobalTypes.h"
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
 
 #include "../LinearAlgebra/LinearAlgebraLib.h"
 #include "../NumericOptimization/DiffNum.h"
+#include "../Bundler/NumericTypes.h"
 #include "../Bundler/BundlerDefs.h"
 
 // #define GLEW_STATIC

@@ -6,7 +6,9 @@ namespace Bundler { namespace CameraModels {
 	class ICameraModel {
 	public:
 
-		static const uint totalParamCount = cameraParamCount + POINT_PARAM_COUNT;
+		static constexpr const uint cameraParameterCount = cameraParamCount;
+
+		static constexpr const uint totalParamCount = cameraParamCount + POINT_PARAM_COUNT;
 
 		virtual void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) = 0;
 

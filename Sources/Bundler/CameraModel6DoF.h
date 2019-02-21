@@ -3,7 +3,7 @@
 namespace Bundler { namespace CameraModels {
 
 	template < uint maxRotations >
-	class CameraModel6DoF: public BasicCameraModel< RodriguesRotation::rotationParameterCount + 3  >
+	class CameraModel6DoF: public BasicCameraModel< RodriguesRotation::rotationParameterCount + 3 >
 	{
 	protected:
 

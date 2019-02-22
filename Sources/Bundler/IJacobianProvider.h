@@ -6,28 +6,28 @@ namespace Bundler {
 	class IJacobianProvider {
 	public:
 
-		virtual uint GetCameraCount() const = 0;
+		virtual size_t GetCameraCount() const = 0;
 
-		virtual uint GetCameraProjectionCount( __in const uint cameraIx ) const = 0;
+		virtual size_t GetCameraProjectionCount( __in const size_t cameraIx ) const = 0;
 
-		virtual uint GetCameraProjectionIndex( __in const uint cameraIx, __in const uint ix ) const = 0;
+		virtual size_t GetCameraProjectionIndex( __in const size_t cameraIx, __in const size_t ix ) const = 0;
 
-		virtual void GetCameraProjectionIndices( __in const uint cameraIx, __inout uint* pCount, __out_ecount( *pCount ) uint* pIndices ) const = 0;
+		// virtual void GetCameraProjectionIndices( __in const size_t cameraIx, __inout size_t* pCount, __out_ecount( *pCount ) size_t* pIndices ) const = 0;
 
 
-		virtual uint GetPointCount() const = 0;
+		virtual size_t GetPointCount() const = 0;
 
-		virtual uint GetPointProjectionCount( __in const uint pointIx ) const = 0;
+		virtual size_t GetPointProjectionCount( __in const size_t pointIx ) const = 0;
 
-		virtual uint GetPointProjectionIndex( __in const uint pointIx, __in const uint ix ) const = 0;
+		virtual size_t GetPointProjectionIndex( __in const size_t pointIx, __in const size_t ix ) const = 0;
 
-		virtual void GetPointProjectionIndices( __in const uint pointIx, __inout uint* pCount, __out_ecount( *pCount ) uint* pIndices ) const = 0;
+		// virtual void GetPointProjectionIndices( __in const size_t pointIx, __inout size_t* pCount, __out_ecount( *pCount ) size_t* pIndices ) const = 0;
 
 
 		virtual void GetProjection(
-			__in const uint projectionIx,
-			__out uint* pCameraIndex,
-			__out uint* pPointIndex,
+			__in const size_t projectionIx,
+			__out size_t* pCameraIndex,
+			__out size_t* pPointIndex,
 			__out_ecount( 2 ) DScalar< CameraModel::totalParamCount >* pResiduals ) const = 0;
 
 		virtual void ConvertToBlocks(

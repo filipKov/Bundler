@@ -15,15 +15,14 @@ namespace Bundler {
 
 
 		virtual void GetCameraBlocks(
-			__in const uint cameraIx,
+			__in const size_t cameraIx,
 			__deref_out HessianCameraBlock** ppCamBlock,
-			__out uint* pCamPointBlockCount,
-			__deref_out uint** ppPointIndices,
+			__out size_t* pCamPointBlockCount,
+			__deref_out size_t** ppPointIndices,
 			__deref_out HessianCameraPointBlock** ppCamPtBlocks ) = 0;
-		)
 
 		virtual void GetPointBlock(
-			__in const uint pointIx,
+			__in const size_t pointIx,
 			__deref_out HessianPointBlock** ppPtBlock ) = 0;
 
 	};

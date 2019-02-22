@@ -132,6 +132,9 @@
     <ClInclude Include="BundlerLib.h" />
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
+    <ClInclude Include="IHessianProvider.h" />
+    <ClInclude Include="IJacobianProvider.h" />
+    <ClInclude Include="JacobianBlock.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ReprojectionResiudal.h" />

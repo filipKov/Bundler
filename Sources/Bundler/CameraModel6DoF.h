@@ -9,7 +9,6 @@ namespace Bundler { namespace CameraModels {
 
 		static constexpr const uint rotationParamStartIx = 0;
 		static constexpr const uint translationParamStartIx = RodriguesRotation::rotationParameterCount;
-		static constexpr const uint pointParamStartIx = translationParamStartIx + 3;
 
 	public:
 

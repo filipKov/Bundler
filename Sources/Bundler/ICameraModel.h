@@ -10,6 +10,8 @@ namespace Bundler { namespace CameraModels {
 
 		static constexpr const uint totalParamCount = cameraParamCount + POINT_PARAM_COUNT;
 
+		static constexpr const uint pointParamStartIx = cameraParamCount;
+
 		virtual void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) = 0;
 
 		virtual void ProjectPoint( 

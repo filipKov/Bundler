@@ -4,17 +4,13 @@ namespace Bundler {
 
 	template < uint cameraParamCount >
 	struct JacobianCameraBlock {
-		uint cameraIndex;
-
-		Scalar diffX[ cameraParamCount ];
-		Scalar diffY[ cameraParamCount ];
+		Vector< Scalar, cameraParamCount > diffX;
+		Vector< Scalar, cameraParamCount > diffY;
 	};
 
 	struct JacobianPointBlock {
-		uint pointIndex;
-
-		Scalar diffX[ POINT_PARAM_COUNT ];
-		Scalar diffY[ POINT_PARAM_COUNT ];
+		Vector< Scalar, POINT_PARAM_COUNT > diffX;
+		Vector< Scalar, POINT_PARAM_COUNT > diffY;
 	};
 
 	template < uint cameraModelParamCount >

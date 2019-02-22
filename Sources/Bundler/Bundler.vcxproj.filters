@@ -38,6 +38,9 @@
     <ClInclude Include="IHessianProvider.h">
       <Filter>JacobianGenerator</Filter>
     </ClInclude>
+    <ClInclude Include="BasicJacobianProvider.h">
+      <Filter>JacobianGenerator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

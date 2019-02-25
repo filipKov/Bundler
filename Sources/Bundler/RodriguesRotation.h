@@ -10,13 +10,15 @@ namespace Bundler { namespace CameraModels {
 		static constexpr const uint rotationParameterCount = 4;
 
 		static inline void GetFromRotationMatrix( __in_ecount( 9 ) const Scalar* pMatrix, __out Scalar* pAngle, __out_ecount( 3 ) Scalar* pAxis ) {
-			*pAngle = acos( Scalar( 0.5 ) * ( M33Trace( pMatrix ) - Scalar( 1 ) ) );
-			Scalar denomInv = Scalar( 1 ) / ( 2 * sin( *pAngle ) );
+			ELEMENT( pAxis, 0 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 7 ) - ELEMENT( pMatrix, 5 ) );
+			ELEMENT( pAxis, 1 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 2 ) - ELEMENT( pMatrix, 6 ) );
+			ELEMENT( pAxis, 2 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 3 ) - ELEMENT( pMatrix, 1 ) );
 
-			ELEMENT( pAxis, 0 ) = denomInv * ( ELEMENT( pMatrix, 7 ) - ELEMENT( pMatrix, 5 ) );
-			ELEMENT( pAxis, 1 ) = denomInv * ( ELEMENT( pMatrix, 2 ) - ELEMENT( pMatrix, 6 ) );
-			ELEMENT( pAxis, 2 ) = denomInv * ( ELEMENT( pMatrix, 3 ) - ELEMENT( pMatrix, 1 ) );
-			V3Normalize( pAxis, pAxis );
+			*pAngle = V3Length( pAxis );
+			if ( *pAngle != Scalar( 0 ) ) {
+				V3MulC( pAxis, ( Scalar( 1 ) / (*pAngle) ), pAxis );
+				*pAngle = asin( *pAngle );
+			}
 		}
 
 		template < uint cameraModelParameters, uint rotationParamStartIx = 0, bool useDiff = false >

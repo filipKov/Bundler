@@ -145,15 +145,15 @@ namespace LinearAlgebra {
 		ELEMENT( oM, 6 ) = ( ELEMENT( M, 4 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 5 ) * ELEMENT( K, 6 ) ) + ( ELEMENT( M, 6 ) * ELEMENT( K, 10 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( K, 14 ) );
 		ELEMENT( oM, 7 ) = ( ELEMENT( M, 4 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 5 ) * ELEMENT( K, 7 ) ) + ( ELEMENT( M, 6 ) * ELEMENT( K, 11 ) ) + ( ELEMENT( M, 7 ) * ELEMENT( K, 15 ) );
 
-		ELEMENT( oM, 0 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 8 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 12 ) );
-		ELEMENT( oM, 1 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 5 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 9 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 13 ) );
-		ELEMENT( oM, 2 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 6 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 10 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 14 ) );
-		ELEMENT( oM, 3 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 7 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 11 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 15 ) );
+		ELEMENT( oM, 8 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 8 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 12 ) );
+		ELEMENT( oM, 9 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 5 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 9 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 13 ) );
+		ELEMENT( oM, 10 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 6 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 10 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 14 ) );
+		ELEMENT( oM, 11 ) = ( ELEMENT( M, 8 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 9 ) * ELEMENT( K, 7 ) ) + ( ELEMENT( M, 10 ) * ELEMENT( K, 11 ) ) + ( ELEMENT( M, 11 ) * ELEMENT( K, 15 ) );
 
-		ELEMENT( oM, 0 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 8 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 12 ) );
-		ELEMENT( oM, 1 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 5 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 9 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 13 ) );
-		ELEMENT( oM, 2 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 6 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 10 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 14 ) );
-		ELEMENT( oM, 3 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 7 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 11 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 15 ) );
+		ELEMENT( oM, 12 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 0 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 4 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 8 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 12 ) );
+		ELEMENT( oM, 13 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 1 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 5 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 9 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 13 ) );
+		ELEMENT( oM, 14 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 2 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 6 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 10 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 14 ) );
+		ELEMENT( oM, 15 ) = ( ELEMENT( M, 12 ) * ELEMENT( K, 3 ) ) + ( ELEMENT( M, 13 ) * ELEMENT( K, 7 ) ) + ( ELEMENT( M, 14 ) * ELEMENT( K, 11 ) ) + ( ELEMENT( M, 15 ) * ELEMENT( K, 15 ) );
 	}
 
 	// ----------------------------------------------------

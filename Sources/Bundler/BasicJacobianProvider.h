@@ -11,10 +11,19 @@ namespace Bundler {
 			__in const CameraModel* pCameras,
 			__in const size_t pointCount,
 			__in const Vector3* pPoints,
-			__in const size_t trackCount,
-			__in const Track* pTracks )
+			__in const size_t projectionCount,
+			__in const Projection* pProjections )
 		{
+			m_cameraCount = cameraCount;
+			m_pCameras = pCameras;
 
+			m_pointCount = pointCount;
+			m_pPoints = pPoints;
+
+			m_projectionCount = projectionCount;
+			m_pProjections = pProjections;
+
+			InitializeMappings();
 		}
 
 		size_t GetCameraCount() const override {
@@ -49,7 +58,7 @@ namespace Bundler {
 			__out size_t* pPointIndex,
 			__out_ecount( 2 ) DScalar< CameraModel::totalParamCount >* pResiduals ) const override
 		{
-			Track* pProjection = m_pTracks + projectionIx;
+			Projection* pProjection = m_pProjections + projectionIx;
 
 			*pCameraIndex = pProjection->cameraIndex;
 			*pPointIndex = pProjection->pointIndex;
@@ -69,13 +78,30 @@ namespace Bundler {
 
 	protected:
 
+		void InitializeMappings() 
+		{
+			m_cameraToProjectionMapping.Allocate( m_cameraCount );
+			m_pointToProjectionMapping.Allocate( m_pointCount );
+
+			const Projection* pProjection = m_pProjections;
+			for ( size_t projI = 0; projI < m_projectionCount; projI++ )
+			{
+				m_cameraToProjectionMapping[ pProjection->cameraIndex ].Add( projI );
+				m_pointToProjectionMapping[ pProjection->pointIndex ].Add( projI );
+
+				pProjection++;
+			}
+		}
+
+	protected:
+
 		size_t m_cameraCount;
 		size_t m_pointCount;
-		size_t m_trackCount;
+		size_t m_projectionCount;
 
 		CameraModel* m_pCameras;
 		Vector3* m_pPoints;
-		Track* m_pTracks;
+		Projection* m_pProjections;
 
 		Containers::Buffer< Containers::PagedVector< size_t, 13 > > m_cameraToProjectionMapping;
 		Containers::Buffer< Containers::PagedVector< size_t, 5 > > m_pointToProjectionMapping;

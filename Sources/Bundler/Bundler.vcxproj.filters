@@ -41,6 +41,9 @@
     <ClInclude Include="BasicJacobianProvider.h">
       <Filter>JacobianGenerator</Filter>
     </ClInclude>
+    <ClInclude Include="BasicHessianProvider.h">
+      <Filter>JacobianGenerator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

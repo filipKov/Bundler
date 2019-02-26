@@ -14,4 +14,6 @@
 #include "JacobianBlock.h"
 #include "IJacobianProvider.h"
 #include "BasicJacobianProvider.h"
+
 #include "IHessianProvider.h"
+#include "BasicHessianProvider.h"

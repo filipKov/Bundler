@@ -45,26 +45,34 @@ namespace Bundler { namespace CameraModels {
 				ELEMENT( dAxis, 2 ).SetDiff( rotationParamStartIx + 3 );
 			}
 
-			DScalar< cameraModelParameters > K[9] = {
-				DScalar<cameraModelParameters>( 0 ),	-ELEMENT( dAxis, 2 ),					ELEMENT( dAxis, 1 ),
-				ELEMENT( dAxis, 2 ),					DScalar<cameraModelParameters>( 0 ),	-ELEMENT( dAxis, 0 ),
-			 	-ELEMENT( dAxis, 1 ),					ELEMENT( dAxis, 0 ),					DScalar<cameraModelParameters>( 0 )
+			GetRotation< DScalar< cameraModelParameters > >( dAngle, dAxis, pRotationMatrix );
+		}
+
+		template < typename T >
+		static inline void GetRotation( __in const T angle, __in_ecount( 3 ) const T* pAxis, __out_ecount( 9 ) T* pRotationMatrix ) 
+		{
+			T K[ 9 ] = {
+				T( 0 ),					-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
+				ELEMENT( pAxis, 2 ),	T( 0 ),					-ELEMENT( pAxis, 0 ),
+				-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	T( 0 )
 			};
 
-			DScalar< cameraModelParameters > K2[ 9 ];
-			auto angleCosine = cos( dAngle );
+			T K2[ 9 ];
+			T angleCosine = cos( angle );
 
-			M33MulC( K, sin( dAngle ), K );
-			
-			V3OuterProduct( dAxis, dAxis, K2 );
-			M33MulC( K2, ( Scalar( 1 ) - angleCosine ), K2 );
-			
+			M33MulC( K, sin( angle ), K );
+
+			V3OuterProduct( pAxis, pAxis, K2 );
+			M33MulC( K2, ( T( 1 ) - angleCosine ), K2 );
+
 			M33Identity( pRotationMatrix );
 			M33MulC( pRotationMatrix, angleCosine, pRotationMatrix );
-			
+
 			M33AddM33( K, K2, K );
 			M33AddM33( pRotationMatrix, K, pRotationMatrix );
 		}
+
+
 
 	};
 

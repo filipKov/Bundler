@@ -59,23 +59,36 @@ namespace BundlerTest {
 		}
 
 		TEST_METHOD( GetRotation1 ) {
-			// TODO
+			Scalar angle = 1.0186f;
+			Scalar axis[ 3 ] = { 0.5242f, 0.2690f, 0.8080f };
 
-			Scalar angle = 1.57079632679f;
-			Scalar axis[ 3 ] = { 0,0,1 };
+			Scalar M[ 9 ];
+			RodriguesRotation::GetRotation( angle, axis, M );
 
-			DScalar<4> M[ 9 ];
-			RodriguesRotation::GetRotation<4, 0, false>( angle, axis, M );
-
-			DScalar<4> expected[ 9 ] = {
-				DScalar<4>( 0 ), DScalar<4>( -1 ), DScalar<4>( 0 ),
-				DScalar<4>( 1 ), DScalar<4>( 0 ), DScalar<4>( 0 ),
-				DScalar<4>( 0 ), DScalar<4>( 0 ), DScalar<4>( 1 ),
+			Scalar expected[ 9 ] = {
+				0.6552f, -0.6208f, 0.4304f,
+				0.7549f, 0.5590f, -0.3430f,
+				-0.0276f, 0.5497f, 0.8349f
 			};
 
-			for ( uint i = 0; i < 9; i++ ) {
-				Assert::AreEqual( expected[ i ].GetFx(), M[ i ].GetFx(), 10e-5f );
-			}
+			AssertAreEqual( expected, M, 10e-4f );
+		}
+
+		TEST_METHOD( InverseTransform0 ) {
+			Scalar M1[ 9 ] = {
+				0.7150f, -0.5592f, 0.4196f,
+				0.6984f, 0.5438f, -0.4654f,
+				0.0321f, 0.6258f, 0.7793f
+			};
+
+			Scalar angle;
+			Scalar axis[ 3 ];
+			RodriguesRotation::GetFromRotationMatrix( M1, &angle, axis );
+
+			Scalar M2[ 9 ];
+			RodriguesRotation::GetRotation( angle, axis, M2 );
+
+			AssertAreEqual( M1, M2, 10e-4f );
 		}
 
 	};

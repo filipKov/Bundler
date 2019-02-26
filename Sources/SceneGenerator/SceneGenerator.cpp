@@ -83,7 +83,7 @@ namespace SceneGenerator {
 	void SceneGenerator::CopyGroundTruth() {
 		m_pOutBundle->points.SetCopy( m_pGroundTruth->points.Length(), m_pGroundTruth->points.Data() );
 		m_pOutBundle->cameras.SetCopy( m_pGroundTruth->cameras.Length(), m_pGroundTruth->cameras.Data() );
-		m_pOutBundle->tracks.SetCopy( m_pGroundTruth->tracks.Length(), m_pGroundTruth->tracks.Data() );
+		m_pOutBundle->projections.SetCopy( m_pGroundTruth->projections.Length(), m_pGroundTruth->projections.Data() );
 	}
 
 	void SceneGenerator::AddNoiseToPoints() {

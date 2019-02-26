@@ -316,4 +316,51 @@ namespace LinearAlgebraTest {
 
 	};
 
+	TEST_CLASS( FastMatrixMultiplicationTest ) 
+	{
+		TEST_METHOD( Correctness0 ) {
+			float M[ 9 ] = {
+				2, 4, 5,
+				1, 6, 9,
+				5, 7, 8
+			};
+
+			float v[ 3 ] = { 1, 2, 3 };
+
+			float v1[ 3 ];
+			float v2[ 3 ];
+
+			MatrixMultiply<float, 3, 3, 1>( M, v, v1 );
+
+			M33MulV3( M, v, v2 );
+
+			AssertAreEqual( v2, v1, 10e-5f );
+		}
+
+		TEST_METHOD( Correctness1 ) {
+			double M1[ 16 ] = {
+				0.32, 1.54, 0.12, 0.55,
+				0.03, 0.12, 0.64, 1.69,
+				0.85, 0.44, 2.65, 0.35,
+				0.60, 0.06, 1.33, 0.54,
+			};
+
+			double M2[ 16 ] = {
+				0.65, 0.23, 1.54, 0.99,
+				0.45, 0.56, 4.63, 6.32,
+				0.24, 1.54, 0.65, 0.32,
+				0.95, 0.64, 0.81, 1.47,
+			};
+			
+			double M3[ 16 ];
+			double M4[ 16 ];
+
+			M44MulM44( M1, M2, M3 );
+			MatrixMultiply<double, 4, 4, 4>( M1, M2, M4 );
+
+			AssertAreEqual( M3, M4, 10e-10 );
+		}
+
+	};
+
 }

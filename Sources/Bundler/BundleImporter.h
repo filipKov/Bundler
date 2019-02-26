@@ -28,7 +28,7 @@ namespace Bundler { namespace Import {
 
 		Bundler::Bundle* m_pBundle;
 
-		Containers::PagedVector< Bundler::Track, 12 > m_tempTracks;
+		Containers::PagedVector< Bundler::Projection, 12 > m_tempTracks;
 
 	};
 

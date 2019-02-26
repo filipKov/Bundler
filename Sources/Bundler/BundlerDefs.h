@@ -15,7 +15,7 @@ namespace Bundler {
 		Vector3 t;
 	};
 
-	struct Track {
+	struct Projection {
 		uint cameraIndex;
 		uint pointIndex;
 
@@ -32,7 +32,7 @@ namespace Bundler {
 	struct Bundle {
 		Containers::Buffer< Camera > cameras;
 		Containers::Buffer< Point > points;
-		Containers::Buffer< Track > tracks;
+		Containers::Buffer< Projection > projections;
 	};
 
 }

@@ -93,7 +93,7 @@ namespace Bundler { namespace Import {
 			ParsePoint( i );
 		}
 
-		m_pBundle->tracks.SetCopy( m_tempTracks );
+		m_pBundle->projections.SetCopy( m_tempTracks );
 		m_tempTracks.Clear();
 	}
 
@@ -118,7 +118,7 @@ namespace Bundler { namespace Import {
 
 		m_tempTracks.EnsureLength( m_tempTracks.Length() + trackLength );
 		for ( uint trackI = 0; trackI < trackLength; trackI++ ) {
-			Track& track = m_tempTracks[trackI];
+			Projection& track = m_tempTracks[trackI];
 			( *m_pInputStream ) >> track.cameraIndex >> track.pointIndex >> track.projectedPoint[0] >> track.projectedPoint[1];
 		}
 	}

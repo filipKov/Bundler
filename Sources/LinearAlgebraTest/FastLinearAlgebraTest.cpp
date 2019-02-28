@@ -361,6 +361,215 @@ namespace LinearAlgebraTest {
 			AssertAreEqual( M3, M4, 10e-10 );
 		}
 
+		TEST_METHOD( Correctness2 ) {
+			double M0[ 3 ] = { 1, 2, 3 };
+			double M1[ 2 ] = { 4, 5 };
+
+			double M2[ 6 ];
+			MatrixMultiply< double, 3, 1, 2 >( M0, M1, M2 );
+
+			double expected[ 6 ] = {
+				4, 5,
+				8, 10,
+				12, 15
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( AtBCorrectness0 ) {
+			double M0[ 2 ] = { 4, 5 };
+			double M1[ 3 ] = { 1, 2, 3 };
+
+			double M2[ 6 ];
+			MatrixMultiplyAtB< double, 1, 2, 3 >( M0, M1, M2 );
+
+			double expected[ 6 ] = {
+				4, 8, 12,
+				5, 10, 15
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( AtBCorrectness1 ) {
+			double M0[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			double M1[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+			double M2[ 9 ];
+			MatrixMultiplyAtB< double, 3, 3, 3 >( M0, M1, M2 );
+
+			double expected[ 9 ] = {
+				66, 78, 90,
+				78, 93, 108,
+				90, 108, 126
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( ABtCorrectness0 ) {
+			double M0[ 2 ] = { 4, 5 };
+			double M1[ 3 ] = { 1, 2, 3 };
+
+			double M2[ 6 ];
+			MatrixMultiplyABt< double, 2, 1, 3 >( M0, M1, M2 );
+
+			double expected[ 6 ] = {
+				4, 8, 12,
+				5, 10, 15
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( ABtCorrectness1 ) {
+			double M0[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			double M1[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+			double M2[ 9 ];
+			MatrixMultiplyABt< double, 3, 3, 3 >( M0, M1, M2 );
+
+			double expected[ 9 ] = {
+				14, 32, 50,
+				32, 77, 122,
+				50, 122, 194
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( AtBtCorrectness0 ) {
+			double M0[ 2 ] = { 4, 5 };
+			double M1[ 3 ] = { 1, 2, 3 };
+
+			double M2[ 6 ];
+			MatrixMultiplyAtBt< double, 1, 2, 3 >( M0, M1, M2 );
+
+			double expected[ 6 ] = {
+				4, 8, 12,
+				5, 10, 15
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( AtBtCorrectness1 ) {
+			double M0[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			double M1[ 9 ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+			double M2[ 9 ];
+			MatrixMultiplyAtBt< double, 3, 3, 3 >( M0, M1, M2 );
+
+			double expected[ 9 ] = {
+				30, 66, 102,
+				36, 81, 126,
+				42, 96, 150
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( CorrectnesRand0 ) 
+		{
+			srand( (uint)time( NULL ) );
+			
+			const uint BATCH_SIZE = 100;
+
+			Matrix< double, 4, 5 > M0;
+			Matrix< double, 5, 2 > M1;
+
+			for ( uint i = 0; i < BATCH_SIZE; i++ )
+			{
+				RandomFill( 20, M0.Elements() );
+				RandomFill( 10, M1.Elements() );
+
+				auto expected = M0 * M1;
+
+				double M2[ 8 ];
+
+				MatrixMultiply< double, 4, 5, 2 >( M0.Elements(), M1.Elements(), M2 );
+
+				AssertAreEqual( 8, expected.Elements(), M2, 10e-10 );
+
+			}
+		}
+
+		TEST_METHOD( AtBCorrectnesRand0 )
+		{
+			srand( (uint)time( NULL ) );
+
+			const uint BATCH_SIZE = 100;
+
+			Matrix< double, 5, 4 > M0;
+			Matrix< double, 5, 2 > M1;
+
+			for ( uint i = 0; i < BATCH_SIZE; i++ )
+			{
+				RandomFill( 20, M0.Elements() );
+				RandomFill( 10, M1.Elements() );
+
+				auto expected = M0.Transpose() * M1;
+
+				double M2[ 8 ];
+
+				MatrixMultiplyAtB< double, 5, 4, 2 >( M0.Elements(), M1.Elements(), M2 );
+
+				AssertAreEqual( 8, expected.Elements(), M2, 10e-10 );
+
+			}
+		}
+
+		TEST_METHOD( ABtCorrectnesRand0 )
+		{
+			srand( (uint)time( NULL ) );
+
+			const uint BATCH_SIZE = 100;
+
+			Matrix< double, 4, 5 > M0;
+			Matrix< double, 2, 5 > M1;
+
+			for ( uint i = 0; i < BATCH_SIZE; i++ )
+			{
+				RandomFill( 20, M0.Elements() );
+				RandomFill( 10, M1.Elements() );
+
+				auto expected = M0 * M1.Transpose();
+
+				double M2[ 8 ];
+
+				MatrixMultiplyABt< double, 4, 5, 2 >( M0.Elements(), M1.Elements(), M2 );
+
+				AssertAreEqual( 8, expected.Elements(), M2, 10e-10 );
+
+			}
+		}
+
+		TEST_METHOD( AtBtCorrectnesRand0 )
+		{
+			srand( (uint)time( NULL ) );
+
+			const uint BATCH_SIZE = 100;
+
+			Matrix< double, 5, 4 > M0;
+			Matrix< double, 2, 5 > M1;
+
+			for ( uint i = 0; i < BATCH_SIZE; i++ )
+			{
+				RandomFill( 20, M0.Elements() );
+				RandomFill( 10, M1.Elements() );
+
+				auto expected = M0.Transpose() * M1.Transpose();
+
+				double M2[ 8 ];
+
+				MatrixMultiplyAtBt< double, 5, 4, 2 >( M0.Elements(), M1.Elements(), M2 );
+
+				AssertAreEqual( 8, expected.Elements(), M2, 10e-10 );
+
+			}
+		}
+
 	};
 
 }

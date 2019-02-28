@@ -29,9 +29,6 @@
     <ClInclude Include="CameraModel6DoF.h">
       <Filter>CameraModels</Filter>
     </ClInclude>
-    <ClInclude Include="JacobianBlock.h">
-      <Filter>JacobianGenerator</Filter>
-    </ClInclude>
     <ClInclude Include="IJacobianProvider.h">
       <Filter>JacobianGenerator</Filter>
     </ClInclude>

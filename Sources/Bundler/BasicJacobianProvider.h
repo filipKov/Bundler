@@ -58,7 +58,7 @@ namespace Bundler {
 			__out size_t* pPointIndex,
 			__out_ecount( 2 ) DScalar< CameraModel::totalParamCount >* pResiduals ) const override
 		{
-			Projection* pProjection = m_pProjections + projectionIx;
+			const Projection* pProjection = m_pProjections + projectionIx;
 
 			*pCameraIndex = pProjection->cameraIndex;
 			*pPointIndex = pProjection->pointIndex;
@@ -68,12 +68,14 @@ namespace Bundler {
 
 		void ConvertToBlocks(
 			__in_ecount( 2 ) const DScalar< CameraModel::totalParamCount >* pResiduals,
-			__out JacobianCameraBlock< CameraModel::totalParamCount >* pCameraBlock,
-			__out JacobianPointBlock* pPointBlock ) const override 
+			__out_ecount( 2 * CameraModel::cameraParameterCount ) Scalar* pCameraBlock,
+			__out_ecount( 2 * POINT_PARAM_COUNT ) Scalar* pPointBlock ) const override
 		{
-			UNREFERENCED_PARAMETER( pResiduals );
-			UNREFERENCED_PARAMETER( pCameraBlock );
-			UNREFERENCED_PARAMETER( pPointBlock );
+			ShallowCopy< Scalar >( ELEMENT( pResiduals, 0 ).GetDiff().Elements(), CameraModel::cameraParameterCount, pCameraBlock + 0 );
+			ShallowCopy< Scalar >( ELEMENT( pResiduals, 1 ).GetDiff().Elements(), CameraModel::cameraParameterCount, pCameraBlock + CameraModel::cameraParameterCount );
+
+			ShallowCopy< Scalar >( ELEMENT( pResiduals, 0 ).GetDiff().Elements() + CameraModel::pointParamStartIx, POINT_PARAM_COUNT, pPointBlock + 0 );
+			ShallowCopy< Scalar >( ELEMENT( pResiduals, 1 ).GetDiff().Elements() + CameraModel::pointParamStartIx, POINT_PARAM_COUNT, pPointBlock + POINT_PARAM_COUNT );
 		}
 
 	protected:
@@ -99,9 +101,9 @@ namespace Bundler {
 		size_t m_pointCount;
 		size_t m_projectionCount;
 
-		CameraModel* m_pCameras;
-		Vector3* m_pPoints;
-		Projection* m_pProjections;
+		const CameraModel* m_pCameras;
+		const Vector3* m_pPoints;
+		const Projection* m_pProjections;
 
 		Containers::Buffer< Containers::PagedVector< size_t, 13 > > m_cameraToProjectionMapping;
 		Containers::Buffer< Containers::PagedVector< size_t, 5 > > m_pointToProjectionMapping;

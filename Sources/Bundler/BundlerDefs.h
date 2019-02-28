@@ -27,7 +27,7 @@ namespace Bundler {
 		uint color;
 	};
 
-	static const uint POINT_PARAM_COUNT = 3;
+	static constexpr const uint POINT_PARAM_COUNT = 3;
 
 	struct Bundle {
 		Containers::Buffer< Camera > cameras;

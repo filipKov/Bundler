@@ -3,6 +3,11 @@
 namespace Bundler {
 
 	template < class CameraModel >
+	using JacobianCameraBlock = Scalar[ 2 * CameraModel::cameraParameterCount ];
+
+	using JacobianPointBlock = Scalar[ 2 * POINT_PARAM_COUNT ];
+
+	template < class CameraModel >
 	class IJacobianProvider {
 	public:
 
@@ -32,8 +37,9 @@ namespace Bundler {
 
 		virtual void ConvertToBlocks(
 			__in_ecount( 2 ) const DScalar< CameraModel::totalParamCount >* pResiduals,
-			__out JacobianCameraBlock< CameraModel::totalParamCount >* pCameraBlock,
-			__out JacobianPointBlock* pPointBlock ) const = 0;
+			__out_ecount( 2 * CameraModel::cameraParameterCount ) Scalar* pCameraBlock,
+			__out_ecount( 2 * POINT_PARAM_COUNT ) Scalar* pPointBlock
+		) const = 0;
 
 	};
 

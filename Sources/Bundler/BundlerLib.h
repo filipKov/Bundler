@@ -11,7 +11,6 @@
 #include "CameraModel3DoF.h"
 #include "CameraModel6DoF.h"
 
-#include "JacobianBlock.h"
 #include "IJacobianProvider.h"
 #include "BasicJacobianProvider.h"
 

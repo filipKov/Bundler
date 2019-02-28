@@ -10,65 +10,95 @@ namespace Bundler {
 			m_pJacobianProvider = pJacobianProvider;
 		}
 
-		void GetCameraCount() const override {
+		size_t GetCameraCount() const override
+		{
 			return m_pJacobianProvider->GetCameraCount();
 		}
 
-		void GetPointCount() const override {
+		size_t GetCameraPointBlockCount( __in const size_t cameraIx ) const override
+		{
+			return m_pJacobianProvider->GetCameraProjectionCount( cameraIx );
+		}
+
+		size_t GetPointCount() const override
+		{
 			return m_pJacobianProvider->GetPointCount();
 		}
 
-
 		void GetCameraBlocks(
 			__in const size_t cameraIx,
-			__deref_out HessianCameraBlock** ppCamBlock,
-			__out size_t* pCamPointBlockCount,
-			__deref_out size_t** ppPointIndices,
-			__deref_out HessianCameraPointBlock** ppCamPtBlocks ) override 
+			__out HessianCameraBlock< CameraModel >* pCamBlock,
+			__in const size_t camPointBlockCount,
+			__out size_t* pPointIndices,
+			__out HessianCameraPointBlock< CameraModel >* pCamPtBlocks ) const override
 		{
 			const size_t projectionCount = m_pJacobianProvider->GetCameraProjectionCount( cameraIx );
-			*pCamPointBlockCount = projectionCount;
+			_ASSERT_EXPR( camPointBlockCount == projectionCount, "requested number of camera-point blocks is different than jacobian provides" );
 
-			m_cameraPtBlocks.EnsureLength( projectionCount );
+			Matrix< Scalar > cameraBlockAccumulator( (uint)( 2 * projectionCount ), CameraModel::cameraParameterCount );
 
 			for ( size_t i = 0; i < projectionCount; i++ ) 
 			{
-				size_t camIx;
-				size_t ptIx;
+				size_t camIx = 0;
+				size_t pointIx = 0;
 				DScalar< CameraModel::totalParamCount > residuals[ 2 ];
 
-				m_pJacobianProvider->GetProjection( m_pJacobianProvider->GetCameraProjectionIndex( cameraIx i ), &camIx, &ptIx, residuals );
+				m_pJacobianProvider->GetProjection( m_pJacobianProvider->GetCameraProjectionIndex( cameraIx, i ), &camIx, &pointIx, residuals );
 
-				// accumulate camera block
+				JacobianPointBlock pointBlock;
+				Scalar* pCameraBlock = cameraBlockAccumulator[ 2 * (uint)i ];
 
+				m_pJacobianProvider->ConvertToBlocks( residuals, pCameraBlock, pointBlock );
 
-				// calculate camera-point block
-				MatrixMultiply< Scalar, CameraModel::totalParamCount, 2, POINT_PARAM_COUNT >( ..., ..., m_cameraPtBlocks[ i ].Elements() );
+				ELEMENT( pPointIndices, i ) = pointIx;
+				MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, POINT_PARAM_COUNT >( pCameraBlock, pointBlock, ELEMENT( pCamPtBlocks, i ).Elements() );
 			}
 
-			// calculate camera block: Nx|C| x |C|xN matrix multiplication
+			MatrixMultiplyAtB( 
+				(uint)( 2 * projectionCount ), 
+				CameraModel::cameraParameterCount,
+				CameraModel::cameraParameterCount,
+				cameraBlockAccumulator.Elements(), 
+				cameraBlockAccumulator.Elements(), 
+				pCamBlock->Elements() 
+			);
 		}
 
 		void GetPointBlock(
 			__in const size_t pointIx,
-			__deref_out HessianPointBlock** ppPtBlock ) override
+			__out HessianPointBlock* pPointBlock ) const override
 		{
-			const size_t projectionCount m_pJacobianProvider->GetPointProjectionCount( pointIx );
+			const size_t projectionCount = m_pJacobianProvider->GetPointProjectionCount( pointIx );
 
-			for ( size_t i = 0; i < projectionCount; i++ ) {
-				// accumulate 
+			Matrix< Scalar > pointBlockAccumulator( (uint)( 2 * projectionCount ), POINT_PARAM_COUNT );
+
+			for ( size_t i = 0; i < projectionCount; i++ )
+			{
+				size_t camIx = 0;
+				size_t pointIx = 0;
+				DScalar< CameraModel::totalParamCount > residuals[ 2 ];
+
+				m_pJacobianProvider->GetProjection( m_pJacobianProvider->GetPointProjectionIndex( pointIx, i ), &camIx, &pointIx, residuals );
+
+				Scalar* pAccumulator = pointBlockAccumulator[ 2 * (uint)i ];
+				ShallowCopy< Scalar >( residuals[ 0 ].GetDiff().Elements() + CameraModel::pointParamStartIx, POINT_PARAM_COUNT, pAccumulator + 0 );
+				ShallowCopy< Scalar >( residuals[ 1 ].GetDiff().Elements() + CameraModel::pointParamStartIx, POINT_PARAM_COUNT, pAccumulator + POINT_PARAM_COUNT );
 			}
 
-			// calculate block: Nx3 x 3xN matrix multiplication
+			MatrixMultiplyAtB( 
+				(uint)( 2 * projectionCount ),
+				POINT_PARAM_COUNT,
+				POINT_PARAM_COUNT,
+				pointBlockAccumulator.Elements(), 
+				pointBlockAccumulator.Elements(), 
+				pPointBlock->Elements() 
+			);
 		}
+
 
 	protected:
 
 		IJacobianProvider< CameraModel >* m_pJacobianProvider;
-
-		HessianCameraBlock m_cameraBlock;
-		PagedVector< HessianCameraPointBlock, 13 > m_cameraPtBlocks;
-		HessianPointBlock m_pointBlock;
 
 	};
 

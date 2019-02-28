@@ -27,6 +27,9 @@
     <ClCompile Include="CameraModel6DoFTest.cpp">
       <Filter>CameraModels</Filter>
     </ClCompile>
+    <ClCompile Include="BasicJacobiProviderTest.cpp">
+      <Filter>JacobianAndHessian</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">
@@ -37,6 +40,9 @@
     </Filter>
     <Filter Include="Benchmarks">
       <UniqueIdentifier>{aa1a05b4-3d79-4d86-882b-d8895528a31e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian">
+      <UniqueIdentifier>{7adca1b1-3ac2-461b-8b86-7f99e7a171af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

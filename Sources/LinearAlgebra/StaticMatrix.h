@@ -181,6 +181,17 @@ namespace LinearAlgebra {
 			}
 		}
 
+		inline Matrix< Scalar, columns, rows > Transpose() {
+			Matrix< Scalar, columns, rows > T;
+			for ( uint i = 0; i < rows; i++ ) {
+				for ( uint j = 0; j < columns; j++ ) {
+					T[ j ][ i ] = m_pData[ i * columns + j ];
+				}
+			}
+
+			return T;
+		}
+
 	protected:
 
 		void Initialize() {

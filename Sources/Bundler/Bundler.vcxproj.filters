@@ -41,9 +41,6 @@
     <ClInclude Include="BasicHessianProvider.h">
       <Filter>JacobianAndHessian</Filter>
     </ClInclude>
-    <ClInclude Include="QuaternionRotation.h">
-      <Filter>CameraModels\Rotation</Filter>
-    </ClInclude>
     <ClInclude Include="PCGSolver.h">
       <Filter>LinearSolver</Filter>
     </ClInclude>

@@ -5,62 +5,76 @@
 namespace Bundler { namespace Import {
 
 #define BUNDLE_FILE_IDENTIFIER "# Bundle file "
-#define BUNDLE_FILE_VER "v0.3"
-#define BUNDLE_FILE_HEADER BUNDLE_FILE_IDENTIFIER BUNDLE_FILE_VER
+#define BUNDLE_FILE_VER_3 "v0.3"
+#define BUNDLE_FILE_HEADER BUNDLE_FILE_IDENTIFIER BUNDLE_FILE_VER_3
 
 #define ERR_INVALID_FILE "Stream does not contain valid Bundle file"
 
-	void BundleImporter::Import( __in std::istream& stream, __out Bundle& bundle ) {
+	void BundleImporter::Import( __in std::istream& stream, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData )
+	{
 		m_pInputStream = &stream;
-		m_pBundle = &bundle;
+		m_pOutBundle = pBundle;
+		m_pAdditionalData = pAdditionalData;
 
 		ParseFile();
 
-		m_pBundle = nullptr;
+		m_pOutBundle = nullptr;
+		m_pAdditionalData = nullptr;
 		m_pInputStream = nullptr;
 	}
 
-	void BundleImporter::Import( __in_z const char* pFilename, __out Bundle& bundle ) {
+	void BundleImporter::Import( __in_z const char* pFilename, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData )
+	{
 		std::ifstream inputStream = OpenStreamOnFile< std::ifstream >( pFilename );
-		Import( inputStream, bundle );
+		Import( inputStream, pBundle, pAdditionalData );
 	}
 
-	void BundleImporter::ParseFile() {
+	void BundleImporter::ParseFile() 
+	{
 		ParseAndCheckHeader();
 
 		uint cameraCount = 0, pointCount = 0;
 		ParseCountInformation( cameraCount, pointCount );
 		InitializeBundle( cameraCount, pointCount );
 
-		ParseCameras();
-		ParsePoints();
+		ParseCameras( cameraCount );
+		ParsePoints( pointCount );
 	}
 
-	void BundleImporter::ParseAndCheckHeader() {
+	void BundleImporter::ParseAndCheckHeader() 
+	{
 		char header[256];
 
 		m_pInputStream->getline( header, 256 );
-		if ( strcmp( header, BUNDLE_FILE_HEADER ) != 0 ) {
+		if ( strcmp( header, BUNDLE_FILE_HEADER ) != 0 ) 
+		{
 			throw InvalidArgumentException( GET_VARIABLE_NAME( m_pInputStream ), ERR_INVALID_FILE );
 		}
 	}
 
-	void BundleImporter::ParseCountInformation( __out uint& cameraCount, __out uint& pointCount ) {
-		if ( !m_pInputStream->good() ) {
+	void BundleImporter::ParseCountInformation( __out uint& cameraCount, __out uint& pointCount ) 
+	{
+		if ( !m_pInputStream->good() ) 
+		{
 			throw WrongStateException( GET_VARIABLE_NAME( m_pInputStream ) );
 		}
 
 		(*m_pInputStream) >> cameraCount >> pointCount;
 	}
 
-	void BundleImporter::InitializeBundle( __in const uint cameraCount, __in const uint pointCount ) {
-		m_pBundle->cameras.Allocate( cameraCount );
-		m_pBundle->points.Allocate( pointCount );
+	void BundleImporter::InitializeBundle( __in const uint cameraCount, __in const uint pointCount ) 
+	{
+		m_pOutBundle->cameras.Allocate( cameraCount );
+		m_pOutBundle->points.Allocate( pointCount );
+
+		if ( m_pAdditionalData ) 
+		{
+			m_pAdditionalData->pointColors.Allocate( pointCount );
+		}
 	}
 
-	void BundleImporter::ParseCameras() {
-		uint cameraCount = (uint)m_pBundle->cameras.Length();
-
+	void BundleImporter::ParseCameras( __in const uint cameraCount ) 
+	{
 		for ( uint i = 0; i < cameraCount; i++ ) {
 			if ( !m_pInputStream->good() ) {
 				throw WrongStateException( GET_VARIABLE_NAME( m_pInputStream ) );
@@ -71,7 +85,8 @@ namespace Bundler { namespace Import {
 	}
 
 	void BundleImporter::ParseCamera( __in const uint cameraIndex ) {
-		Camera& camera = m_pBundle->cameras[cameraIndex];
+		Camera& camera = m_pOutBundle->cameras[cameraIndex];
+
 		Matrix3x3& rotMatrix = camera.r;
 		Vector3& cameraPos = camera.t;
 
@@ -82,9 +97,8 @@ namespace Bundler { namespace Import {
 		( *m_pInputStream ) >> cameraPos[0] >> cameraPos[1] >> cameraPos[2];
 	}
 
-	void BundleImporter::ParsePoints() {
-		uint pointCount = (uint)m_pBundle->points.Length();
-
+	void BundleImporter::ParsePoints( __in const uint pointCount ) 
+	{
 		for ( uint i = 0; i < pointCount; i++ ) {
 			if ( !m_pInputStream->good() ) {
 				throw WrongStateException( GET_VARIABLE_NAME( m_pInputStream ) );
@@ -93,31 +107,34 @@ namespace Bundler { namespace Import {
 			ParsePoint( i );
 		}
 
-		m_pBundle->projections.SetCopy( m_tempTracks );
+		m_pOutBundle->projections.SetCopy( m_tempTracks );
 		m_tempTracks.Clear();
 	}
 
-	void BundleImporter::ParsePoint( __in const uint pointIndex ) {
-		Point& point = m_pBundle->points[pointIndex];
-
-		Vector3& ptPos = point.position;
-		
+	void BundleImporter::ParsePoint( __in const uint pointIndex ) 
+	{
+		Vector3& point = m_pOutBundle->points[pointIndex];
 		uint r = 0, g = 0, b = 0;
 
-		( *m_pInputStream ) >> ptPos[0] >> ptPos[1] >> ptPos[2];
+		( *m_pInputStream ) >> point[0] >> point[1] >> point[2];
 		( *m_pInputStream ) >> r >> g >> b;
 
-		point.color = 0xFF000000 | r << 16 | g << 8 | b;
+		if ( m_pAdditionalData ) 
+		{
+			m_pAdditionalData->pointColors[ pointIndex ] = 0xFF000000 | r << 16 | g << 8 | b;
+		}
 
 		ParseTrack();
 	}
 
-	void BundleImporter::ParseTrack() {
+	void BundleImporter::ParseTrack() 
+	{
 		uint trackLength = 0;
 		( *m_pInputStream ) >> trackLength;
 
 		m_tempTracks.EnsureLength( m_tempTracks.Length() + trackLength );
-		for ( uint trackI = 0; trackI < trackLength; trackI++ ) {
+		for ( uint trackI = 0; trackI < trackLength; trackI++ ) 
+		{
 			Projection& track = m_tempTracks[trackI];
 			( *m_pInputStream ) >> track.cameraIndex >> track.pointIndex >> track.projectedPoint[0] >> track.projectedPoint[1];
 		}

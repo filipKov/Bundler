@@ -15,37 +15,44 @@ RenderablePointCloud::RenderablePointCloud() {
 	mColorBufferId = 0;
 }
 
-RenderablePointCloud::RenderablePointCloud( __in const uint pointCount, __in const Bundler::Point* pPoints ) {
+RenderablePointCloud::RenderablePointCloud(
+	__in const uint pointCount,
+	__in_ecount( pointCount ) const Bundler::Vector3* pPoints,
+	__in_ecount_opt( pointCount ) const uint* pVertexColors ) 
+{
 	mPointCount = pointCount;
 
+	
 	Buffer< float > tempVertexBuffer;
-	tempVertexBuffer.Allocate( mPointCount * 3 );
+	if ( sizeof( Bundler::Vector3 ) != 3 * sizeof( float ) ) 
+	{
+		tempVertexBuffer.Allocate( mPointCount * 3 );
+		float* pPositions = tempVertexBuffer.Data();
 
-	Buffer< uint > tempColorBuffer;
-	tempColorBuffer.Allocate( mPointCount );
-
-	auto pSrc = pPoints;
-	float* pPosDst = tempVertexBuffer.Data();
-	uint* pColDst = tempColorBuffer.Data();
-	for ( uint i = 0; i < mPointCount; i++ ) {
-		( *pPosDst ) = (float)pSrc->position[0];
-		( *( pPosDst +1) ) = (float)pSrc->position[1];
-		( *( pPosDst +2) ) = (float)pSrc->position[2];
-		pPosDst += 3;
-
-		*pColDst = pSrc->color;
-		pColDst++;
-
-		pSrc++;
+		for ( uint i = 0; i < mPointCount; i++ ) {
+			ELEMENT( pPositions, 0 ) = (float)( *pPoints )[ 0 ];
+			ELEMENT( pPositions, 1 ) = (float)( *pPoints )[ 1 ];
+			ELEMENT( pPositions, 2 ) = (float)( *pPoints )[ 2 ];
+			pPositions += 3;
+			pPoints++;
+		}
 	}
 
 	glGenBuffers( 1, &mVertexBufferId );
 	glBindBuffer( GL_ARRAY_BUFFER, mVertexBufferId );
-	glBufferData( GL_ARRAY_BUFFER, mPointCount * sizeof( float ), tempVertexBuffer.Data(), GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, mPointCount * 3 * sizeof( float ), tempVertexBuffer.Data(), GL_STATIC_DRAW );
+
+	Buffer< uint > vertColors;
+	if ( !pVertexColors )
+	{
+		vertColors.Allocate( pointCount );
+		vertColors.Fill( 0xFF7F7F7F );
+		pVertexColors = vertColors.Data();
+	}
 
 	glGenBuffers( 1, &mColorBufferId );
 	glBindBuffer( GL_ARRAY_BUFFER, mColorBufferId );
-	glBufferData( GL_ARRAY_BUFFER, mPointCount * sizeof( uint ), tempColorBuffer.Data(), GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, mPointCount * sizeof( *pVertexColors ), pVertexColors, GL_STATIC_DRAW );
 }
 
 void RenderablePointCloud::Render( __in const GLuint shader ) const {

@@ -13,7 +13,10 @@ class RenderablePointCloud : public RenderableObject {
 public:
 
 	RenderablePointCloud();
-	RenderablePointCloud( __in const uint pointCount, __in const Bundler::Point* pPoints );
+	RenderablePointCloud( 
+		__in const uint pointCount, 
+		__in_ecount( pointCount ) const Bundler::Vector3* pPoints, 
+		__in_ecount_opt( pointCount ) const uint* pVertexColors );
 
 	void Render( __in const GLuint shader ) const override;
 

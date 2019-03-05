@@ -6,8 +6,8 @@ namespace Bundler { namespace Import {
 	{
 	public:
 		
-		void Import( __in std::istream& stream, __out Bundler::Bundle& bundle );
-		void Import( __in_z const char* pFilename, __out Bundler::Bundle& bundle );
+		void Import( __in std::istream& stream, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
+		void Import( __in_z const char* pFilename, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
 
 	protected:
 
@@ -15,9 +15,9 @@ namespace Bundler { namespace Import {
 		void ParseAndCheckHeader();
 		void ParseCountInformation( __out uint& cameraCount, __out uint& pointCount );
 		void InitializeBundle( __in const uint cameraCount, __in const uint pointCount );
-		void ParseCameras();
+		void ParseCameras( __in const uint cameraCount );
 		void ParseCamera( __in const uint cameraIndex );
-		void ParsePoints();
+		void ParsePoints( __in const uint pointCount );
 		void ParsePoint( __in const uint pointIndex );
 		void ParseTrack();
 
@@ -26,7 +26,8 @@ namespace Bundler { namespace Import {
 
 		std::istream* m_pInputStream;
 
-		Bundler::Bundle* m_pBundle;
+		Bundler::Bundle* m_pOutBundle;
+		Bundler::BundleAdditionalPayload* m_pAdditionalData;
 
 		Containers::PagedVector< Bundler::Projection, 12 > m_tempTracks;
 

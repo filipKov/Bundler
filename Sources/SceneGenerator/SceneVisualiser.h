@@ -19,7 +19,7 @@ namespace Visualiser {
 
 		void Reset();
 
-		void VisualiseBundle( __in const Bundler::Bundle& bundle );
+		void VisualiseBundle( __in const Bundler::Bundle* pBundle, __in_opt const Bundler::BundleAdditionalPayload* pAdditionalData );
 
 		void RenderScene();
 

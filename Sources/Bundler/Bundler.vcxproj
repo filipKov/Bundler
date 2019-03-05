@@ -138,6 +138,8 @@
     <ClInclude Include="IJacobianProvider.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
+    <ClInclude Include="PCGSolver.h" />
+    <ClInclude Include="QuaternionRotation.h" />
     <ClInclude Include="ReprojectionResiudal.h" />
     <ClInclude Include="RodriguesRotation.h" />
     <ClInclude Include="stdafx.h" />

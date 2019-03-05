@@ -16,3 +16,5 @@
 
 #include "IHessianProvider.h"
 #include "BasicHessianProvider.h"
+
+#include "PCGSolver.h"

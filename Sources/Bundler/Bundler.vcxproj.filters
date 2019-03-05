@@ -30,16 +30,22 @@
       <Filter>CameraModels</Filter>
     </ClInclude>
     <ClInclude Include="IJacobianProvider.h">
-      <Filter>JacobianGenerator</Filter>
+      <Filter>JacobianAndHessian</Filter>
     </ClInclude>
     <ClInclude Include="IHessianProvider.h">
-      <Filter>JacobianGenerator</Filter>
+      <Filter>JacobianAndHessian</Filter>
     </ClInclude>
     <ClInclude Include="BasicJacobianProvider.h">
-      <Filter>JacobianGenerator</Filter>
+      <Filter>JacobianAndHessian</Filter>
     </ClInclude>
     <ClInclude Include="BasicHessianProvider.h">
-      <Filter>JacobianGenerator</Filter>
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionRotation.h">
+      <Filter>CameraModels\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="PCGSolver.h">
+      <Filter>LinearSolver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -70,8 +76,11 @@
     <Filter Include="CameraModels\Rotation">
       <UniqueIdentifier>{5c020c72-9be5-47ff-97a9-64c49a7f3d61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="JacobianGenerator">
+    <Filter Include="JacobianAndHessian">
       <UniqueIdentifier>{ccd2c308-9179-4462-9e03-20a205616903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver">
+      <UniqueIdentifier>{b41c4c52-00db-4ade-ab71-03dcf24253f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

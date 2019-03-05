@@ -72,8 +72,6 @@ namespace Bundler { namespace CameraModels {
 			M33AddM33( pRotationMatrix, K, pRotationMatrix );
 		}
 
-
-
 	};
 
 } }

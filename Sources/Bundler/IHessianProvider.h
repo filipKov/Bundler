@@ -3,10 +3,10 @@
 namespace Bundler {
 
 	template < class CameraModel >
-	using HessianCameraBlock = Matrix< Scalar, CameraModel::totalParamCount, CameraModel::totalParamCount >;
+	using HessianCameraBlock = Matrix< Scalar, CameraModel::cameraParameterCount, CameraModel::cameraParameterCount >;
 
 	template < class CameraModel >
-	using HessianCameraPointBlock = Matrix< Scalar, CameraModel::totalParamCount, (int)POINT_PARAM_COUNT >;
+	using HessianCameraPointBlock = Matrix< Scalar, CameraModel::cameraParameterCount, (int)POINT_PARAM_COUNT >;
 
 	using HessianPointBlock = Matrix< Scalar, (int)POINT_PARAM_COUNT, (int)POINT_PARAM_COUNT >;
 
@@ -22,14 +22,17 @@ namespace Bundler {
 
 		virtual void GetCameraBlocks(
 			__in const size_t cameraIx,
-			__out HessianCameraBlock< CameraModel >* ppCamBlock,
+			__out HessianCameraBlock< CameraModel >* pCamBlock,
 			__in const size_t camPointBlockCount,
 			__out size_t* pPointIndices,
-			__out HessianCameraPointBlock< CameraModel >* pCamPtBlocks ) const = 0;
+			__out HessianCameraPointBlock< CameraModel >* pCamPtBlocks,
+			__out_ecount_opt( CameraModel::cameraParameterCount ) Scalar* pJtfBlock ) const = 0;
 
 		virtual void GetPointBlock(
 			__in const size_t pointIx,
-			__out HessianPointBlock* pPointBlock ) const = 0;
+			__out HessianPointBlock* pPointBlock,
+			__out_ecount_opt( POINT_PARAM_COUNT ) Scalar* pJtfBlock ) const = 0;
+
 
 
 	};

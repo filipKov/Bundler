@@ -44,6 +44,15 @@
     <ClInclude Include="PCGSolver.h">
       <Filter>LinearSolver</Filter>
     </ClInclude>
+    <ClInclude Include="JacobianBlockProvider.h">
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianBlockProvider.h">
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianMultiplicationEngine.h">
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

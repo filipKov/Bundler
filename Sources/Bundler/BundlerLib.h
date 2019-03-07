@@ -13,8 +13,11 @@
 
 #include "IJacobianProvider.h"
 #include "BasicJacobianProvider.h"
+#include "JacobianBlockProvider.h"
 
 #include "IHessianProvider.h"
 #include "BasicHessianProvider.h"
+#include "HessianBlockProvider.h"
+#include "HessianMultiplicationEngine.h"
 
 #include "PCGSolver.h"

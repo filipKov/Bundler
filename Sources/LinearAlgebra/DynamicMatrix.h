@@ -27,6 +27,14 @@ namespace LinearAlgebra {
 			Initialize( rows, columns );
 		};
 
+		Matrix( 
+			__in const uint rows, 
+			__in const uint columns, 
+			__in_ecount( rows * columns ) Scalar* pData )
+		{
+			Initialize( rows, columns, pData );
+		}
+
 		Matrix( __in const std::initializer_list< std::initializer_list<Scalar> > list ) {
 			Initialize( static_cast<uint>( list.size() ), static_cast<uint>( list.begin()->size() ) );
 
@@ -46,6 +54,7 @@ namespace LinearAlgebra {
 			m_rows = moveSrc.m_rows;
 			m_columns = moveSrc.m_columns;
 			m_pData = moveSrc.m_pData;
+			m_externalDataAttached = moveSrc.m_externalDataAttached;
 
 			moveSrc.m_pData = nullptr;
 			moveSrc.m_rows = 0;
@@ -212,15 +221,28 @@ namespace LinearAlgebra {
 			m_rows = rows;
 			m_columns = columns;
 
+			m_externalDataAttached = false;
 			m_pData = Allocator::Allocate( rows * columns );
 			memset( m_pData, 0, rows * columns * sizeof( Scalar ) );
 		};
 
+		void Initialize( 
+			__in const uint rows, 
+			__in const uint columns, 
+			__in_ecount( rows * columns ) Scalar* pData )
+		{
+			m_rows = rows;
+			m_columns = columns;
+			m_externalDataAttached = true;
+			m_pData = pData;
+		}
+
 		void Release() {
-			if ( m_pData ) {
+			if ( m_pData && !m_externalDataAttached ) {
 				Allocator::Release( m_pData );
-				m_pData = nullptr;
 			}
+
+			m_pData = nullptr;
 		};
 
 		void ResizeTo( __in const uint rows, __in const uint columns ) {
@@ -232,6 +254,8 @@ namespace LinearAlgebra {
 
 		uint m_rows;
 		uint m_columns;
+
+		bool m_externalDataAttached;
 		Scalar* m_pData;
 
 	};

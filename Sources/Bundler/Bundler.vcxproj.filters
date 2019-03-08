@@ -44,18 +44,6 @@
     <ClInclude Include="BundleStructureMapping.h">
       <Filter>JacobianAndHessian</Filter>
     </ClInclude>
-    <ClInclude Include="BasicHessianProvider.h">
-      <Filter>JacobianAndHessian\OldApproach</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicJacobianProvider.h">
-      <Filter>JacobianAndHessian\OldApproach</Filter>
-    </ClInclude>
-    <ClInclude Include="IHessianProvider.h">
-      <Filter>JacobianAndHessian\OldApproach</Filter>
-    </ClInclude>
-    <ClInclude Include="IJacobianProvider.h">
-      <Filter>JacobianAndHessian\OldApproach</Filter>
-    </ClInclude>
     <ClInclude Include="PCGStructs.h">
       <Filter>LinearSolver</Filter>
     </ClInclude>
@@ -93,9 +81,6 @@
     </Filter>
     <Filter Include="LinearSolver">
       <UniqueIdentifier>{b41c4c52-00db-4ade-ab71-03dcf24253f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JacobianAndHessian\OldApproach">
-      <UniqueIdentifier>{c157bd52-1b7f-4aed-b07a-38ed7ffbddd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

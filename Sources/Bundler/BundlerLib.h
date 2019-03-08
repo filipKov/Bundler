@@ -11,20 +11,11 @@
 #include "CameraModel3DoF.h"
 #include "CameraModel6DoF.h"
 
-// Old Approach to Hessian
-#include "IJacobianProvider.h"
-#include "BasicJacobianProvider.h"
-
-#include "IHessianProvider.h"
-#include "BasicHessianProvider.h"
-
-// New Approach to Hessian
 #include "BundleStructureMapping.h"
 
 #include "ProjectionProvider.h"
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
-
 
 #include "PCGStructs.h"
 #include "PCGSolver.h"

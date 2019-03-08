@@ -41,25 +41,28 @@ namespace BundlerTest {
 			for ( uint i = 0; i < camCount; i++ ) {
 				camModels[ i ].Initialize( &cameras[ i ] );
 			}
+			
+			// BasicJacobianProvider< CameraModel6DoF< 10 > > provider;
+			// 
+			// provider.Initialize(
+			// 	camCount, camModels,
+			// 	ptCount, points,
+			// 	projectionCount, projections
+			// );
+			// 
+			// Assert::AreEqual( camCount, provider.GetCameraCount() );
+			// Assert::AreEqual( size_t( 2 ), provider.GetCameraProjectionCount( 0 ) );
+			// Assert::AreEqual( size_t( 4 ), provider.GetCameraProjectionCount( 1 ) );
+			// Assert::AreEqual( size_t( 3 ), provider.GetCameraProjectionCount( 2 ) );
+			// 
+			// Assert::AreEqual( ptCount, provider.GetPointCount() );
+			// Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 0 ) );
+			// Assert::AreEqual( size_t( 3 ), provider.GetPointProjectionCount( 1 ) );
+			// Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 2 ) );
+			// Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 3 ) );
 
-			BasicJacobianProvider< CameraModel6DoF< 10 > > provider;
-
-			provider.Initialize(
-				camCount, camModels,
-				ptCount, points,
-				projectionCount, projections
-			);
-
-			Assert::AreEqual( camCount, provider.GetCameraCount() );
-			Assert::AreEqual( size_t( 2 ), provider.GetCameraProjectionCount( 0 ) );
-			Assert::AreEqual( size_t( 4 ), provider.GetCameraProjectionCount( 1 ) );
-			Assert::AreEqual( size_t( 3 ), provider.GetCameraProjectionCount( 2 ) );
-
-			Assert::AreEqual( ptCount, provider.GetPointCount() );
-			Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 0 ) );
-			Assert::AreEqual( size_t( 3 ), provider.GetPointProjectionCount( 1 ) );
-			Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 2 ) );
-			Assert::AreEqual( size_t( 2 ), provider.GetPointProjectionCount( 3 ) );
+			HessianBlockProvider< CameraModel6DoF< 10 > > hessian;
+			HessianMultiplicationEngine< CameraModel6DoF< 10 > > hessianEngine;
 		}
 
 

@@ -118,7 +118,7 @@ namespace Bundler { namespace LinearSolver {
 
 		void GetInitialResidual(
 			__in const ProjectionProvider< CameraModel >* pJacobian,
-			__in const IHessianProvider< CameraModel >* pHessian,
+			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__out_ecount( totalParamCount ) Scalar* pResidual )

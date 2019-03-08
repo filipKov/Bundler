@@ -126,8 +126,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BasicCameraModel.h" />
-    <ClInclude Include="BasicHessianProvider.h" />
-    <ClInclude Include="BasicJacobianProvider.h" />
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
@@ -137,8 +135,6 @@
     <ClInclude Include="CameraModel6DoF.h" />
     <ClInclude Include="HessianBlockProvider.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
-    <ClInclude Include="IHessianProvider.h" />
-    <ClInclude Include="IJacobianProvider.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="PCGSolver.h" />

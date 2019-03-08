@@ -316,7 +316,7 @@ namespace LinearAlgebraTest {
 
 	};
 
-	TEST_CLASS( FastMatrixMultiplicationTest ) 
+	TEST_CLASS( FastMatrixMultiplicationTest )
 	{
 		TEST_METHOD( Correctness0 ) {
 			float M[ 9 ] = {
@@ -351,7 +351,7 @@ namespace LinearAlgebraTest {
 				0.24, 1.54, 0.65, 0.32,
 				0.95, 0.64, 0.81, 1.47,
 			};
-			
+
 			double M3[ 16 ];
 			double M4[ 16 ];
 
@@ -470,10 +470,10 @@ namespace LinearAlgebraTest {
 			AssertAreEqual( expected, M2, 10e-10 );
 		}
 
-		TEST_METHOD( CorrectnesRand0 ) 
+		TEST_METHOD( CorrectnesRand0 )
 		{
 			srand( (uint)time( NULL ) );
-			
+
 			const uint BATCH_SIZE = 100;
 
 			Matrix< double, 4, 5 > M0;
@@ -568,6 +568,43 @@ namespace LinearAlgebraTest {
 				AssertAreEqual( 8, expected.Elements(), M2, 10e-10 );
 
 			}
+		}
+	};
+
+	TEST_CLASS( FastMatrixAddtitonTest ) {
+
+		TEST_METHOD( MatrixAddCorrectness0 )
+		{
+			double a = 0.21;
+			double b = 0.85;
+
+			double res = 0;
+			MatrixAdd< double, 1, 1 >( &a, &b, &res );
+
+			Assert::AreEqual( 1.06, res );
+		}
+
+		TEST_METHOD( MatrixAddCorrectness1 )
+		{
+			double M1[ 4 ] = { 0.5, 0.1, 0.22, 0.68 };
+			double M2[ 4 ] = { 0.3, 0.25, 0.2, 1.54 };
+
+			double res[ 4 ];
+			MatrixAdd< double, 2, 2 >( M1, M2, res );
+
+			AssertAreEqual( { 0.8, 0.35, 0.42, 2.22 }, res, 10e-10 );
+		}
+
+		TEST_METHOD( MatrixAddCorrectness2 )
+		{
+			Matrix< double, 3, 3 > M1( { 1, 2, 3, 4, 5, 6, 7, 8, 9 } );
+			Matrix< double, 3, 3 > M2( { 10, 20, 30, 40, 50, 60, 70, 80, 90 } );
+
+			double res[ 9 ];
+			MatrixAdd< double, 3, 3 >( M1.Elements(), M2.Elements(), res );
+
+			Matrix< double, 3, 3 > expected = M1 + M2;
+			AssertAreEqual( 9, expected.Elements(), res );
 		}
 
 	};

@@ -189,6 +189,14 @@ namespace LinearAlgebra {
 			return B;
 		};
 
+		inline void Negate()
+		{
+			for ( uint i = 0; i < m_rows * m_columns; i++ )
+			{
+				ELEMENT( m_pData, i ) = -ELEMENT( m_pData, i );
+			}
+		}
+
 		inline void MultiplyDiag( __in const Scalar& cnst ) {
 			if ( !CheckSquare() ) {
 				throw InvalidDimensionsException( GET_VARIABLE_NAME( this ) );

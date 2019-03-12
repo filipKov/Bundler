@@ -3,7 +3,6 @@
 #include "NumericTypes.h"
 
 #include "BundlerDefs.h"
-#include "BundlerUtils.h"
 
 #include "RodriguesRotation.h"
 
@@ -11,6 +10,8 @@
 #include "BasicCameraModel.h"
 #include "CameraModel3DoF.h"
 #include "CameraModel6DoF.h"
+
+#include "BundlerUtils.h" // TODO: move up when done( it's here because intellisense has a mental breakdown otherwise )
 
 #include "BundleStructureMapping.h"
 

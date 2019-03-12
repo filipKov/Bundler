@@ -27,7 +27,7 @@ namespace Bundler { namespace LinearSolver {
 			hessian.Initialize( pJacobian );
 			
 			InitSolve( pJacobian, &hessian, parameterVectorSize, pX, &temp );
-			uint finalIter = SolveLoop( pJacobian, &hessian, parameterVectorSize, pX, &tmep );
+			uint finalIter = SolveLoop( pJacobian, &hessian, parameterVectorSize, pX, &temp );
 
 			if ( pStatistics )
 			{
@@ -36,15 +36,17 @@ namespace Bundler { namespace LinearSolver {
 			}
 		}
 
+	protected:
+
 		void InitSolve(
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__out PCGSolverTemp* pTemp )
+			__out PCGSolverTemp* pTemp ) const
 		{
 			GetInitialResidual( pJacobian, pHessian, parameterVectorSize, pX, pTemp->r.Elements() );
-			ApplyPreconditioner( pHessian, pTemp->r, pTemp->d );
+			ApplyPreconditioner( pJacobian, parameterVectorSize, pTemp->r.Elements(), pTemp->d.Elements() );
 			pTemp->errSq = pTemp->r.Dot( pTemp->d );
 		}
 
@@ -59,19 +61,19 @@ namespace Bundler { namespace LinearSolver {
 
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) && 
-					( pTemp->m_errSq > m_errorToleranceSq ) )
+					( pTemp->errSq > m_errorToleranceSq ) )
 			{
-				MultiplyByHessian( pHessian, pTemp->d.Elements(), pTemp->Ad.Elements() );
+				MultiplyByHessian( pHessian, parameterVectorSize, pTemp->d.Elements(), pTemp->Ad.Elements() );
 
 				Scalar alpha = pTemp->errSq / ( pTemp->d.Dot( pTemp->Ad ) );
 				x += alpha * pTemp->d;
 				pTemp->r -= alpha * pTemp->Ad; // maybe do "r = b - Ax" every 50th iter or so
 
-				ApplyPreconditioner( pHessian, parameterVectorSize, pTemp->r.Elements(), pTemp->MInvR.Elements() );
+				ApplyPreconditioner( pJacobian, parameterVectorSize, pTemp->r.Elements(), pTemp->MInvR.Elements() );
 
 				Scalar errSqOld = pTemp->errSq;
 				pTemp->errSq = pTemp->r.Dot( pTemp->MInvR );
-				Scalar beta = temp.errSq / errSqOld;
+				Scalar beta = pTemp->errSq / errSqOld;
 				pTemp->d *= beta;
 				pTemp->d += pTemp->MInvR;
 
@@ -84,12 +86,12 @@ namespace Bundler { namespace LinearSolver {
 	protected:
 
 		void MultiplyByHessian(
-			__in HessianMultiplicationEngine< CameraModel >* pHessian,
+			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const size_t vectorSize,
 			__in_ecount( vectorSize ) const Scalar* pX,
-			__out_ecount( vectorSize ) Scalar* pY )
+			__out_ecount( vectorSize ) Scalar* pY ) const
 		{
-			Scalar pYDestination = pY;
+			Scalar* pYDestination = pY;
 
 			const size_t cameraCount = pHessian->GetCameraCount();
 			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
@@ -107,12 +109,16 @@ namespace Bundler { namespace LinearSolver {
 		}
 
 		void ApplyPreconditioner(
-			__in HessianMultiplicationEngine< CameraModel >* pHessian,
+			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const size_t vectorSize,
 			__in_ecount( vectorSize ) const Scalar* pX,
-			__out_ecount( vectorSize ) Scalar* pPreconditionedX )
+			__out_ecount( vectorSize ) Scalar* pPreconditionedX ) const
 		{
+			HessianBlockProvider< CameraModel > hessian;
+			hessian.Initialize( pJacobian );
+
 			// TODO: Jacobi preconditioner !!!
+
 			ShallowCopy< Scalar >( pX, vectorSize, pPreconditionedX ); // TODO: delete this;
 		}
 
@@ -121,7 +127,7 @@ namespace Bundler { namespace LinearSolver {
 			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__out_ecount( totalParamCount ) Scalar* pResidual )
+			__out_ecount( totalParamCount ) Scalar* pResidual ) const
 		{
 			MultiplyByHessian( pHessian, parameterVectorSize, pX, pResidual );
 			JtfNegSubtractX( pJacobian, parameterVectorSize, pResidual );
@@ -132,7 +138,7 @@ namespace Bundler { namespace LinearSolver {
 		void JtfNegSubtractX(
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const uint vectorSize,
-			__inout_ecount( vectorSize ) Scalar* pX )
+			__inout_ecount( vectorSize ) Scalar* pX ) const
 		{
 			const size_t cameraCount = pJacobian->GetCameraCount();
 
@@ -153,15 +159,15 @@ namespace Bundler { namespace LinearSolver {
 
 					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, camTemp.Elements(), pointTemp.Elements(), residualTemp.Elements() );
 
-					MatrixMultiplyAtB< Scalar, 2, CameraModel::camaraParameterCount, 1 >( camTemp.Elements(), residualTemp.Elements(), camXTemp.Elements() );
+					MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp.Elements(), residualTemp.Elements(), camXTemp.Elements() );
 					MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp.Elements(), residualTemp.Elements(), pointXTemp.Elements() );
 
 
-					Scalar* pCamXDestination = pX + cameraIx * CameraModel::camaraParameterCount;
-					Scalar* pPtXDestination = pX + cameraCount * CameraModel::camaraParameterCount + pointIx * POINT_PARAM_COUNT;
+					Scalar* pCamXDestination = Bundler::Utils::GetCameraParamPtr< CameraModel >( cameraIx, pX );
+					Scalar* pPtXDestination = Bundler::Utils::GetPointParamPtr< CameraModel >( pointIx, cameraCount, pX );
 
-					MatrixAdd< Scalar, CameraModel::camaraParameterCount, 1 >( camXTemp.Elements(), pCamXDestination, pCamXDestination );
-					MatrixAdd< Scalar, POINT_PARAM_COUNT >( pointXTemp.Elements(), pPtXDestination, pPtXDestination );
+					MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( camXTemp.Elements(), pCamXDestination, pCamXDestination );
+					MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pointXTemp.Elements(), pPtXDestination, pPtXDestination );
 				}
 			}
 

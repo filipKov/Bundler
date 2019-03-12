@@ -47,7 +47,7 @@ namespace Bundler {
 			Scalar* pBlockDst = jacobianCameraBlock.Elements();
 			for ( uint projI = 0; projI < projectionCount; projI++ )
 			{
-				const size_t projectionIx = m_pJacobian->GetProjectionIndex( cameraIx, projI );
+				const size_t projectionIx = m_pJacobian->GetCameraProjectionIndex( cameraIx, projI );
 
 				m_pJacobian->GetProjectionBlock< true, false, false >(
 					projectionIx, pBlockDst, NULL, NULL );
@@ -93,13 +93,13 @@ namespace Bundler {
 			const size_t projectionCount = m_pJacobian->GetPointProjectionCount( pointIx );
 
 			Matrix< Scalar > pointBlocks( (uint)( projectionCount * 2 ), POINT_PARAM_COUNT );
-			Scalar pBlockDst = pointBlocks.Elements();
+			Scalar* pBlockDst = pointBlocks.Elements();
 
 			for ( size_t projI = 0; projI < projectionCount; projI++ )
 			{
-				const size_t projectionIx = m_jacobian.GetPointProjectionIndex( pointIx, projI );
+				const size_t projectionIx = m_pJacobian->GetPointProjectionIndex( pointIx, projI );
 
-				m_jacobian->GetProjectionBlock< false, true, false >(
+				m_pJacobian->GetProjectionBlock< false, true, false >(
 					projectionIx, NULL, pBlockDst, NULL );
 
 				pBlockDst += POINT_PARAM_COUNT * 2;
@@ -114,12 +114,12 @@ namespace Bundler {
 
 		void GetCameraPointBlock(
 			__in const size_t projectionIx,
-			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock )
+			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) const
 		{
 			Scalar cameraBlock[ 2 * CameraModel::cameraParameterCount ];
 			Scalar pointBlock[ 2 * POINT_PARAM_COUNT ];
 
-			m_pJacobian->GetProjectionBlock< true, true, false >( projectionIx, cameraBlock, pointBlock );
+			m_pJacobian->GetProjectionBlock< true, true, false >( projectionIx, cameraBlock, pointBlock, NULL );
 
 			MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, POINT_PARAM_COUNT >(
 				cameraBlock, pointBlock, pBlock );

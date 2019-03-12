@@ -11,24 +11,24 @@ namespace Bundler {
 
 		void Initialize( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
 		{
-			m_pHessian->Initialize( pProjectionProvider );
+			m_hessian.Initialize( pProjectionProvider );
 		}
 
 		inline size_t GetCameraCount() const
 		{
-			return m_pHessian->GetCameraCount();
+			return m_hessian.GetCameraCount();
 		}
 
 		inline size_t GetPointCount() const
 		{
-			return m_pHessian->GetPointCount();
+			return m_hessian.GetPointCount();
 		}
 
 		void MultiplyCameraRow(
 			__in const size_t cameraIx,
 			__in const size_t totalParameterCount,
 			__in_ecount( totalParameterCount ) const Scalar* pX,
-			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY )
+			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY ) const
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
@@ -44,14 +44,14 @@ namespace Bundler {
 			__in const size_t pointIx,
 			__in const size_t totalParameterCount,
 			__in_ecount( totalParameterCount ) const Scalar* pX,
-			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY )
+			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY ) const
 		{
 			const Scalar* pPointXSource = pX + GetCameraCount() * CameraModel::cameraParameterCount + pointIx * POINT_PARAM_COUNT;
 			MultiplyByPointBlock( pointIx, pPointXSource, pY );
 
 			Scalar cameraBlockAccumulator[ POINT_PARAM_COUNT ];
-			MultiplyByCameraPointBlockPt( pointIx, totalParameterCount, pX, cameraBlockAccumulator );
-
+			MultiplyByCameraPointBlocksPt( pointIx, totalParameterCount, pX, cameraBlockAccumulator );
+			
 			MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pY, cameraBlockAccumulator, pY );
 		}
 
@@ -60,24 +60,24 @@ namespace Bundler {
 		void MultiplyByCameraBlock(
 			__in const size_t cameraIx,
 			__in_ecount( CameraModel::cameraParameterCount ) const Scalar* pX,
-			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY ) 
+			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY ) const
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
 			Scalar cameraBlock[ cameraParamCount * cameraParamCount ];
-			m_pHessian->GetCameraBlock( cameraIx, cameraBlock );
+			m_hessian.GetCameraBlock( cameraIx, cameraBlock );
 
 			MatrixMultiply< Scalar, cameraParamCount, cameraParamCount, 1 >( cameraBlock, pX, pY );
 		}
-
+		
 		void MultiplyByCameraPointBlocksCam(
 			__in const size_t cameraIx,
 			__in const size_t totalParameterCount,
 			__in_ecount( totalParameterCount ) const Scalar* pX,
-			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pAccumulator )
+			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pAccumulator ) const
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
-			const size_t projectionCount = m_pHessian->GetCameraProjectionCount( cameraIx );
+			const size_t projectionCount = m_hessian.GetCameraProjectionCount( cameraIx );
 
 			ByteFill< Scalar >( 0, cameraParamCount, pAccumulator );
 			Scalar cameraPointBlock[ cameraParamCount * POINT_PARAM_COUNT ];
@@ -86,7 +86,7 @@ namespace Bundler {
 			for ( size_t projI = 0; projI < projectionCount; projI++ )
 			{
 				size_t pointIndex = 0;
-				m_pHessian->GetCameraPointBlockCam( cameraix, projI, &pointIndex, cameraPointBlock );
+				m_hessian.GetCameraPointBlockCam( cameraIx, projI, &pointIndex, cameraPointBlock );
 
 				const Scalar* pXSource = pX + GetCameraCount() * cameraParamCount + pointIndex * POINT_PARAM_COUNT;
 
@@ -98,10 +98,10 @@ namespace Bundler {
 		void MultiplyByPointBlock(
 			__in const size_t pointIx,
 			__in_ecount( POINT_PARAM_COUNT ) const Scalar* pX,
-			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY )
+			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY ) const
 		{
 			Scalar pointBlock[ POINT_PARAM_COUNT * POINT_PARAM_COUNT ];
-			m_pHessian->GetPointBlock( pointIx, pointBlock );
+			m_hessian.GetPointBlock( pointIx, pointBlock );
 
 			MatrixMultiply< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT, 1 >( pointBlock, pX, pY );
 		}
@@ -110,10 +110,10 @@ namespace Bundler {
 			__in const size_t pointIx,
 			__in const size_t totalParameterCount,
 			__in_ecount( totalParameterCount ) const Scalar* pX,
-			__out_ecount( POINT_PARAM_COUNT ) Scalar* pAccumulator )
+			__out_ecount( POINT_PARAM_COUNT ) Scalar* pAccumulator ) const
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
-			const size_t projectionCount = m_pHessian->GetPointProjectionCount( pointIx );
+			const size_t projectionCount = m_hessian.GetPointProjectionCount( pointIx );
 
 			ByteFill< Scalar >( 0, POINT_PARAM_COUNT, pAccumulator );
 			Scalar cameraPointBlock[ cameraParamCount * POINT_PARAM_COUNT ];
@@ -122,7 +122,7 @@ namespace Bundler {
 			for ( size_t projI = 0; projI < projectionCount; projI++ )
 			{
 				size_t cameraIndex = 0;
-				m_pHessian->GetCameraPointBlockPt( pointIx, projI, &cameraIndex, cameraPointBlock );
+				m_hessian.GetCameraPointBlockPt( pointIx, projI, &cameraIndex, cameraPointBlock );
 
 				const Scalar* pXSource = pX + cameraIndex * cameraParamCount;
 			
@@ -133,7 +133,7 @@ namespace Bundler {
 
 	protected:
 
-		const HessianBlockProvider< CameraModel >* m_pHessian;
+		HessianBlockProvider< CameraModel > m_hessian;
 
 	};
 

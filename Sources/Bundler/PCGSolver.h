@@ -117,9 +117,7 @@ namespace Bundler { namespace LinearSolver {
 			HessianBlockProvider< CameraModel > hessian;
 			hessian.Initialize( pJacobian );
 
-			// TODO: Jacobi preconditioner !!!
-
-			ShallowCopy< Scalar >( pX, vectorSize, pPreconditionedX ); // TODO: delete this;
+			m_pPreconditioner->Apply( &hessian, vectorSize, pX, pPreconditionedX );
 		}
 
 		void GetInitialResidual(
@@ -179,6 +177,8 @@ namespace Bundler { namespace LinearSolver {
 		
 		uint m_maxIterations;
 		Scalar m_errorToleranceSq;
+
+		Preconditioner< CameraModel >* m_pPreconditioner;
 
 	};
 

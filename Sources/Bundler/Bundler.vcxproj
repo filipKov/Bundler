@@ -140,6 +140,7 @@
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="PCGSolver.h" />
     <ClInclude Include="PCGStructs.h" />
+    <ClInclude Include="Preconditioner.h" />
     <ClInclude Include="ProjectionProvider.h" />
     <ClInclude Include="ReprojectionResiudal.h" />
     <ClInclude Include="RodriguesRotation.h" />

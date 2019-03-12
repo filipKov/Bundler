@@ -19,5 +19,7 @@
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
 
+#include "Preconditioner.h"
+
 #include "PCGStructs.h"
 #include "PCGSolver.h"

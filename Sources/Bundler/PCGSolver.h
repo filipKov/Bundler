@@ -136,15 +136,32 @@ namespace Bundler { namespace LinearSolver {
 		{
 			const size_t cameraCount = pJacobian->GetCameraCount();
 
+			Matrix< Scalar, 2, CameraModel::cameraParameterCount > camTemp;
+			Matrix< Scalar, 2, POINT_PARAM_COUNT > pointTemp;
+			Vector< Scalar, 2 > residualTemp;
+
+			Vector< Scalar, CameraModel::cameraParameterCount > camXTemp;
+			Vector< Scalar, POINT_PARAM_COUNT > pointXTemp;
+
 			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 			{
 				const size_t projectionCount = pJacobian->GetCameraProjectionCount( cameraIx );
 				for ( size_t projI = 0; projI < projectionCount; projI++ )
 				{
 					const size_t projectionIx = pJacobian->GetCameraProjectionIndex( cameraIx, projI );
+					const size_t pointIx = pJacobian->GetPointIndex( projectionIx );
 
-					// TODO: !!
-					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, ..., ..., ... );
+					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, camTemp.Elements(), pointTemp.Elements(), residualTemp.Elements() );
+
+					MatrixMultiplyAtB< Scalar, 2, CameraModel::camaraParameterCount, 1 >( camTemp.Elements(), residualTemp.Elements(), camXTemp.Elements() );
+					MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp.Elements(), residualTemp.Elements(), pointXTemp.Elements() );
+
+
+					Scalar* pCamXDestination = pX + cameraIx * CameraModel::camaraParameterCount;
+					Scalar* pPtXDestination = pX + cameraCount * CameraModel::camaraParameterCount + pointIx * POINT_PARAM_COUNT;
+
+					MatrixAdd< Scalar, CameraModel::camaraParameterCount, 1 >( camXTemp.Elements(), pCamXDestination, pCamXDestination );
+					MatrixAdd< Scalar, POINT_PARAM_COUNT >( pointXTemp.Elements(), pPtXDestination, pPtXDestination );
 				}
 			}
 

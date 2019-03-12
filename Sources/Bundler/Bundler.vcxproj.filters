@@ -47,6 +47,7 @@
     <ClInclude Include="PCGStructs.h">
       <Filter>LinearSolver</Filter>
     </ClInclude>
+    <ClInclude Include="BundlerUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

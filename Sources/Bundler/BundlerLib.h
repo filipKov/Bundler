@@ -3,6 +3,7 @@
 #include "NumericTypes.h"
 
 #include "BundlerDefs.h"
+#include "BundlerUtils.h"
 
 #include "RodriguesRotation.h"
 

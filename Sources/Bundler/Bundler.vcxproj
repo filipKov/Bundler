@@ -132,6 +132,7 @@
     <ClInclude Include="BundlerLib.h" />
     <ClInclude Include="BundlerUtils.h" />
     <ClInclude Include="BundleStructureMapping.h" />
+    <ClInclude Include="CachedJacobiPreconditioner.h" />
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
     <ClInclude Include="HessianBlockProvider.h" />

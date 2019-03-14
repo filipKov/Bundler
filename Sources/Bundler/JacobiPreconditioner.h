@@ -2,7 +2,7 @@
 
 namespace Bundler { namespace LinearSolver {
 
-#define PRECONDITIONER_NO_CHECK false
+#define PRECONDITIONER_SAFE false
 
 	template < class CameraModel >
 	class JacobiPreconditioner : public Preconditioner< CameraModel >
@@ -55,16 +55,16 @@ namespace Bundler { namespace LinearSolver {
 		{
 			for ( uint i = 0; i < blockSize; i++ )
 			{
-			#if PRECONDITIONER_NO_CHECK
-				ELEMENT( pPreconditionedVector, i ) = ( Scalar( 1 ) / ELEMENT( pBlock, i * blockSize + i ) ) * ELEMENT( pVector, i );
-			#else
+			#if PRECONDITIONER_SAFE
 				ELEMENT( pPreconditionedVector, i ) = ELEMENT( pVector, i );
 				Scalar diagElement = ELEMENT( pBlock, i * blockSize + i );
 				if ( diagElement != Scalar( 0 ) )
 				{
-					ELEMENT( pPreconditionedVector, i ) *= Scalar( 1 ) / diagElement;
+					ELEMENT( pPreconditionedVector, i ) /= diagElement;
 				}
-			#endif // PRECONDITIONER_NO_CHECK
+			#else
+				ELEMENT( pPreconditionedVector, i ) = ( Scalar( 1 ) / ELEMENT( pBlock, i * blockSize + i ) ) * ELEMENT( pVector, i );
+			#endif // PRECONDITIONER_SAFE
 
 				// Or should we add some eps to diagonal element??
 			}

@@ -21,6 +21,7 @@
 
 #include "Preconditioner.h"
 #include "JacobiPreconditioner.h"
+#include "CachedJacobiPreconditioner.h"
 
 #include "PCGStructs.h"
 #include "PCGSolver.h"

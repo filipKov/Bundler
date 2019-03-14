@@ -9,10 +9,12 @@ namespace Bundler { namespace LinearSolver {
 		
 		void Initialize(
 			__in const uint maxIterations,
-			__in const Scalar errorTolerance ) 
+			__in const Scalar errorTolerance,
+			__in const Preconditioner< CameraModel >* pPreconditioner ) 
 		{
 			m_maxIterations = maxIterations;
 			m_errorToleranceSq = errorTolerance * errorTolerance;
+			m_pPreconditioner = pPreconditioner;
 		}
 
 		void SolveSystem(
@@ -178,7 +180,7 @@ namespace Bundler { namespace LinearSolver {
 		uint m_maxIterations;
 		Scalar m_errorToleranceSq;
 
-		Preconditioner< CameraModel >* m_pPreconditioner;
+		const Preconditioner< CameraModel >* m_pPreconditioner;
 
 	};
 

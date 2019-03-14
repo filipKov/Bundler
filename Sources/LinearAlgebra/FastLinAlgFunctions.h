@@ -179,30 +179,6 @@ namespace LinearAlgebra {
 		};
 	}
 
-	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
-	{
-		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::NORMAL >( A, B, C );
-	}
-
-	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyAtB( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
-	{
-		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
-	}
-
-	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyABt( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
-	{
-		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
-	}
-
-	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyAtBt( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
-	{
-		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
-	}
-
 	namespace Internal {
 
 		template < typename T, size_t m, size_t n, size_t row, size_t col >
@@ -263,6 +239,58 @@ namespace LinearAlgebra {
 			}
 		};
 
+		template < typename T, size_t m, size_t n, size_t row, size_t col >
+		struct MatrixElementWiseMultiplicator
+		{
+			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) * ELEMENT( B, row * n + col );
+				MatrixElementWiseMultiplicator< T, m, n, row, col - 1 >::Get( A, B, C );
+			}
+		};
+
+		template < typename T, size_t m, size_t n, size_t row >
+		struct MatrixElementWiseMultiplicator< T, m, n, row, 0 >
+		{
+			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) * ELEMENT( B, row * n );
+				MatrixElementWiseMultiplicator< T, m, n, row - 1, n - 1 >::Get( A, B, C );
+			}
+		};
+
+		template < typename T, size_t m, size_t n >
+		struct MatrixElementWiseMultiplicator< T, m, n, 0, 0 >
+		{
+			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) * ELEMENT( B, 0 );
+			}
+		};
+	}
+
+	template < typename T, size_t m, size_t n, size_t p >
+	inline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
+	{
+		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::NORMAL >( A, B, C );
+	}
+
+	template < typename T, size_t m, size_t n, size_t p >
+	inline void MatrixMultiplyAtB( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
+	{
+		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
+	}
+
+	template < typename T, size_t m, size_t n, size_t p >
+	inline void MatrixMultiplyABt( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
+	{
+		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
+	}
+
+	template < typename T, size_t m, size_t n, size_t p >
+	inline void MatrixMultiplyAtBt( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
+	{
+		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n >
@@ -275,6 +303,12 @@ namespace LinearAlgebra {
 	inline void MatrixSub( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 	{
 		Internal::MatrixSubtractor< T, m, n, m - 1, n - 1 >::Get( A, B, C );
+	}
+
+	template < typename T, size_t m, size_t n >
+	inline void MatrixMultiplyElementWise( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+	{
+		Internal::MatrixElementWiseMultiplicator< T, m, n, m - 1, n - 1 >::Get( A, B, C );
 	}
 
 }

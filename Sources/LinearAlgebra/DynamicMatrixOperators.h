@@ -144,12 +144,29 @@ namespace LinearAlgebra {
 			for ( uint colIx = 0; colIx < p; colIx++ ) 
 			{
 				Scalar tmp = Scalar( 0 );
-				for ( uint i = 0; i < n; i++ )
+				for ( uint i = 0; i < m; i++ )
 				{
 					tmp += ELEMENT( A, i * n + rowIx ) * ELEMENT( B, i * p + colIx );
 				}
 
 				ELEMENT( C, rowIx * p + colIx ) = tmp;
+			}
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixElementWiseMultiply(
+		__in const uint m,
+		__in const uint n,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * n ) const Scalar* B,
+		__out_ecount( m * n ) Scalar* C )
+	{
+		for ( uint rowIx = 0; rowIx < m; rowIx++ )
+		{
+			for ( uint colIx = 0; colIx < n; colIx++ )
+			{
+				ELEMENT( C, rowIx * n + colIx ) = ELEMENT( A, rowIx * n + colIx ) * ELEMENT( B, rowIx * n + colIx );
 			}
 		}
 	}

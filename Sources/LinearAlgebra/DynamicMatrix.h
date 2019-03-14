@@ -254,8 +254,11 @@ namespace LinearAlgebra {
 		};
 
 		void ResizeTo( __in const uint rows, __in const uint columns ) {
-			Release();
-			Initialize( rows, columns );
+			if ( ( rows != m_rows ) || ( columns != m_columns ) )
+			{
+				Release();
+				Initialize( rows, columns );
+			}
 		}
 
 	protected:

@@ -20,6 +20,7 @@
 #include "HessianMultiplicationEngine.h"
 
 #include "Preconditioner.h"
+#include "JacobiPreconditioner.h"
 
 #include "PCGStructs.h"
 #include "PCGSolver.h"

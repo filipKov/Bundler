@@ -155,6 +155,7 @@
     <ClInclude Include="TestingUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BasicJacobiProviderTest.cpp" />
     <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="CameraModel6DoFTest.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />

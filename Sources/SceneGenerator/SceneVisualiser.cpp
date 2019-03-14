@@ -94,11 +94,19 @@ namespace Visualiser {
 		mScene.viewportCamera.LookAt( Vector3f( { 0.0f, 0.0f, 0.0f } ) );
 	}
 
-	void SceneVisualiser::VisualiseBundle( __in const Bundler::Bundle& bundle ) {
+	void SceneVisualiser::VisualiseBundle( __in const Bundler::Bundle* pBundle, __in_opt const Bundler::BundleAdditionalPayload* pAdditionalData ) 
+	{
 		Reset();
 		
 		mScene.pointClouds.Allocate( 1 );
-		mScene.pointClouds[0] = RenderablePointCloud( (uint)bundle.points.Length(), bundle.points.Data() );
+
+		const uint pVertexColors = NULL;
+		if ( pAdditionalData ) 
+		{
+			pAdditionalData->pointColors.Data();
+		}
+
+		mScene.pointClouds[ 0 ] = RenderablePointCloud( (uint)pBundle->points.Length(), pBundle->points.Data(), pVertexColors );
 		mRenderer.RegisterObject( "pointCloud", &mScene.pointClouds[0] );
 	}
 

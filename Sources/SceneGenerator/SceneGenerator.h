@@ -16,7 +16,7 @@ namespace SceneGenerator {
 		Vector3f ptMin;
 		Vector3f ptMax;
 
-		void GetFrom( __in const uint pointCount, __in const Bundler::Point* pPoints );
+		void GetFrom( __in const uint pointCount, __in const Bundler::Vector3* pPoints );
 	};
 
 	class SceneGenerator
@@ -39,7 +39,7 @@ namespace SceneGenerator {
 
 		void AddNoiseToPoints();
 
-		void AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Point& point );
+		void AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Vector3& point );
 
 		void AddNoiseToCameraPosition();
 

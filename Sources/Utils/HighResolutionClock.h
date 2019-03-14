@@ -24,7 +24,10 @@ namespace Utils {
 				if ( !m_running ) {
 					m_running = true;
 
-					QueryPerformanceFrequency( &m_currentFrequency );
+					LARGE_INTEGER currentFrequency;
+					QueryPerformanceFrequency( &currentFrequency );
+					m_tickDuration = 1e+6 * ( 1.0 / currentFrequency.QuadPart );
+
 					QueryPerformanceCounter( &m_startTimestamp );
 					m_lastTimestamp = m_startTimestamp;
 				}
@@ -35,7 +38,7 @@ namespace Utils {
 				QueryPerformanceCounter( &endTimestamp );
 
 				if ( m_running ) {
-					m_totalElpased += ( ( endTimestamp.QuadPart - m_startTimestamp.QuadPart ) * 1000000 ) / m_currentFrequency.QuadPart;
+					m_totalElpased += ( endTimestamp.QuadPart - m_startTimestamp.QuadPart ) * m_tickDuration;
 					m_running = false;
 				}
 			}
@@ -45,14 +48,14 @@ namespace Utils {
 				QueryPerformanceCounter( &endTimestamp );
 
 				if ( m_running ) {
-					m_elapsedLaps.Add( ( ( endTimestamp.QuadPart - m_lastTimestamp.QuadPart ) * 1000000 ) / m_currentFrequency.QuadPart );
+					m_elapsedLaps.Add( ( endTimestamp.QuadPart - m_lastTimestamp.QuadPart ) * m_tickDuration );
 					m_lastTimestamp = endTimestamp;
 				}
 			}
 
 			template < TimeUnits units = TimeUnits::Milliseconds >
 			const double GetTotalTime() const {
-				return TimeConverter::ConvertMicroseconds< units >( double( m_totalElpased ) );
+				return TimeConverter::Convert< TimeUnits::Microseconds, units >( m_totalElpased );
 			}
 
 			size_t GetLapCount() const {
@@ -63,17 +66,17 @@ namespace Utils {
 			double GetLap( __in const uint lapIx ) {
 				_ASSERT_EXPR( lapIx < GetLapCount(), "Lap index out of range" );
 
-				return TimeConverter::ConvertMicroseconds< units >( (double)m_elapsedLaps[ lapIX ] );
+				return TimeConverter::Convert< TimeUnits::Microseconds, units >( m_elapsedLaps[ lapIX ] );
 			}
 
 		protected:
-
-			LARGE_INTEGER m_currentFrequency;
+			
+			double m_tickDuration;
 			LARGE_INTEGER m_startTimestamp;
 			LARGE_INTEGER m_lastTimestamp;
 
-			Containers::PagedVector< int64 > m_elapsedLaps;
-			int64 m_totalElpased;
+			Containers::PagedVector< double > m_elapsedLaps;
+			double m_totalElpased;
 
 			bool m_running;
 		};

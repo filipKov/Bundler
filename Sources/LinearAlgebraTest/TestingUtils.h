@@ -36,3 +36,34 @@ inline void AssertAreEqual( __in const T( &expected )[ N ], __in const T* actual
 		actual++;
 	}
 }
+
+template < typename T >
+inline void AssertAreEqual( __in const size_t N, __in const T* expected, __in const T* actual, __in const T tolerance = T( 0 ) ) {
+	for ( size_t i = 0; i < N; i++ ) {
+		Assert::AreEqual( *expected, *actual, tolerance );
+		expected++;
+		actual++;
+	}
+}
+
+template < typename T >
+inline T Random( __in const T minN, __in const T maxN )
+{
+	return ( T( rand() ) / RAND_MAX ) * ( maxN - minN ) + minN;
+}
+
+template < typename T >
+inline T Random()
+{
+	return Random( T( 0 ), T( 1 ) );
+}
+
+template < typename T >
+inline void RandomFill( __in const size_t cnt, __out_ecount( cnt ) T* pDst )
+{
+	for ( size_t i = 0; i < cnt; i++ ) 
+	{
+		*pDst = Random< T >();
+		pDst++;
+	}
+}

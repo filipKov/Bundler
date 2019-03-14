@@ -125,6 +125,10 @@
     <ClInclude Include="DynamicVectorOperators.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="FastLinAlgFunctions.h" />
+    <ClInclude Include="FastMatrix33.h" />
+    <ClInclude Include="FastMatrix44.h" />
+    <ClInclude Include="FastVector3.h" />
+    <ClInclude Include="FastVector4.h" />
     <ClInclude Include="HelperMacros.h" />
     <ClInclude Include="LinearAlgebraLib.h" />
     <ClInclude Include="Matrix.h" />

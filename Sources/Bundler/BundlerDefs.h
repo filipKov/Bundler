@@ -15,24 +15,25 @@ namespace Bundler {
 		Vector3 t;
 	};
 
-	struct Track {
+	struct Projection {
 		uint cameraIndex;
 		uint pointIndex;
 
 		Vector2 projectedPoint;
 	};
 
-	struct Point {
-		Vector3 position;
-		uint color;
+	static constexpr const uint POINT_PARAM_COUNT = 3;
+
+	struct Bundle 
+	{
+		Containers::Buffer< Camera > cameras;
+		Containers::Buffer< Vector3 > points;
+		Containers::Buffer< Projection > projections;
 	};
 
-	static const uint POINT_PARAM_COUNT = 3;
-
-	struct Bundle {
-		Containers::Buffer< Camera > cameras;
-		Containers::Buffer< Point > points;
-		Containers::Buffer< Track > tracks;
+	struct BundleAdditionalPayload 
+	{
+		Containers::Buffer< uint > pointColors;
 	};
 
 }

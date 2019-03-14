@@ -16,10 +16,12 @@ namespace LinearAlgebra {
 		// -------------------------------------------------------------------------------------------------------
 		Vector( __in const uint dimension ) : Matrix< Scalar, MatrixBase::Dynamic >( dimension, 1 ) {};
 	
+		Vector( __in const uint dimension, __in Scalar* pData ) : Matrix< Scalar, MatrixBase::Dynamic >( dimension, 1, pData ) {};
+
 		Vector( __in const std::initializer_list<Scalar> elements ) : Matrix< Scalar, MatrixBase::Dynamic >( static_cast<uint>( elements.size() ), 1 ) {
 			ShallowCopy<Scalar>( elements.begin(), elements.size(), m_pData );
 		};
-	
+
 		Vector( __in const Vector< Scalar, MatrixBase::Dynamic >& src ) : Matrix< Scalar, MatrixBase::Dynamic >( src ) {};
 	
 		Vector( __in Vector< Scalar, MatrixBase::Dynamic >&& src ) : Matrix< Scalar, MatrixBase::Dynamic >( std::move( src ) ) {};

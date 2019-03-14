@@ -10,15 +10,15 @@ namespace SceneGenerator {
 
 #define NOISE_MAX 0.05
 
-	void AxisAlignedBBox::GetFrom( __in const uint pointCount, __in const Bundler::Point* pPoints ) {
-		ptMin = pPoints->position;
-		ptMax = pPoints->position;
+	void AxisAlignedBBox::GetFrom( __in const uint pointCount, __in const Bundler::Vector3* pPoints ) {
+		ptMin = *pPoints;
+		ptMax = *pPoints;
 		pPoints++;
 
 		for ( uint i = 1; i < pointCount; i++ ) {
-			const Bundler::ScalarType x = pPoints->position[0];
-			const Bundler::ScalarType y = pPoints->position[1];
-			const Bundler::ScalarType z = pPoints->position[2];
+			const Bundler::ScalarType x = (*pPoints)[0];
+			const Bundler::ScalarType y = (*pPoints)[1];
+			const Bundler::ScalarType z = (*pPoints)[2];
 
 			if ( x < ptMin[0] ) {
 				ptMin[0] = x;
@@ -83,7 +83,7 @@ namespace SceneGenerator {
 	void SceneGenerator::CopyGroundTruth() {
 		m_pOutBundle->points.SetCopy( m_pGroundTruth->points.Length(), m_pGroundTruth->points.Data() );
 		m_pOutBundle->cameras.SetCopy( m_pGroundTruth->cameras.Length(), m_pGroundTruth->cameras.Data() );
-		m_pOutBundle->tracks.SetCopy( m_pGroundTruth->tracks.Length(), m_pGroundTruth->tracks.Data() );
+		m_pOutBundle->projections.SetCopy( m_pGroundTruth->projections.Length(), m_pGroundTruth->projections.Data() );
 	}
 
 	void SceneGenerator::AddNoiseToPoints() {
@@ -96,13 +96,13 @@ namespace SceneGenerator {
 		}
 	}
 
-	void SceneGenerator::AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Point& point ) {
+	void SceneGenerator::AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Vector3& point ) {
 		Vector3f positionNoise;
 		positionNoise[0] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
 		positionNoise[1] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
 		positionNoise[2] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
 
-		point.position += positionNoise;
+		point += positionNoise;
 	}
 
 	void SceneGenerator::AddNoiseToCameraPosition() {

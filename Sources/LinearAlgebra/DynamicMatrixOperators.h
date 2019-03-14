@@ -130,4 +130,28 @@ namespace LinearAlgebra {
 		}
 	}
 
+	template < typename Scalar >
+	void MatrixMultiplyAtB(
+		__in const uint m,
+		__in const uint n,
+		__in const uint p,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * p ) const Scalar* B,
+		__out_ecount( n * p ) Scalar* C )
+	{
+		for ( uint rowIx = 0; rowIx < n; rowIx++ ) 
+		{
+			for ( uint colIx = 0; colIx < p; colIx++ ) 
+			{
+				Scalar tmp = Scalar( 0 );
+				for ( uint i = 0; i < n; i++ )
+				{
+					tmp += ELEMENT( A, i * n + rowIx ) * ELEMENT( B, i * p + colIx );
+				}
+
+				ELEMENT( C, rowIx * p + colIx ) = tmp;
+			}
+		}
+	}
+
 }

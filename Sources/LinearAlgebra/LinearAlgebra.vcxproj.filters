@@ -39,7 +39,21 @@
     <ClInclude Include="Exceptions.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="FastLinAlgFunctions.h" />
+    <ClInclude Include="FastLinAlgFunctions.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="FastVector3.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="FastVector4.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMatrix33.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMatrix44.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Matrix">
@@ -50,6 +64,9 @@
     </Filter>
     <Filter Include="Helpers">
       <UniqueIdentifier>{354722a1-52b7-40b8-aa1a-d4bbcae75928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FastAlgebra">
+      <UniqueIdentifier>{ff8c8f6f-d086-473b-8ccd-a5a1219fb307}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

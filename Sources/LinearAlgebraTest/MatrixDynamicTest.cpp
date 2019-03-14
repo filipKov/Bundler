@@ -94,6 +94,39 @@ namespace NumericOptimizationTest {
 			} );
 		}
 
+		TEST_METHOD( MatrixMultiplyAtB_0 )
+		{
+			Matrix< double > M0( { { 4, 5 } } );
+			Matrix< double > M1( { { 1, 2, 3 } } );
+
+			double M2[ 6 ];
+			MatrixMultiplyAtB< double >( 1, 2, 3, M0.Elements(), M1.Elements(), M2 );
+
+			double expected[ 6 ] = {
+				4, 8, 12,
+				5, 10, 15
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
+		TEST_METHOD( MatrixMultiplyAtB_1 ) 
+		{
+			Matrix< double > M0( { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } );
+			Matrix< double > M1( { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } );
+
+			double M2[ 9 ];
+			MatrixMultiplyAtB< double >( 3, 3, 3, M0.Elements(), M1.Elements(), M2 );
+
+			double expected[ 9 ] = {
+				66, 78, 90,
+				78, 93, 108,
+				90, 108, 126
+			};
+
+			AssertAreEqual( expected, M2, 10e-10 );
+		}
+
 	};
 
 }

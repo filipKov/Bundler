@@ -13,37 +13,35 @@ namespace BundlerTest {
 		TEST_METHOD( M33MulV3Bench ) {
 			Logger::WriteMessage( "---- M33MulV3Bench Start ----" );
 
-			const uint BATCH_SIZE = 10000;
-
 			srand( (uint)time(NULL) );
 
 			Matrix3x3 mat;
 			Vector3 vect;
-			Vector3 sink;
+
+			Scalar sink0[ 3 ];
+			Vector3 sink1;
 
 			HighResolutionClock stopwatchFast;
 			HighResolutionClock stopwatchStruct;
 
-			for ( uint i = 0; i < BATCH_SIZE; i++ ) {
+			for ( uint i = 0; i < Settings::BENCHMARK_BATCH_SIZE; i++ ) {
 
-				for ( uint j = 0; j < 3; j++ ) {
-					for ( uint k = 0; k < 3; k++ ) {
-						mat[ j ][ k ] = ( (float)rand() ) / RAND_MAX;
-					}
-					vect[ j ] = ( (float)rand() ) / RAND_MAX;
-				}
+				Random< Scalar >::Matrix( 3, 3, mat.Elements() );
+				Random< Scalar >::Matrix( 3, 1, vect.Elements() );
 
 				stopwatchFast.Start();
-				M33MulV3( mat.Elements(), vect.Elements(), sink.Elements() );
+				M33MulV3( mat.Elements(), vect.Elements(), sink0 );
 				stopwatchFast.Stop();
 
 				stopwatchStruct.Start();
-				sink = mat * vect;
+				sink1 = mat * vect;
 				stopwatchStruct.Stop();
+
+				AssertAreEqual( sink0, sink1.Elements() );
 			}
 
-			double fastLaTime = stopwatchFast.GetTotalTime< TimeUnits::Nanoseconds >() / BATCH_SIZE;
-			double matrixStructTime = stopwatchStruct.GetTotalTime< TimeUnits::Nanoseconds >() / BATCH_SIZE;
+			double fastLaTime = stopwatchFast.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
+			double matrixStructTime = stopwatchStruct.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
 
 			char msg[ 256 ];
 			sprintf_s( msg, "\tFastLA average time: %fns", fastLaTime );
@@ -62,55 +60,56 @@ namespace BundlerTest {
 
 			auto structFnc = [] ( __inout Matrix3x3& R, __in Scalar angle, __in_ecount(3) Scalar* pAxis ) -> void {
 				Matrix3x3 K( {
-					0,						-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
-					ELEMENT( pAxis, 2 ),	0,						-ELEMENT( pAxis, 0 ),
-					-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	0
+					Scalar( 0 ),			-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
+					ELEMENT( pAxis, 2 ),	Scalar( 0 ),			-ELEMENT( pAxis, 0 ),
+					-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	Scalar( 0 )
 				} );
 
+				Scalar angleCosine = cos( angle );
+				
+				K *= sin( angle );
+
+				Matrix3x3 K2;
+				V3OuterProduct( pAxis, pAxis, K2.Elements() );
+				K2 *= Scalar( 1 ) - angleCosine;
+
 				R.SetIdentity();
-				R += ( K * sin( angle ) ) + ( K * K * ( Scalar( 1 ) - cos( angle ) ) );
+				R *= angleCosine;
+				R += K + K2;
 			};
 
 			auto fastLaFunc = [] ( __inout_ecount( 9 ) Scalar* R, __in Scalar angle, __in_ecount( 3 ) Scalar* pAxis ) -> void {
 				Scalar K[ 9 ] = {
-					0,						-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
-					ELEMENT( pAxis, 2 ),	0,						-ELEMENT( pAxis, 0 ),
-					-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	0
+					Scalar( 0 ),			-ELEMENT( pAxis, 2 ),	ELEMENT( pAxis, 1 ),
+					ELEMENT( pAxis, 2 ),	Scalar( 0 ),			-ELEMENT( pAxis, 0 ),
+					-ELEMENT( pAxis, 1 ),	ELEMENT( pAxis, 0 ),	Scalar( 0 )
 				};
-				Scalar K2[ 9 ];
 
-				M33MulM33( K, K, K2 );
-				M33MulC( K2, ( Scalar( 1 ) - cos( angle ) ), K2 );
+				Scalar K2[ 9 ];
+				Scalar angleCosine = cos( angle );
 
 				M33MulC( K, sin( angle ), K );
 
-				M33AddM33( K, K2, K );
+				V3OuterProduct( pAxis, pAxis, K2 );
+				M33MulC( K2, ( Scalar( 1 ) - angleCosine ), K2 );
 
 				M33Identity( R );
+				M33MulC( R, angleCosine, R );
+
+				M33AddM33( K, K2, K );
 				M33AddM33( R, K, R );
 			};
-
-			const uint BATCH_SIZE = 10000;
 
 			Matrix3x3 R1;
 			Scalar R2[ 9 ];
 
-			{
-				Scalar angle = ( (Scalar)rand() ) / RAND_MAX;
-				Scalar axis[ 3 ] = { ( (Scalar)rand() ) / RAND_MAX, ( (Scalar)rand() ) / RAND_MAX, ( (Scalar)rand() ) / RAND_MAX };
-
-				fastLaFunc( R2, angle, axis );
-				structFnc( R1, angle, axis );
-
-				AssertAreEqual( 9, R2, R1.Elements() );
-			}
-
 			HighResolutionClock stopwatchFast;
 			HighResolutionClock stopwatchStruct;
 
-			for ( uint i = 0; i < BATCH_SIZE; i++ ) {
-				Scalar angle = ( (Scalar)rand() ) / RAND_MAX;
-				Scalar axis[ 3 ] = { ( (Scalar)rand() ) / RAND_MAX, ( (Scalar)rand() ) / RAND_MAX, ( (Scalar)rand() ) / RAND_MAX };
+			for ( uint i = 0; i < Settings::BENCHMARK_BATCH_SIZE; i++ ) {
+				Scalar angle = Random< Scalar >::Value();
+				Scalar axis[ 3 ];
+				Random<Scalar>::Matrix( 3, 1, axis );
 
 				stopwatchFast.Start();
 				fastLaFunc( R2, angle, axis );
@@ -119,10 +118,12 @@ namespace BundlerTest {
 				stopwatchStruct.Start();
 				structFnc( R1, angle, axis );
 				stopwatchStruct.Stop();
+
+				AssertAreEqual( R2, R1.Elements() );
 			}
 
-			double fastLaTime = stopwatchFast.GetTotalTime< TimeUnits::Nanoseconds >() / BATCH_SIZE;
-			double structTime = stopwatchStruct.GetTotalTime< TimeUnits::Nanoseconds >() / BATCH_SIZE;
+			double fastLaTime = stopwatchFast.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
+			double structTime = stopwatchStruct.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
 
 
 			char msg[ 256 ];
@@ -135,6 +136,63 @@ namespace BundlerTest {
 
 		}
 
+
+		TEST_METHOD( M44MulM44Bench ) {
+			Logger::WriteMessage( "---- M44MulM44Bench Start ----" );
+
+			Matrix< double, 4, 4 > m1;
+			Matrix< double, 4, 4 > m2;
+
+			Matrix< double, 4, 4 > sink1;
+			Matrix< double, 4, 4 > sink2;
+			Matrix< double, 4, 4 > sink3;
+
+			double* pM1 = m1.Elements();
+			double* pM2 = m2.Elements();
+
+			HighResolutionClock stopwatchFast;
+			HighResolutionClock stopwatchUnrolled;
+			HighResolutionClock stopwatchStruct;
+
+			Random<Scalar>::Seed();
+
+			for ( uint batchI = 0; batchI < Settings::BENCHMARK_BATCH_SIZE; batchI++ )
+			{
+				Random< double >::Fill( 16, pM1 );
+				Random< double >::Fill( 16, pM2 );
+
+				stopwatchFast.Start();
+				M44MulM44( pM1, pM2, sink1.Elements() );
+				stopwatchFast.Stop();
+
+				stopwatchUnrolled.Start();
+				MatrixMultiply< double, 4, 4, 4>( pM1, pM2, sink2.Elements() );
+				stopwatchUnrolled.Stop();
+
+				stopwatchStruct.Start();
+				sink3 = m1 * m2;
+				stopwatchStruct.Stop();
+
+				AssertAreEqual( 16, sink1.Elements(), sink2.Elements() );
+				AssertAreEqual( 16, sink2.Elements(), sink3.Elements() );
+			}
+
+			double fastTime = stopwatchFast.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
+			double unrolledTime = stopwatchUnrolled.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
+			double structTime = stopwatchStruct.GetTotalTime< TimeUnits::Nanoseconds >() / Settings::BENCHMARK_BATCH_SIZE;
+
+
+			char msg[ 256 ];
+			sprintf_s( msg, "\tFastLA average time: %fns", fastTime );
+			Logger::WriteMessage( msg );
+			sprintf_s( msg, "\tUnrolled average time: %fns", unrolledTime );
+			Logger::WriteMessage( msg );
+			sprintf_s( msg, "\tStruct average time: %fns", structTime );
+			Logger::WriteMessage( msg );
+
+			Assert::IsTrue( true );
+
+		}
 	};
 
 }

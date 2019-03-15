@@ -2,7 +2,9 @@
 
 namespace TestingUtils { namespace Settings {
 
-	const int RANDOM_TEST_MAX_LOOPS = 100; // 1000;
+	constexpr const int RANDOM_TEST_MAX_LOOPS = 100; // 1000;
+
+	constexpr const uint BENCHMARK_BATCH_SIZE = 10000;
 
 } }
 

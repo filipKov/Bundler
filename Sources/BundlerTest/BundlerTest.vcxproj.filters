@@ -23,7 +23,7 @@
     <ClCompile Include="CameraModel6DoFTest.cpp">
       <Filter>CameraModels</Filter>
     </ClCompile>
-    <ClCompile Include="BasicJacobiProviderTest.cpp">
+    <ClCompile Include="ProjectionProviderTest.cpp">
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
   </ItemGroup>

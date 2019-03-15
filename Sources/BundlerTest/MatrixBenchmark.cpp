@@ -136,6 +136,19 @@ namespace BundlerTest {
 
 		}
 
+		__declspec( noinline ) void Bench1( HighResolutionClock& stopwatch, double* m1, double* m2, double* sink )
+		{
+			stopwatch.Start();
+			M44MulM44( m1, m2, sink );
+			stopwatch.Stop();
+		}
+
+		__declspec( noinline ) void Bench2( HighResolutionClock& stopwatch, double* m1, double* m2, double* sink )
+		{
+			stopwatch.Start();
+			MatrixMultiply<double, 4, 4, 4>( m1, m2, sink );
+			stopwatch.Stop();
+		}
 
 		TEST_METHOD( M44MulM44Bench ) {
 			Logger::WriteMessage( "---- M44MulM44Bench Start ----" );
@@ -161,18 +174,14 @@ namespace BundlerTest {
 				Random< double >::Fill( 16, pM1 );
 				Random< double >::Fill( 16, pM2 );
 
-				stopwatchFast.Start();
-				M44MulM44( pM1, pM2, sink1.Elements() );
-				stopwatchFast.Stop();
-
-				stopwatchUnrolled.Start();
-				MatrixMultiply< double, 4, 4, 4>( pM1, pM2, sink2.Elements() );
-				stopwatchUnrolled.Stop();
-
+				Bench1( stopwatchFast, pM1, pM2, sink1.Elements() );
+				
+				Bench2( stopwatchUnrolled, pM1, pM2, sink2.Elements() );
+				
 				stopwatchStruct.Start();
 				sink3 = m1 * m2;
 				stopwatchStruct.Stop();
-
+				
 				AssertAreEqual( 16, sink1.Elements(), sink2.Elements() );
 				AssertAreEqual( 16, sink2.Elements(), sink3.Elements() );
 			}

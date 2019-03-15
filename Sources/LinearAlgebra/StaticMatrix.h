@@ -174,6 +174,8 @@ namespace LinearAlgebra {
 		//    Other
 		// -------------------------------------------------------------------------------------------------------
 		inline void SetIdentity() {
+			ByteFill< Scalar >( 0, rows * columns, m_pData );
+
 			Scalar* pDst = m_pData;
 			for ( uint i = 0; i < rows; i++ ) {
 				*pDst = Scalar( 1 );

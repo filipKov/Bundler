@@ -9,7 +9,7 @@ namespace Bundler {
 
 		void Initialize(
 			__in const size_t cameraCount,
-			__in const CameraModel pCameras,
+			__in const CameraModel* pCameras,
 			__in const size_t pointCount,
 			__in const Vector3* pPoints,
 			__in const size_t projectionCount,

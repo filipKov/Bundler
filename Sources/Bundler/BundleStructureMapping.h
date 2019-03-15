@@ -9,7 +9,7 @@ namespace Bundler { namespace Structure {
 		void Initialize(
 			__in const size_t cameraCount,
 			__in const size_t pointCount,
-			__in const uint projectionCount,
+			__in const size_t projectionCount,
 			__in_ecount( projectionCount ) const Projection* pProjections )
 		{
 			m_cameraToProjectionMapping.Allocate( cameraCount );

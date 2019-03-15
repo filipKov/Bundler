@@ -481,8 +481,8 @@ namespace LinearAlgebraTest {
 
 			for ( uint i = 0; i < BATCH_SIZE; i++ )
 			{
-				RandomFill( 20, M0.Elements() );
-				RandomFill( 10, M1.Elements() );
+				Random< double >::Fill( 20, M0.Elements() );
+				Random< double >::Fill( 10, M1.Elements() );
 
 				auto expected = M0 * M1;
 
@@ -506,8 +506,8 @@ namespace LinearAlgebraTest {
 
 			for ( uint i = 0; i < BATCH_SIZE; i++ )
 			{
-				RandomFill( 20, M0.Elements() );
-				RandomFill( 10, M1.Elements() );
+				Random<double>::Fill( 20, M0.Elements() );
+				Random<double>::Fill( 10, M1.Elements() );
 
 				auto expected = M0.Transpose() * M1;
 
@@ -531,8 +531,8 @@ namespace LinearAlgebraTest {
 
 			for ( uint i = 0; i < BATCH_SIZE; i++ )
 			{
-				RandomFill( 20, M0.Elements() );
-				RandomFill( 10, M1.Elements() );
+				Random<double>::Fill( 20, M0.Elements() );
+				Random<double>::Fill( 10, M1.Elements() );
 
 				auto expected = M0 * M1.Transpose();
 
@@ -556,8 +556,8 @@ namespace LinearAlgebraTest {
 
 			for ( uint i = 0; i < BATCH_SIZE; i++ )
 			{
-				RandomFill( 20, M0.Elements() );
-				RandomFill( 10, M1.Elements() );
+				Random<double>::Fill( 20, M0.Elements() );
+				Random<double>::Fill( 10, M1.Elements() );
 
 				auto expected = M0.Transpose() * M1.Transpose();
 

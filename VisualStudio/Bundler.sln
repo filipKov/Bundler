@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BundlerTest", "..\Sources\B
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearAlgebraTest", "..\Sources\LinearAlgebraTest\LinearAlgebraTest.vcxproj", "{3E4AB665-0838-4EDC-8393-4E7F2BC7DFA0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestingUtils", "..\Sources\TestingUtils\TestingUtils.vcxproj", "{E10E40BE-A9CE-4792-9B48-52455C222D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -100,6 +102,14 @@ Global
 		{3E4AB665-0838-4EDC-8393-4E7F2BC7DFA0}.Release|x64.Build.0 = Release|x64
 		{3E4AB665-0838-4EDC-8393-4E7F2BC7DFA0}.Release|x86.ActiveCfg = Release|Win32
 		{3E4AB665-0838-4EDC-8393-4E7F2BC7DFA0}.Release|x86.Build.0 = Release|Win32
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Debug|x64.ActiveCfg = Debug|x64
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Debug|x64.Build.0 = Debug|x64
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Debug|x86.ActiveCfg = Debug|Win32
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Debug|x86.Build.0 = Debug|Win32
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Release|x64.ActiveCfg = Release|x64
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Release|x64.Build.0 = Release|x64
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Release|x86.ActiveCfg = Release|Win32
+		{E10E40BE-A9CE-4792-9B48-52455C222D78}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

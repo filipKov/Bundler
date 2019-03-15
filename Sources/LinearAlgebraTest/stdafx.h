@@ -6,18 +6,19 @@
 #pragma once
 
 #include <Windows.h>
+#include <ctime>
 
-// Headers for CppUnitTest
 #include "CppUnitTest.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-// TODO: reference additional headers your program requires here
-#include <ctime>
+
+#define WIN32_LEAN_AND_MEAN 
 
 #include "..\Utils\UtilsLib.h"
 using namespace Utils;
 
-#include "TestingUtils.h"
-
 #include "..\LinearAlgebra\LinearAlgebraLib.h"
 using namespace LinearAlgebra;
+
+#include "..\TestingUtils\TestingUtilsLib.h"
+using namespace TestingUtils;

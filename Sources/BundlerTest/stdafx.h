@@ -6,6 +6,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <ctime>
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
@@ -20,9 +21,7 @@ using namespace Utils;
 
 #include "..\NumericOptimization\NumericOptimizationLib.h"
 using namespace NumericOptimization::AutomaticDifferentiation;
-using namespace NumericOptimization::LinearSolver;
 
-#include "TestingUtils.h"
-#include "MatrixUtils.h"
-
+#include "..\TestingUtils\TestingUtilsLib.h"
+using namespace TestingUtils;
 // TODO: reference additional headers your program requires here

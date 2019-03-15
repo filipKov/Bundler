@@ -5,7 +5,7 @@ namespace LinearAlgebra {
 	// ToDo: move to separate file for fast Matrix3x4
 
 	template < typename T1, typename T2, typename T3 >
-	inline void M34MulV4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
+	__forceinline void M34MulV4( __in_ecount( 12 ) const T1* M, __in_ecount( 4 ) const T2* inV, __out_ecount( 3 ) T3* outV )
 	{
 		_ASSERT_EXPR( (void*)inV != (void*)outV, "Input and output vectors must be different!" );
 
@@ -29,28 +29,28 @@ namespace LinearAlgebra {
 		struct MatrixEntry
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out T* entry )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out T* entry )
 			{
 				MatrixEntry< T, m, n, p, row, col, i - 1 >::Get< type >( A, B, entry );
 				( *entry ) += ( ELEMENT( A, n * row + i ) * ELEMENT( B, p * i + col ) );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out T* entry )
 			{
 				MatrixEntry< T, m, n, p, row, col, i - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, entry );
 				( *entry ) += ( ELEMENT( A, n * i + row ) * ELEMENT( B, p * i + col ) );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out T* entry )
 			{
 				MatrixEntry< T, m, n, p, row, col, i - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, entry );
 				( *entry ) += ( ELEMENT( A, n * row + i ) * ELEMENT( B, n * col + i ) );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out T* entry )
 			{
 				MatrixEntry< T, m, n, p, row, col, i - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, entry );
 				( *entry ) += ( ELEMENT( A, n * i + row ) * ELEMENT( B, m * col + i ) );
@@ -61,25 +61,25 @@ namespace LinearAlgebra {
 		struct MatrixEntry< T, m, n, p, row, col, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out T* entry )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out T* entry )
 			{
 				( *entry ) = ELEMENT( A, n * row ) * ELEMENT( B, col );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out T* entry )
 			{
 				( *entry ) = ELEMENT( A, row ) * ELEMENT( B, col );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out T* entry )
 			{
 				( *entry ) = ELEMENT( A, n * row ) * ELEMENT( B, n * col );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out T* entry )
+			static __forceinline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out T* entry )
 			{
 				( *entry ) = ELEMENT( A, row ) * ELEMENT( B, m * col );
 			}
@@ -90,28 +90,28 @@ namespace LinearAlgebra {
 		struct MatrixRow
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, col, n - 1 >::Get< type >( A, B, C + ( p * row + col ) );
 				MatrixRow< T, m, n, p, row, col - 1 >::Get< type >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, col, m - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, C + ( p * row + col ) );
 				MatrixRow< T, m, n, p, row, col - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, col, n - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, C + ( p * row + col ) );
 				MatrixRow< T, m, n, p, row, col - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, col, m - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C + ( p * row + col ) );
 				MatrixRow< T, m, n, p, row, col - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
@@ -122,28 +122,28 @@ namespace LinearAlgebra {
 		struct MatrixRow< T, m, n, p, row, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, 0, n - 1 >::Get< type >( A, B, C + ( p * row ) );
 				MatrixRow< T, m, n, p, row - 1, p - 1 >::Get< type >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, 0, m - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, C + ( p * row ) );
 				MatrixRow< T, m, n, p, row - 1, p - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, 0, n - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, C + ( p * row ) );
 				MatrixRow< T, m, n, p, row - 1, p - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, row, 0, m - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C + ( p * row ) );
 				MatrixRow< T, m, n, p, row - 1, p - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
@@ -154,25 +154,25 @@ namespace LinearAlgebra {
 		struct MatrixRow< T, m, n, p, 0, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, 0, 0, n - 1 >::Get< type >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::A_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, 0, 0, m - 1 >::Get< MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::B_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, 0, 0, n - 1 >::Get< MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
 			}
 
 			template <>
-			static inline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
+			static __forceinline void Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
 			{
 				MatrixEntry< T, m, n, p, 0, 0, m - 1 >::Get< MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
 			}
@@ -184,7 +184,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row, size_t col >
 		struct MatrixAdder
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) + ELEMENT( B, row * n + col );
 				MatrixAdder< T, m, n, row, col - 1 >::Get( A, B, C );
@@ -194,7 +194,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row >
 		struct MatrixAdder< T, m, n, row, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) + ELEMENT( B, row * n );
 				MatrixAdder< T, m, n, row - 1, n - 1 >::Get( A, B, C );
@@ -204,7 +204,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n >
 		struct MatrixAdder< T, m, n, 0, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) + ELEMENT( B, 0 );
 			}
@@ -213,7 +213,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row, size_t col >
 		struct MatrixSubtractor
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) - ELEMENT( B, row * n + col );
 				MatrixSubtractor< T, m, n, row, col - 1 >::Get( A, B, C );
@@ -223,7 +223,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row >
 		struct MatrixSubtractor< T, m, n, row, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) - ELEMENT( B, row * n );
 				MatrixSubtractor< T, m, n, row - 1, n - 1 >::Get( A, B, C );
@@ -233,7 +233,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n >
 		struct MatrixSubtractor< T, m, n, 0, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) - ELEMENT( B, 0 );
 			}
@@ -242,7 +242,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row, size_t col >
 		struct MatrixElementWiseMultiplicator
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) * ELEMENT( B, row * n + col );
 				MatrixElementWiseMultiplicator< T, m, n, row, col - 1 >::Get( A, B, C );
@@ -252,7 +252,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n, size_t row >
 		struct MatrixElementWiseMultiplicator< T, m, n, row, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) * ELEMENT( B, row * n );
 				MatrixElementWiseMultiplicator< T, m, n, row - 1, n - 1 >::Get( A, B, C );
@@ -262,7 +262,7 @@ namespace LinearAlgebra {
 		template < typename T, size_t m, size_t n >
 		struct MatrixElementWiseMultiplicator< T, m, n, 0, 0 >
 		{
-			static inline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+			static __forceinline void Get( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) * ELEMENT( B, 0 );
 			}
@@ -270,43 +270,43 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
+	__forceinline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
 	{
 		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::NORMAL >( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyAtB( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
+	__forceinline void MatrixMultiplyAtB( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C )
 	{
 		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyABt( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
+	__forceinline void MatrixMultiplyABt( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C )
 	{
 		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n, size_t p >
-	inline void MatrixMultiplyAtBt( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
+	__forceinline void MatrixMultiplyAtBt( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C )
 	{
 		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n >
-	inline void MatrixAdd( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+	__forceinline void MatrixAdd( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 	{
 		Internal::MatrixAdder< T, m, n, m - 1, n - 1 >::Get( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n >
-	inline void MatrixSub( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+	__forceinline void MatrixSub( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 	{
 		Internal::MatrixSubtractor< T, m, n, m - 1, n - 1 >::Get( A, B, C );
 	}
 
 	template < typename T, size_t m, size_t n >
-	inline void MatrixMultiplyElementWise( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
+	__forceinline void MatrixMultiplyElementWise( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 	{
 		Internal::MatrixElementWiseMultiplicator< T, m, n, m - 1, n - 1 >::Get( A, B, C );
 	}

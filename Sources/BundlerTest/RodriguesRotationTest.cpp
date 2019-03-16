@@ -91,6 +91,42 @@ namespace BundlerTest {
 			AssertAreEqual( M1, M2, 10e-4f );
 		}
 
+		TEST_METHOD( InverseTransform1 )
+		{
+			Scalar R1[ 9 ] = {
+				0.9992772826309979f, 2.162559242174209e-002f, 3.126093680646133e-002f,
+				8.818622544508919e-003f, -0.9318492685749851f, 0.3627384354499577f,
+				3.6974914658811e-002f, -0.3622005996801693f, -0.9313665128601626f
+			};
+
+			Scalar angle;
+			Scalar axis[ 3 ];
+			RodriguesRotation::GetFromRotationMatrix( R1, &angle, axis );
+
+			Scalar R2[ 9 ];
+			RodriguesRotation::GetRotation( angle, axis, R2 );
+
+			AssertAreEqual( R1, R2, 10e-4f );
+		}
+
+		TEST_METHOD( InverseTransform2 )
+		{
+			double R1[ 9 ] = {
+				0.940419083939694, -8.336377630598748e-003, 0.3399153591263963,
+				-0.2068876064360509, -0.8073739525624313, 0.552580147152319,
+				0.2698322902567233, -0.5899811908287559, -0.7609945660798734,
+			};
+
+			double angle;
+			double axis[ 3 ];
+			RodriguesRotation::GetFromRotationMatrix( R1, &angle, axis );
+
+			double R2[ 9 ];
+			RodriguesRotation::GetRotation( angle, axis, R2 );
+
+			AssertAreEqual( R1, R2, 10e-10 );
+		}
+
 	};
 
 }

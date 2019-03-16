@@ -9,15 +9,24 @@ namespace Bundler { namespace CameraModels {
 
 		static constexpr const uint rotationParameterCount = 4;
 
-		static inline void GetFromRotationMatrix( __in_ecount( 9 ) const Scalar* pMatrix, __out Scalar* pAngle, __out_ecount( 3 ) Scalar* pAxis ) {
-			ELEMENT( pAxis, 0 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 7 ) - ELEMENT( pMatrix, 5 ) );
-			ELEMENT( pAxis, 1 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 2 ) - ELEMENT( pMatrix, 6 ) );
-			ELEMENT( pAxis, 2 ) = Scalar( 0.5 ) * ( ELEMENT( pMatrix, 3 ) - ELEMENT( pMatrix, 1 ) );
+		template < typename T >
+		static inline void GetFromRotationMatrix( __in_ecount( 9 ) const T* pMatrix, __out T* pAngle, __out_ecount( 3 ) T* pAxis ) {
+			ELEMENT( pAxis, 0 ) = ( ELEMENT( pMatrix, 7 ) - ELEMENT( pMatrix, 5 ) );
+			ELEMENT( pAxis, 1 ) = ( ELEMENT( pMatrix, 2 ) - ELEMENT( pMatrix, 6 ) );
+			ELEMENT( pAxis, 2 ) = ( ELEMENT( pMatrix, 3 ) - ELEMENT( pMatrix, 1 ) );
 
-			*pAngle = V3Length( pAxis );
-			if ( *pAngle != Scalar( 0 ) ) {
-				V3MulC( pAxis, ( Scalar( 1 ) / (*pAngle) ), pAxis );
-				*pAngle = asin( *pAngle );
+			T s = V3Length( pAxis );
+			if ( s >= T( 1e-5 ) )
+			{
+				T c = ( M33Trace( pMatrix ) - T( 1 ) ) * T( 0.5 );
+				c = max( T( -1.0 ), min( c, T( 1.0 ) ) );
+				
+				*pAngle = acos( c );
+				V3MulC( pAxis, T( 1 ) / s, pAxis );
+			}
+			else
+			{
+				*pAngle = T( 0 );
 			}
 		}
 

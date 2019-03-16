@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Bundler\BundlerLib.h"
+#include "TestData.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Bundler;
@@ -99,10 +100,82 @@ namespace BundlerTest {
 				Scalar residuals[ 2 ];
 
 				projectionProvider.GetProjectionBlock< false, false, true >( i, NULL, NULL, residuals );
-				AssertAreEqual< Scalar >( zero, residuals, 10e-6 );
+				AssertAreEqual< Scalar >( zero, residuals, 10e-6f );
 			}
 				
 		}
+
+		TEST_METHOD( _TestDataVerification0 )
+		{
+			Matrix< double, 3, 3 > R =
+			{ { 0.9992772826309979, 2.162559242174209e-002, 3.126093680646133e-002 },
+			{ 8.818622544508919e-003, -0.9318492685749851, 0.3627384354499577 },
+			{ 3.6974914658811e-002, -0.3622005996801693, -0.9313665128601626 } };
+
+			Vector< double, 3 > t = { -2.418273783787768, -11.77408910880922, -633.8143373879709 };
+
+			const double f = 20598.16150548524;
+			Matrix< double, 3, 3 > K = { { f, 0, 0 },
+			{ 0, f, 0 },
+			{ 0, 0, 1 } };
+
+			Vector< double, 3 > pt = { 1.3001678, -9.5217347, 3.1589597 };
+
+			auto projPt = ( R * pt ) + t;
+			projPt *= -1 / projPt[ 2 ];
+			projPt *= f;
+
+			Vector< double, 3 > ftCoords = { -40.7, -56.1, 1.0 };
+
+			auto res = projPt - ftCoords;
+
+			Assert::AreEqual( 0.0, res[ 0 ][0], 2.0 );
+			Assert::AreEqual( 0.0, res[ 1 ][0], 2.0 );
+		}
+
+		TEST_METHOD( InitializeFromFile )
+		{
+			// Use Snavely's Pinhole camera model: http://www.cs.cornell.edu/~snavely/bundler/bundler-v0.3-manual.html !!
+
+			std::istringstream inputStream( cubesMaskedBundle );
+			Bundle bundle;
+
+			Import::BundleImporter importer;
+			importer.Import( inputStream, &bundle, NULL );
+
+			Containers::Buffer< CameraModel6DoF< 10 > > cameraModels;
+			cameraModels.Allocate( bundle.cameras.Length() );
+			for ( size_t i = 0; i < cameraModels.Length(); i++ )
+			{
+				cameraModels[ i ].Initialize( &bundle.cameras[ i ] );
+			}
+
+			ProjectionProvider< CameraModel6DoF< 10 > > projectionProvider;
+			projectionProvider.Initialize(
+				cameraModels.Length(),
+				cameraModels.Data(),
+				bundle.points.Length(),
+				bundle.points.Data(),
+				bundle.projections.Length(),
+				bundle.projections.Data() );
+
+			const size_t camCount = projectionProvider.GetCameraCount();
+			Assert::AreEqual( bundle.cameras.Length(), camCount );
+
+			const size_t ptCount = projectionProvider.GetPointCount();
+			Assert::AreEqual( bundle.points.Length(), ptCount );
+
+
+			Scalar zero[ 2 ] = { 0, 0 };
+			for ( size_t i = 0; i < bundle.projections.Length(); i++ )
+			{
+				Scalar residuals[ 2 ];
+
+				projectionProvider.GetProjectionBlock< false, false, true >( i, NULL, NULL, residuals );
+				AssertAreEqual< Scalar >( zero, residuals, 10e-6f );
+			}
+		}
+
 	};
 
 }

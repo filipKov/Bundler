@@ -124,19 +124,23 @@ namespace Bundler { namespace Import {
 			m_pAdditionalData->pointColors[ pointIndex ] = 0xFF000000 | r << 16 | g << 8 | b;
 		}
 
-		ParseTrack();
+		ParseTrack( pointIndex );
 	}
 
-	void BundleImporter::ParseTrack() 
+	void BundleImporter::ParseTrack( __in const uint pointIndex ) 
 	{
 		uint trackLength = 0;
 		( *m_pInputStream ) >> trackLength;
 
-		m_tempTracks.EnsureLength( m_tempTracks.Length() + trackLength );
+		uint featureIndex = 0;
+
+		m_tempTracks.EnsureCapacity( m_tempTracks.Length() + trackLength );
 		for ( uint trackI = 0; trackI < trackLength; trackI++ ) 
 		{
-			Projection& track = m_tempTracks[trackI];
-			( *m_pInputStream ) >> track.cameraIndex >> track.pointIndex >> track.projectedPoint[0] >> track.projectedPoint[1];
+			Projection track;
+			( *m_pInputStream ) >> track.cameraIndex >> featureIndex >> track.projectedPoint[0] >> track.projectedPoint[1];
+			track.pointIndex = pointIndex;
+			m_tempTracks.Add( track );
 		}
 	}
 

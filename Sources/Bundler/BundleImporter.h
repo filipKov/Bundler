@@ -19,7 +19,7 @@ namespace Bundler { namespace Import {
 		void ParseCamera( __in const uint cameraIndex );
 		void ParsePoints( __in const uint pointCount );
 		void ParsePoint( __in const uint pointIndex );
-		void ParseTrack();
+		void ParseTrack( __in const uint pointIndex );
 
 
 	protected:

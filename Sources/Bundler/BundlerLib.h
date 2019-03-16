@@ -4,6 +4,8 @@
 
 #include "BundlerDefs.h"
 
+#include "BundleImporter.h"
+
 #include "RodriguesRotation.h"
 
 #include "ICameraModel.h"

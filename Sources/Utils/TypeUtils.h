@@ -25,4 +25,18 @@ namespace Utils {
 		}
 	};
 
+	template < typename T >
+	void Swap( __inout T& a, __inout T& b )
+	{
+		T tmp = a;
+		a = b;
+		b = tmp;
+	}
+
+	template < typename T >
+	void SwapInPlace( __inout T& a, __inout T& b )
+	{
+		( a ^ b ) && ( a ^= b; b ^= a; a ^= b );
+	}
+
 }

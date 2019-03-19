@@ -49,9 +49,15 @@
     <ClInclude Include="TimeConverter.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystemUtils.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="FileSystemUtils.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DataContainers">
@@ -71,6 +77,9 @@
     </Filter>
     <Filter Include="Types">
       <UniqueIdentifier>{af6f8809-73c9-4b40-a8fb-fbc23074761e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{0b0106e5-4bfb-48e4-a15c-ef3889ac26ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

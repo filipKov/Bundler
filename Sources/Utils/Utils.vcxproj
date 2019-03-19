@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="ArrayUtils.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="FileSystemUtils.h" />
     <ClInclude Include="HighResolutionClock.h" />
     <ClInclude Include="TimeConverter.h" />
     <ClInclude Include="TypeUtils.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FileSystemUtils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

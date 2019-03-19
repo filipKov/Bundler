@@ -46,9 +46,7 @@ namespace BundlerTest {
 			Camera cam;
 			cam.t = Vector3( { 2, 3, 4 } );
 			cam.r = Matrix3x3( { 1,0,0, 0,1,0, 0,0,1 } );
-			cam.k.fScale = 1.0f;
-			cam.k.k1 = 0.0f;
-			cam.k.k2 = 0.0f;
+			cam.focalLength = 1;
 
 			CameraModel3DoF camModel;
 			camModel.Initialize( &cam );

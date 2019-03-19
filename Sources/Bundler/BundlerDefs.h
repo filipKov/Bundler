@@ -1,21 +1,22 @@
 #pragma once
 
 namespace Bundler {
-	
-	struct CameraCalibration {
-		Scalar fScale;
-		Scalar k1;
-		Scalar k2;
-	};
 
-	struct Camera {
-		CameraCalibration k;
-
+	struct Camera 
+	{
+		Scalar focalLength;
 		Matrix3x3 r;
 		Vector3 t;
 	};
 
-	struct Projection {
+	struct CameraInfo
+	{
+		uint width;
+		uint height;
+	};
+
+	struct Projection 
+	{
 		uint cameraIndex;
 		uint pointIndex;
 
@@ -34,6 +35,7 @@ namespace Bundler {
 	struct BundleAdditionalPayload 
 	{
 		Containers::Buffer< uint > pointColors;
+		Containers::Buffer< CameraInfo > cameraInformation;
 	};
 
 }

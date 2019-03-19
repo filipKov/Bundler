@@ -44,9 +44,7 @@ namespace BundlerTest {
 		{
 			camera.t = Vector3( pos );
 			RodriguesRotation::GetRotation( rotAngle, rotAxis, camera.r.Elements() );
-			camera.k.fScale = 1;
-			camera.k.k1 = 0;
-			camera.k.k2 = 0;
+			camera.focalLength = 1;
 		}
 
 		void SetPoint( __in const Scalar( &pos )[ 3 ], __out Vector3& point )
@@ -140,8 +138,7 @@ namespace BundlerTest {
 			std::istringstream inputStream( cubesMaskedBundle );
 			Bundle bundle;
 
-			Import::BundleImporter importer;
-			importer.Import( inputStream, &bundle, NULL );
+			Import::BundleImporter::Import( &inputStream, &bundle, NULL );
 
 			Containers::Buffer< CameraModel6DoF< 10 > > cameraModels;
 			cameraModels.Allocate( bundle.cameras.Length() );

@@ -70,15 +70,11 @@ namespace Bundler { namespace CameraModels {
 			__in_ecount( 3 ) const DScalar< totalParamCount >* pPoint,
 			__out_ecount( 3 ) DScalar< totalParamCount >* pCalibratedPoint ) const override 
 		{
-			const CameraCalibration& calib = m_pCamera->k;
-			Scalar K[ 9 ] =
-			{
-				calib.fScale,	0,				calib.k1,
-				0,				calib.fScale,	calib.k2,
-				0,				0,				1
-			};
+			const Scalar focalLength = m_pCamera->focalLength;
 
-			M33MulV3( K, pPoint, pCalibratedPoint );
+			ELEMENT( pCalibratedPoint, 0 ) = ELEMENT( pPoint, 0 ) * focalLength;
+			ELEMENT( pCalibratedPoint, 1 ) = ELEMENT( pPoint, 1 ) * focalLength;
+			ELEMENT( pCalibratedPoint, 2 ) = ELEMENT( pPoint, 2 );
 		}
 
 		void AddInitialRotation( __in_ecount( 9 ) const Scalar* pRotMatrix ) 

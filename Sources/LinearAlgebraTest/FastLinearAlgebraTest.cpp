@@ -607,6 +607,24 @@ namespace LinearAlgebraTest {
 			AssertAreEqual( 9, expected.Elements(), res );
 		}
 
+		TEST_METHOD( MatrixInvertCorrectness0 )
+		{
+			Matrix< double, 3, 3 > M( { 1, 2, 3, 0, 1, 4, 5, 6, 0 } );
+			
+			Matrix< double, 3, 3 > M1 = M;
+			Matrix< double, 3, 3 > IM;
+
+			MatrixInvertGJ< double, 3 >( M1.Elements(), IM.Elements() );
+
+			double identity[ 9 ];
+			M33Identity( identity );
+
+			double expectedMMulInv[ 9 ];
+			M33MulM33( M.Elements(), IM.Elements(), expectedMMulInv );
+
+			AssertAreEqual( identity, expectedMMulInv, 10e-10 );
+		}
+
 	};
 
 }

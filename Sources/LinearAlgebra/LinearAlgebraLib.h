@@ -20,3 +20,4 @@
 #include "FastVector4.h"
 #include "FastMatrix33.h"
 #include "FastMatrix44.h"
+#include "MatrixInvertGJ.h"

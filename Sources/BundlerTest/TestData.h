@@ -2,6 +2,45 @@
 
 namespace BundlerTest {
 
+	const char parseTestBundle[] =
+		"# Bundle file v0.3\n"
+		"2 3\n"
+		"12.453 0 0\n"
+		"1 2 3\n"// r
+		"4 5 6\n"// r
+		"7 8 9\n"// r
+		"10 11 12\n"// t
+		"18.543 0 0\n"
+		"12 11 10\n"// r
+		"9 8 7\n"// r
+		"6 5 4\n"// r
+		"3 2 1\n"// t
+		"1.25 3.56 4.11\n"// pos
+		"127 127 127\n"// rgb
+		"2 0 0 0.54 0.14 1 23 0.75 0.34\n"//track ( cam ft x y )
+		"1.25 4.01 4.43\n"// pos
+		"127 127 184\n"// rgb
+		"2 0 2343 0.85 0.3 1 98 0.23 0.40\n"//track
+		"3.25 3 0.11\n"// pos
+		"43 51 93\n"// rgb
+		"2 0 6548 0.34 0.56 1 65 0.81 0.25\n";//track
+
+	const char parseTestImageList[] =
+		"image1 16 12\n"
+		"image2 16 12\n";
+
+	const char cubesMaskedImageList[] =
+		"PC026001.tif 2288 1712\n"
+		"PC026004.tif 2288 1712\n"
+		"PC026005.tif 2288 1712\n"
+		"PC026006.tif 2288 1712\n"
+		"PC026007.tif 2288 1712\n"
+		"PC026008.tif 2288 1712\n"
+		"PC026009.tif 2288 1712\n"
+		"PC026010.tif 2288 1712\n"
+		"PC026011.tif 2288 1712\n"
+		"PC026012.tif 2288 1712\n";
+
 	const char cubesMaskedBundle[] =
 		"# Bundle file v0.3\n"
 		"10 433\n"
@@ -1354,6 +1393,7 @@ namespace BundlerTest {
 		"-10.142891 -26.091816 -41.27912\n"
 		"140 129 128\n"
 		"2 4 117 -1.05e+003 262 0 382 -509 -89.6";
+
 
 
 }

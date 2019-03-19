@@ -10,10 +10,7 @@ namespace Bundler { namespace Import {
 			return "UNKNOWN";
 		}
 
-		static constexpr bool SupportsImageList()
-		{
-			return false;
-		}
+		virtual bool SupportsImageList() const = 0;
 
 		virtual HRESULT Parse(
 			__in std::istream* pBundleStream,

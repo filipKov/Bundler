@@ -154,6 +154,7 @@
     <ClInclude Include="TestData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BundleImportTest.cpp" />
     <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="CameraModel6DoFTest.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />

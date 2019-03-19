@@ -27,6 +27,9 @@
     <ClCompile Include="ProjectionProviderTest.cpp">
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
+    <ClCompile Include="BundleImportTest.cpp">
+      <Filter>Import</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">
@@ -40,6 +43,9 @@
     </Filter>
     <Filter Include="JacobianAndHessian">
       <UniqueIdentifier>{7adca1b1-3ac2-461b-8b86-7f99e7a171af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Import">
+      <UniqueIdentifier>{d464f3a7-00d0-40e7-b756-6a221417918e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -133,12 +133,14 @@ namespace BundlerTest {
 
 		TEST_METHOD( InitializeFromFile )
 		{
-			// Use Snavely's Pinhole camera model: http://www.cs.cornell.edu/~snavely/bundler/bundler-v0.3-manual.html !!
-
 			std::istringstream inputStream( cubesMaskedBundle );
-			Bundle bundle;
+			std::istringstream imageListStream( cubesMaskedImageList );
 
-			Import::BundleImporter::Import( &inputStream, &bundle, NULL );
+			Bundle bundle;
+			BundleAdditionalPayload metadata;
+
+			HRESULT hr = Import::BundleImporter::Import( &inputStream, &imageListStream, &bundle, &metadata );
+			Assert::AreEqual( S_OK, hr );
 
 			Containers::Buffer< CameraModel6DoF< 10 > > cameraModels;
 			cameraModels.Allocate( bundle.cameras.Length() );
@@ -169,7 +171,7 @@ namespace BundlerTest {
 				Scalar residuals[ 2 ];
 
 				projectionProvider.GetProjectionBlock< false, false, true >( i, NULL, NULL, residuals );
-				AssertAreEqual< Scalar >( zero, residuals, 10e-6f );
+				AssertAreEqual< Scalar >( zero, residuals, 0.2f );
 			}
 		}
 

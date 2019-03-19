@@ -11,10 +11,7 @@ namespace Bundler { namespace Import {
 			return "# Bundle file v0.3";
 		}
 
-		static constexpr bool SupportsImageList()
-		{
-			return true;
-		}
+		bool SupportsImageList() const override;
 
 		HRESULT Parse(
 			__in std::istream* pBundleStream,

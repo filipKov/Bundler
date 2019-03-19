@@ -6,6 +6,11 @@
 
 namespace Bundler { namespace Import {
 
+	bool SnavelyBundleImportWorker::SupportsImageList() const
+	{
+		return true;
+	}
+
 	HRESULT SnavelyBundleImportWorker::Parse(
 		__in std::istream* pBundleStream,
 		__out Bundle* pBundle,
@@ -53,7 +58,7 @@ namespace Bundler { namespace Import {
 			hr = ParseCameras( cameraCount );
 			if ( SUCCEEDED( hr ) )
 			{
-				ParsePoints( pointCount );
+				hr = ParsePoints( pointCount );
 			}
 		}
 
@@ -208,7 +213,13 @@ namespace Bundler { namespace Import {
 
 		if ( SUCCEEDED( hr ) )
 		{
-			// TODO: flip values
+									; camera.r[ 0 ][ 1 ] *= -1;
+			camera.r[ 1 ][ 0 ] *= -1;						  ; camera.r[ 1 ][ 2 ] *= -1;
+			camera.r[ 2 ][ 0 ] *= -1;						  ; camera.r[ 2 ][ 2 ] *= -1;
+
+			Swap( camera.r[ 0 ][ 1 ], camera.r[ 0 ][ 2 ] );
+			Swap( camera.r[ 1 ][ 1 ], camera.r[ 1 ][ 2 ] );
+			Swap( camera.r[ 2 ][ 1 ], camera.r[ 2 ][ 2 ] );
 		}
 		
 		return hr;
@@ -238,7 +249,8 @@ namespace Bundler { namespace Import {
 
 		if ( SUCCEEDED( hr ) )
 		{
-			// TODO: flip values
+			camera.t[ 1 ] *= -1;
+			camera.t[ 2 ] *= -1;
 		}
 
 		return hr;
@@ -297,7 +309,8 @@ namespace Bundler { namespace Import {
 
 		if ( SUCCEEDED( hr ) )
 		{
-			// TOOD: flip values
+			point[ 1 ] *= -1;
+			Swap( point[ 1 ], point[ 2 ] );
 		}
 
 		return hr;
@@ -377,7 +390,7 @@ namespace Bundler { namespace Import {
 			Scalar scaleInv = 1 / (Scalar)max( camInfo.width, camInfo.height );
 			projection.projectedPoint *= scaleInv;
 
-			// TODO: flip values
+			projection.projectedPoint[ 1 ] *= -1;
 		}
 
 		if ( SUCCEEDED( hr ) )

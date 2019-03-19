@@ -57,6 +57,15 @@
     <ClInclude Include="CachedJacobiPreconditioner.h">
       <Filter>LinearSolver\Preconditioning</Filter>
     </ClInclude>
+    <ClInclude Include="TextStreamReader.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="IBundleImportWorker.h">
+      <Filter>Import\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="SnavelyBundleImportWorker.h">
+      <Filter>Import\Workers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -71,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="ReprojectionResiudal.cpp">
       <Filter>OldPrototype</Filter>
+    </ClCompile>
+    <ClCompile Include="SnavelyBundleImportWorker.cpp">
+      <Filter>Import\Workers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +106,9 @@
     </Filter>
     <Filter Include="LinearSolver\Preconditioning">
       <UniqueIdentifier>{7aae04f3-8a23-4ee9-b5dd-c58a1f6cbf96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Import\Workers">
+      <UniqueIdentifier>{03b00418-b1d2-439a-99d9-631912a93353}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

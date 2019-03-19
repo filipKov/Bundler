@@ -4,6 +4,8 @@
 
 #include "BundlerDefs.h"
 
+#include "IBundleImportWorker.h"
+#include "SnavelyBundleImportWorker.h"
 #include "BundleImporter.h"
 
 #include "RodriguesRotation.h"

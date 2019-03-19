@@ -6,30 +6,30 @@ namespace Bundler { namespace Import {
 	{
 	public:
 		
-		void Import( __in std::istream& stream, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
-		void Import( __in_z const char* pFilename, __out Bundler::Bundle* pBundle, __out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
+		static HRESULT Import( 
+			__in std::istream* pBundleStream, 
+			__out Bundler::Bundle* pBundle, 
+			__out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
+
+		static HRESULT Import(
+			__in std::istream* pBundleStream,
+			__in std::istream* pImageListStream,
+			__out Bundler::Bundle* pBundle,
+			__out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
+
+		static HRESULT Import( 
+			__in_z const char* pFilename, 
+			__out Bundler::Bundle* pBundle, 
+			__out_opt Bundler::BundleAdditionalPayload* pAdditionalData );
 
 	protected:
 
-		void ParseFile();
-		void ParseAndCheckHeader();
-		void ParseCountInformation( __out uint& cameraCount, __out uint& pointCount );
-		void InitializeBundle( __in const uint cameraCount, __in const uint pointCount );
-		void ParseCameras( __in const uint cameraCount );
-		void ParseCamera( __in const uint cameraIndex );
-		void ParsePoints( __in const uint pointCount );
-		void ParsePoint( __in const uint pointIndex );
-		void ParseTrack( __in const uint pointIndex );
+		static void GetImageListPath( __in_z const char* pBundlePath, __out_ecount( 512 ) char* pImListPath );
 
+		static HRESULT ParseHeader( __in std::istream* pStream, __out_z char( &header )[ 256 ] );
 
-	protected:
+		static HRESULT SelectImporter( __in_z const char* pHeader, __deref_out IBundleImportWorker** ppImporter );
 
-		std::istream* m_pInputStream;
-
-		Bundler::Bundle* m_pOutBundle;
-		Bundler::BundleAdditionalPayload* m_pAdditionalData;
-
-		Containers::PagedVector< Bundler::Projection, 12 > m_tempTracks;
 
 	};
 

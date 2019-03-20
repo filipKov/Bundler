@@ -622,6 +622,7 @@ namespace LinearAlgebraTest {
 			double expectedMMulInv[ 9 ];
 			M33MulM33( M.Elements(), IM.Elements(), expectedMMulInv );
 
+			AssertAreEqual( identity, M1.Elements( ), 10e-10 );
 			AssertAreEqual( identity, expectedMMulInv, 10e-10 );
 		}
 

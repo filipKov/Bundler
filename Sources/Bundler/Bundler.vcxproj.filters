@@ -66,6 +66,9 @@
     <ClInclude Include="SnavelyBundleImportWorker.h">
       <Filter>Import\Workers</Filter>
     </ClInclude>
+    <ClInclude Include="BlockJacobiPreconditioner.h">
+      <Filter>LinearSolver\Preconditioning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

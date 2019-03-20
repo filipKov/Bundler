@@ -132,7 +132,6 @@
     <ClInclude Include="HelperMacros.h" />
     <ClInclude Include="LinearAlgebraLib.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="MatrixInvertGJ2.h" />
     <ClInclude Include="MatrixInvertGJ.h" />
     <ClInclude Include="StaticMatrix.h" />
     <ClInclude Include="StaticMatrixOperators.h" />

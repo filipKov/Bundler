@@ -15,9 +15,9 @@
 #include "StaticVector.h"
 #include "StaticVectorOperators.h"
 
-#include "FastLinAlgFunctions.h"
 #include "FastVector3.h"
 #include "FastVector4.h"
 #include "FastMatrix33.h"
 #include "FastMatrix44.h"
-#include "MatrixInvertGJ2.h"
+#include "FastLinAlgFunctions.h"
+#include "MatrixInvertGJ.h"

@@ -145,16 +145,7 @@ namespace LinearAlgebra {
 		_ASSERT_EXPR( det != T2( 0 ), "Matrix is singular" );
 
 		det = T2( 1 ) / det;
-
-		ELEMENT( MI, 0 ) *= det;
-		ELEMENT( MI, 1 ) *= det;
-		ELEMENT( MI, 2 ) *= det;
-		ELEMENT( MI, 3 ) *= det;
-		ELEMENT( MI, 4 ) *= det;
-		ELEMENT( MI, 5 ) *= det;
-		ELEMENT( MI, 6 ) *= det;
-		ELEMENT( MI, 7 ) *= det;
-		ELEMENT( MI, 8 ) *= det;
+		M33MulC( MI, det, MI );
 	}
 
 	// ----------------------------------------------------

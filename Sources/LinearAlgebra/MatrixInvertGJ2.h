@@ -35,15 +35,15 @@ namespace LinearAlgebra {
 		for ( size_t rowIx = diagIx + 1; rowIx < n; rowIx++ )
 		{
 			T rowFactor = ELEMENT( A, rowIx * n + diagIx ) * diagInv;
+
+			//MatrixSubC< T, 1, n - diagIx >( A + rowIx * n + diagIx, A + diagIx * n + diagIx, rowFactor, A + rowIx * n + diagIx );
+
 			for ( size_t colIx = diagIx; colIx < n; colIx++ )
 			{
 				ELEMENT( A, rowIx * n + colIx ) -= ELEMENT( A, diagIx * n + colIx ) * rowFactor;
 			}
 
-			for ( size_t colIx = 0; colIx < n; colIx++ )
-			{
-				ELEMENT( InvertedA, rowIx * n + colIx ) -= ELEMENT( InvertedA, diagIx * n + colIx ) * rowFactor;
-			}
+			MatrixSubC< T, 1, n >( InvertedA + rowIx * n, InvertedA + diagIx * n, rowFactor, InvertedA + rowIx * n );
 		}
 	}
 
@@ -71,10 +71,8 @@ namespace LinearAlgebra {
 				T rowFactor = ELEMENT( A, rowI * n + diagI ) * diagInv;
 
 				MatrixSubC< T, 1, n >( InvertedA + rowI * n, InvertedA + diagI * n, rowFactor, InvertedA + rowI * n );
-				ELEMENT( A, rowI * n + diagI ) -= ELEMENT( A, diagI * n + diagI ) * rowFactor; // delete, we don't need to set A to Identity
 			}
 
-			ELEMENT( A, diagI * n + diagI ) *= diagInv; // delete, we don't need to set A to Identity
 			MatrixMultiplyC< T, 1, n >( InvertedA + diagI * n, diagInv, InvertedA + diagI * n );
 		}
 	}

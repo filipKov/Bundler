@@ -60,7 +60,7 @@ namespace Bundler {
 
 		size_t GetPointProjectionIndex( __in const size_t pointIx, __in const size_t ix ) const
 		{
-			return m_mapping.GetCameraProjectionIndex( pointIx, ix );
+			return m_mapping.GetPointProjectionIndex( pointIx, ix );
 		}
 
 		size_t GetPointIndex( __in const size_t projectionIx ) const

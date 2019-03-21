@@ -18,6 +18,7 @@ namespace Bundler { namespace LinearSolver {
 		}
 
 		void SolveSystem(
+			__in const Scalar diagonalDampeningFactor,
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
@@ -26,7 +27,7 @@ namespace Bundler { namespace LinearSolver {
 			PCGSolverTemp temp( parameterVectorSize );
 
 			HessianMultiplicationEngine< CameraModel > hessian;
-			hessian.Initialize( pJacobian );
+			hessian.Initialize( pJacobian, diagonalDampeningFactor );
 			
 			InitSolve( pJacobian, &hessian, parameterVectorSize, pX, &temp );
 			uint finalIter = SolveLoop( pJacobian, &hessian, parameterVectorSize, pX, &temp );

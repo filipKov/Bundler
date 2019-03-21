@@ -2,16 +2,15 @@
 
 namespace Bundler {
 
-	// TODO: add Levenberg-Marquardt dampening factor
-
 	template < class CameraModel >
 	class HessianMultiplicationEngine
 	{
 	public:
 
-		void Initialize( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
+		void Initialize( __in const ProjectionProvider< CameraModel >* pProjectionProvider, __in const Scalar lmLambda )
 		{
 			m_hessian.Initialize( pProjectionProvider );
+			m_diagonalFactor = 1 + lmLambda;
 		}
 
 		inline size_t GetCameraCount() const
@@ -67,6 +66,7 @@ namespace Bundler {
 			Scalar cameraBlock[ cameraParamCount * cameraParamCount ];
 			m_hessian.GetCameraBlock( cameraIx, cameraBlock );
 
+			MatrixMultiplyDiagonal< Scalar, cameraParamCount >( m_diagonalFactor, cameraBlock );
 			MatrixMultiply< Scalar, cameraParamCount, cameraParamCount, 1 >( cameraBlock, pX, pY );
 		}
 		
@@ -103,6 +103,7 @@ namespace Bundler {
 			Scalar pointBlock[ POINT_PARAM_COUNT * POINT_PARAM_COUNT ];
 			m_hessian.GetPointBlock( pointIx, pointBlock );
 
+			MatrixMultiplyDiagonal< Scalar, POINT_PARAM_COUNT >( m_diagonalFactor, pointBlock );
 			MatrixMultiply< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT, 1 >( pointBlock, pX, pY );
 		}
 
@@ -134,6 +135,8 @@ namespace Bundler {
 	protected:
 
 		HessianBlockProvider< CameraModel > m_hessian;
+
+		Scalar m_diagonalFactor;
 
 	};
 

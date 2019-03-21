@@ -284,28 +284,44 @@ namespace LinearAlgebra {
 		template < typename T, size_t n, size_t diagIx >
 		struct MatrixDiagonalIteratorImpl
 		{
-			static void SetTo( __out_ecount( n * n ) T* A, __in const T cnst )
+			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A )
 			{
 				ELEMENT( A, diagIx * n + diagIx ) = cnst;
-				MatrixDiagonalIteratorImpl< T, n, diagIx - 1 >::SetTo( A, cnst );
+				MatrixDiagonalIteratorImpl< T, n, diagIx - 1 >::SetTo( cnst, A );
+			}
+
+			static __forceinline void MultiplyBy( __in const T cnst, __inout_ecount( n * n ) T* A )
+			{
+				ELEMENT( A, diagIx * n + diagIx ) *= cnst;
+				MatrixDiagonalIteratorImpl< T, n, diagIx - 1 >::MultiplyBy( cnst, A );
 			}
 		};
 
 		template < typename T, size_t n >
 		struct MatrixDiagonalIteratorImpl< T, n, 0 >
 		{
-			static void SetTo( __out_ecount( n * n ) T* A, __in const T cnst )
+			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A )
 			{
 				ELEMENT( A, 0 ) = cnst;
+			}
+
+			static __forceinline void MultiplyBy( __in const T cnst, __inout_ecount( n * n ) T* A )
+			{
+				ELEMENT( A, 0 ) *= cnst;
 			}
 		};
 
 		template < typename T, size_t n >
 		struct MatrixDiagonalIterator
 		{
-			static void SetTo( __out_ecount( n * n ) T* A, __in const T cnst )
+			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A )
 			{
-				MatrixDiagonalIteratorImpl< T, n, n - 1 >::SetTo( A, cnst );
+				MatrixDiagonalIteratorImpl< T, n, n - 1 >::SetTo( cnst, A );
+			}
+
+			static __forceinline void MultiplyBy( __in const T cnst, __inout_ecount( n * n ) T* A )
+			{
+				MatrixDiagonalIteratorImpl< T, n, n - 1 >::MultiplyBy( cnst, A );
 			}
 		};
 
@@ -363,13 +379,19 @@ namespace LinearAlgebra {
 	__forceinline void MatrixIdentity( __out_ecount( n * n ) T* A )
 	{
 		ByteFill< T >( 0, n * n, A );
-		Internal::MatrixDiagonalIterator< T, n >::SetTo( A, T( 1 ) );
+		Internal::MatrixDiagonalIterator< T, n >::SetTo( T( 1 ), A );
 	}
 
 	template < typename T, size_t m, size_t n >
 	__forceinline void MatrixMultiplyC( __in_ecount( m * n ) const T* A, __in const T cnst, __out_ecount( m * n ) T* B )
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::MultiplyByCnst( A, cnst, B );
+	}
+
+	template < typename T, size_t n >
+	__forceinline void MatrixMultiplyDiagonal( __in const T cnst, __inout_ecount( n * n ) T* A )
+	{
+		Internal::MatrixDiagonalIterator< T, n >::MultiplyBy( cnst, A );
 	}
 
 }

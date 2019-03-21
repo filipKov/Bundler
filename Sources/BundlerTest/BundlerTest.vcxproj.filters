@@ -30,6 +30,9 @@
     <ClCompile Include="BundleImportTest.cpp">
       <Filter>Import</Filter>
     </ClCompile>
+    <ClCompile Include="HessianTest.cpp">
+      <Filter>JacobianAndHessian</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">

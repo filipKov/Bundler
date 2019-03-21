@@ -157,6 +157,7 @@
     <ClCompile Include="BundleImportTest.cpp" />
     <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="CameraModel6DoFTest.cpp" />
+    <ClCompile Include="HessianTest.cpp" />
     <ClCompile Include="JacobiPreconditionerTest.cpp" />
     <ClCompile Include="MatrixBenchmark.cpp" />
     <ClCompile Include="ProjectionProviderTest.cpp" />

@@ -63,7 +63,7 @@ namespace Bundler { namespace LinearSolver {
 			__in_ecount( blockSize ) const Scalar* pVector,
 			__out_ecount( blockSize ) Scalar* pPreconditionedVector ) const
 		{
-			Scalar invertedBlock[blockSize * blockSize];
+			Scalar invertedBlock[9];
 
 			M33Inverse( pBlock, invertedBlock );
 			M33MulV3( invertedBlock, pVector, pPreconditionedVector );

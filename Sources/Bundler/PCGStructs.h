@@ -2,6 +2,12 @@
 
 namespace Bundler { namespace LinearSolver {
 
+	struct PCGSolverSettings
+	{
+		uint maxIterations;
+		Scalar errorTolerance;
+	};
+
 	struct PCGSolverStatistics
 	{
 		uint iterationCount;

@@ -17,6 +17,13 @@ namespace Bundler { namespace LinearSolver {
 			m_pPreconditioner = pPreconditioner;
 		}
 
+		void Initialize(
+			__in const PCGSolverSettings& settings,
+			__in const Preconditioner< CameraModel >* pPreconditioner )
+		{
+			Initialize( settings.maxIterations, settings.errorTolerance, pPreconditioner );
+		}
+
 		void SolveSystem(
 			__in const Scalar diagonalDampeningFactor,
 			__in const ProjectionProvider< CameraModel >* pJacobian,

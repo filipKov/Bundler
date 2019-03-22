@@ -68,6 +68,11 @@ namespace Bundler {
 			return ELEMENT( m_pProjections, projectionIx ).pointIndex;
 		}
 
+		size_t GetProjectionCount( ) const
+		{
+			return m_projectionCount;
+		}
+
 
 		template < bool getCameraBlock, bool getPointBlock, bool getResiduals >
 		void GetProjectionBlock(

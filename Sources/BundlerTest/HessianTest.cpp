@@ -234,35 +234,57 @@ namespace BundlerTest {
 			}
 		}
 
+		void PrintTime( __in_z const char* pMsg, __in const double elapsedMillis )
+		{
+			char messageBuffer[256];
+			sprintf_s( messageBuffer, "\t%s: %fms", pMsg, elapsedMillis );
+
+			Logger::WriteMessage( messageBuffer );
+		}
+
 		TEST_METHOD( CompareWithDense0 )
 		{
+			Logger::WriteMessage( "---- " __FUNCTION__ " Start ----" );
+
+			HighResolutionClock stopwatch;
+
 			std::istringstream inputStream( parseTestBundle );
 			std::istringstream imListStream( parseTestImageList );
 			Bundle bundle;
-
+		
 			GetBundle( &inputStream, &imListStream, &bundle );
-
+		
 			Containers::Buffer< CamModel > cameraModels;
 			ProjectionProvider< CamModel > jacobian;
-
+		
 			cameraModels.Allocate( bundle.cameras.Length( ) );
 			InitializeProjectionProvider( &bundle, cameraModels.Data( ), &jacobian );
-
-
+		
+		
 			const size_t hessianSize = GetTotalParameterCount( &jacobian );
-
+		
 			Matrix< Scalar > denseHessian( (uint)hessianSize, (uint)hessianSize );
 			Matrix< Scalar > denseHessian2 = denseHessian;
-
+		
+			stopwatch.Start( );
 			FillDenseHessian( &jacobian, &denseHessian );
-			PrintHessian( hessianSize, denseHessian.Elements( ) );
+			stopwatch.Stop( );
+			PrintTime( "Dense Hessian", stopwatch.GetTotalTime<TimeUnits::Milliseconds>( ) );
 
-
+			// PrintHessian( hessianSize, denseHessian.Elements( ) );
+			
+		
 			HessianBlockProvider< CamModel > hessian;
 			hessian.Initialize( &jacobian );
+			
+			stopwatch.Clear( );
+			stopwatch.Start( );
 			FillDenseHessian( &hessian, &denseHessian2 );
-			PrintHessian( hessianSize, denseHessian2.Elements( ) );
+			stopwatch.Stop( );
+			PrintTime( "Sparse Hessian", stopwatch.GetTotalTime<TimeUnits::Milliseconds>( ) );
 
+			// PrintHessian( hessianSize, denseHessian2.Elements( ) );
+		
 			AssertAreEqual( hessianSize * hessianSize, denseHessian.Elements( ), denseHessian2.Elements( ), Scalar(10e-4) );
 		}
 

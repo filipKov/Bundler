@@ -16,6 +16,7 @@ namespace Bundler {
 
 	struct OptimizerStatistics
 	{
+		Scalar initialGeometricError;
 		Scalar finalGeometricError;
 		uint iterationCount;
 	};
@@ -44,13 +45,7 @@ namespace Bundler {
 
 			Scalar geometricError = 0;
 			uint finalIteration = 0;
-			OptimizeLoop( &jacobian, pBundle, &geometricError, &finalIteration ); // TODO: parameter vector
-
-			if ( pStats )
-			{
-				pStats->finalGeometricError = geometricError;
-				pStats->iterationCount = finalIteration;
-			}
+			OptimizeLoop( &jacobian, pBundle, pStats );
 		}
 
 	protected:
@@ -79,14 +74,17 @@ namespace Bundler {
 		void OptimizeLoop(
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__inout Bundle* pBundle,
-			__out Scalar* pGeometricError,
-			__out uint* pFinalIteration )
+			__out_opt OptimizerStatistics* pStats )
 		{
 			const size_t parameterCount = GetTotalPrameterCount( pJacobian );
 			Vector< Scalar > updateVector( (uint)parameterCount );
 			Scalar* pUpdateVector = updateVector.Elements( );
 
 			Scalar geometricError = GetGeometricError( pJacobian );
+			if ( pStats )
+			{
+				pStats->initialGeometricError = geometricError;
+			}
 
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) && ( geometricError > m_errorTolerance ) )
@@ -106,15 +104,19 @@ namespace Bundler {
 				}
 				else
 				{
-					
 					ResetBundleParams( parameterCount, pUpdateVector, pBundle );
 
 					m_dampeningFactor *= m_dampeningUp;
 				}
+
+				iteration++;
 			}
 
-			*pFinalIteration = iteration;
-			*pGeometricError = geometricError;
+			if ( pStats )
+			{
+				pStats->iterationCount = iteration;
+				pStats->finalGeometricError = geometricError;
+			}
 		}
 
 		size_t GetTotalPrameterCount( __in const ProjectionProvider< CameraModel >* pJacobian ) const
@@ -130,7 +132,7 @@ namespace Bundler {
 			const size_t projectionCount = pJacobian->GetProjectionCount();
 			for ( size_t projIx = 0; projIx < projectionCount; projIx++ )
 			{
-				pJacobian->GetProjectionBlock< false, false, false >( projIx, NULL, NULL, residuals );
+				pJacobian->GetProjectionBlock< false, false, true >( projIx, NULL, NULL, residuals );
 
 				error += residuals[0] * residuals[0];
 				error += residuals[1] * residuals[1];

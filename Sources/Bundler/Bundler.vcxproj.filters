@@ -69,6 +69,9 @@
     <ClInclude Include="BlockJacobiPreconditioner.h">
       <Filter>LinearSolver\Preconditioning</Filter>
     </ClInclude>
+    <ClInclude Include="BundleOptimizer.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -112,6 +115,9 @@
     </Filter>
     <Filter Include="Import\Workers">
       <UniqueIdentifier>{03b00418-b1d2-439a-99d9-631912a93353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Optimization">
+      <UniqueIdentifier>{0c8eb5e0-4720-4e44-8107-c4ce404bb3a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -30,3 +30,5 @@
 
 #include "PCGStructs.h"
 #include "PCGSolver.h"
+
+#include "BundleOptimizer.h"

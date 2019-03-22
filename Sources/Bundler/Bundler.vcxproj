@@ -128,6 +128,7 @@
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BundleImporter.h" />
+    <ClInclude Include="BundleOptimizer.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
     <ClInclude Include="BundlerLib.h" />

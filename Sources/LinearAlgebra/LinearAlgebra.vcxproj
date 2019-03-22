@@ -133,6 +133,7 @@
     <ClInclude Include="LinearAlgebraLib.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixInvertGJ.h" />
+    <ClInclude Include="MatrixInvertGJUnrolled.h" />
     <ClInclude Include="StaticMatrix.h" />
     <ClInclude Include="StaticMatrixOperators.h" />
     <ClInclude Include="StaticVector.h" />

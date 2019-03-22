@@ -20,4 +20,7 @@
 #include "FastMatrix33.h"
 #include "FastMatrix44.h"
 #include "FastLinAlgFunctions.h"
+
+#include "MatrixInvertGJUnrolled.h"
 #include "MatrixInvertGJ.h"
+

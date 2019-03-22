@@ -57,6 +57,9 @@
     <ClInclude Include="MatrixInvertGJ.h">
       <Filter>FastAlgebra</Filter>
     </ClInclude>
+    <ClInclude Include="MatrixInvertGJUnrolled.h">
+      <Filter>FastAlgebra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Matrix">

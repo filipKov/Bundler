@@ -171,4 +171,49 @@ namespace LinearAlgebra {
 		}
 	}
 
+	template < typename Scalar >
+	void MatrixIdentity( __in const size_t n, __out_ecount( n * n ) Scalar* A )
+	{
+		ByteFill( 0, n * n, A );
+		for ( size_t i = 0; i < n; i++ )
+		{
+			ELEMENT( A, i *n + i ) = Scalar( 1 );
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixSubC(
+		__in const size_t n,
+		__in const size_t m,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * n ) const Scalar* B,
+		__in const Scalar cnst,
+		__out_ecount( m * n ) Scalar* C )
+	{
+		for ( size_t r = 0; r < m; r++ )
+		{
+			for ( size_t c = 0; c < n; c++ )
+			{
+				ELEMENT( C, r * n + c ) = ELEMENT( A, r * n + c ) - ( cnst * ELEMENT( B, r * n + c ) );
+			}
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixMultiplyC(
+		__in const size_t n,
+		__in const size_t m,
+		__in_ecount( m * n ) const Scalar* A,
+		__in const Scalar cnst,
+		__out_ecount( m * n ) Scalar* B )
+	{
+		for ( size_t r = 0; r < m; r++ )
+		{
+			for ( size_t c = 0; c < n; c++ )
+			{
+				ELEMENT( B, r * n + c ) = ELEMENT( A, r * n + c ) * cnst;
+			}
+		}
+	}
+
 }

@@ -27,6 +27,12 @@ namespace Bundler { namespace CameraModels {
 			V3AddV3( m_pCamera->t.Elements(), pDeltaParams + translationParamStartIx, m_pCamera->t.Elements() );
 		}
 
+		void ResetLastUpdate( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) override
+		{
+			m_currentRotationCount--;
+			V3SubV3( m_pCamera->t.Elements( ), pDeltaParams + translationParamStartIx, m_pCamera->t.Elements( ) );
+		}
+
 	protected:
 
 		void RotatePoint(

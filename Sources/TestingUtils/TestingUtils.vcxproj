@@ -121,7 +121,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="InputGenerators.h" />
     <ClInclude Include="MatrixUtils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TestingUtils.h" />

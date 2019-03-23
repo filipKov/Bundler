@@ -167,7 +167,7 @@ namespace BundlerTest {
 			HighResolutionClock stopwatchUnrolled;
 			HighResolutionClock stopwatchStruct;
 
-			Random<Scalar>::Seed();
+			Random<Scalar>::Seed( (uint)time(NULL) );
 
 			for ( uint batchI = 0; batchI < Settings::BENCHMARK_BATCH_SIZE; batchI++ )
 			{

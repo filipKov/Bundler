@@ -216,4 +216,22 @@ namespace LinearAlgebra {
 		}
 	}
 
+	template < typename Scalar >
+	Scalar FrobeniusNorm(
+		__in const size_t m,
+		__in const size_t n,
+		__in_ecount( m * n ) const Scalar* A )
+	{
+		Scalar norm = 0;
+
+		Scalar tmp = 0;
+		for ( size_t i = 0; r < m * n; r++ )
+		{
+			tmp = abs( ELEMENT( A, i ) );
+			norm += tmp * tmp;
+		}
+
+		return sqrt( norm );
+	}
+
 }

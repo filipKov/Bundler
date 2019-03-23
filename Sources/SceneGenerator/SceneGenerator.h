@@ -2,57 +2,51 @@
 
 namespace SceneGenerator {
 
-#define NOISE_POINT_POS 1
-#define NOISE_CAMERA_POS 2
-#define NOISE_CAMERA_ROT 4
+	struct SceneGenRange
+	{
+		Bundler::Scalar minDelta;
+		Bundler::Scalar maxDelta;
+	};
 
-	struct SceneGeneratorParams {
-		uint noiseMask;
-		double noiseStrength;
+	struct SceneGenCameraNoiseSettings
+	{
+		SceneGenRange translationNoise;
+		SceneGenRange focalLengthNoise;
+		SceneGenRange rotationNoise;
+	};
+
+	struct SceneGenNoiseSettings
+	{
+		SceneGenRange pointSettings;
+		SceneGenCameraNoiseSettings cameraSettings;
 		uint rngSeed;
 	};
 
-	struct AxisAlignedBBox {
-		Vector3f ptMin;
-		Vector3f ptMax;
-
-		void GetFrom( __in const uint pointCount, __in const Bundler::Vector3* pPoints );
-	};
-
-	class SceneGenerator
+	class SceneGen
 	{
 	public:
 
-		SceneGenerator();
-
-		void Initialize( __in const SceneGeneratorParams& params );
-
-		void SetGroundTruth( __in const Bundler::Bundle& groundTruth );
-
-		void GetScene( __out Bundler::Bundle& noisedScene );
-
-		void Release();
+		void AddNoise( 
+			__in const SceneGenNoiseSettings* pNoiseParameters,
+			__in const Bundler::Bundle* pGroundTruth, 
+			__out Bundler::Bundle* pNoisedScene );
 
 	protected:
 
-		void CopyGroundTruth();
+		void CopyGroundTruth(
+			__in const Bundler::Bundle* pGroundTruth,
+			__out Bundler::Bundle* pNoisedScene );
 
-		void AddNoiseToPoints();
+		void AddNoise(
+			__in const SceneGenRange* pSettings,
+			__in const uint n,
+			__inout_ecount( n ) Bundler::Scalar* pValues );
 
-		void AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Vector3& point );
-
-		void AddNoiseToCameraPosition();
-
-		void AddNoiseToCameraRotation();
-
-	protected:
-
-		SceneGeneratorParams m_params;
-
-		const Bundler::Bundle* m_pGroundTruth;
-		AxisAlignedBBox m_groundTruthBBox;
-		
-		Bundler::Bundle* m_pOutBundle;
+		void Clamp(
+			__in const Bundler::Scalar minVal,
+			__in const Bundler::Scalar maxVal,
+			__in const uint n,
+			__inout_ecount( n ) Bundler::Scalar* pValues );
 
 	};
 

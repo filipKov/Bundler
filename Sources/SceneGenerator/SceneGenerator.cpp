@@ -1,116 +1,74 @@
 #include "stdafx.h"
-
-#include <random>
-
-#include "AlgebraLib.h"
-
 #include "SceneGenerator.h"
+
+using namespace Bundler;
 
 namespace SceneGenerator {
 
-#define NOISE_MAX 0.05
+	void SceneGen::AddNoise(
+		__in const SceneGenNoiseSettings* pNoise,
+		__in const Bundler::Bundle* pGroundTruth,
+		__out Bundler::Bundle* pNoisedScene )
+	{
+		CopyGroundTruth( pGroundTruth, pNoisedScene );
 
-	void AxisAlignedBBox::GetFrom( __in const uint pointCount, __in const Bundler::Vector3* pPoints ) {
-		ptMin = *pPoints;
-		ptMax = *pPoints;
-		pPoints++;
+		const size_t pointCount = pNoisedScene->points.Length( );
+		for ( size_t ptIx = 0; ptIx < pointCount; ptIx++ )
+		{
+			AddNoise( &pNoise->pointSettings, POINT_PARAM_COUNT, pNoisedScene->points[ptIx].Elements() );
+		}
 
-		for ( uint i = 1; i < pointCount; i++ ) {
-			const Bundler::ScalarType x = (*pPoints)[0];
-			const Bundler::ScalarType y = (*pPoints)[1];
-			const Bundler::ScalarType z = (*pPoints)[2];
+		const size_t cameraCount = pNoisedScene->cameras.Length( );
+		for ( size_t camIx = 0; camIx < cameraCount; camIx++ )
+		{
+			Camera* pCamera = &pNoisedScene->cameras[camIx];
 
-			if ( x < ptMin[0] ) {
-				ptMin[0] = x;
-			} else if ( x > ptMax[0] ) {
-				ptMax[0] = x;
-			}
-
-			if ( y < ptMin[1] ) {
-				ptMin[1] = y;
-			} else if ( y > ptMax[1] ) {
-				ptMax[1] = y;
-			}
-
-			if ( z < ptMin[2] ) {
-				ptMin[2] = z;
-			} else if ( x > ptMax[2] ) {
-				ptMax[2] = z;
-			}
+			AddNoise( &pNoise->cameraSettings.translationNoise, 3, pCamera->t.Elements( ) );
+			AddNoise( &pNoise->cameraSettings.rotationNoise, 9, pCamera->r.Elements( ) );
+			Clamp( Scalar( -1 ), Scalar( 1 ), 9, pCamera->r.Elements( ) );
+			
+			pCamera->focalLength += Random< Scalar >::Value(
+				pNoise->cameraSettings.focalLengthNoise.minDelta,
+				pNoise->cameraSettings.focalLengthNoise.maxDelta );
 		}
 	}
 
-	SceneGenerator::SceneGenerator() {
-		Release();
-		m_params.noiseMask = 0;
-		m_params.noiseStrength = 0;
-		m_params.rngSeed = 1;
-		srand( m_params.rngSeed );
+	void SceneGen::CopyGroundTruth(
+		__in const Bundler::Bundle* pGroundTruth,
+		__out Bundler::Bundle* pNoisedScene )
+	{
+		pNoisedScene->cameras.SetCopy( pGroundTruth->cameras );
+		pNoisedScene->points.SetCopy( pGroundTruth->points );
+		pNoisedScene->projections.SetCopy( pGroundTruth->projections );
 	}
 
-	void SceneGenerator::Initialize( __in const SceneGeneratorParams& params ) {
-		m_params = params;
-		srand( m_params.rngSeed );
-	}
-
-	void SceneGenerator::SetGroundTruth( __in const Bundler::Bundle& groundTruth ) {
-		m_pGroundTruth = &groundTruth;
-		m_groundTruthBBox.GetFrom( (uint)m_pGroundTruth->points.Length(), m_pGroundTruth->points.Data() );
-	}
-
-	void SceneGenerator::GetScene( __out Bundler::Bundle& noisedScene ) {
-		m_pOutBundle = &noisedScene;
-		CopyGroundTruth();
-
-		const uint noiseMask = m_params.noiseMask;
-		if ( noiseMask & NOISE_POINT_POS ) {
-			AddNoiseToPoints();
-		}
-
-		if ( noiseMask & NOISE_CAMERA_POS ) {
-			AddNoiseToCameraPosition();
-		}
-
-		if ( noiseMask & NOISE_CAMERA_ROT ) {
-			AddNoiseToCameraRotation();
+	void SceneGen::AddNoise(
+		__in const SceneGenRange* pSettings,
+		__in const uint n,
+		__inout_ecount( n ) Bundler::Scalar* pValues )
+	{
+		for ( uint i = 0; i < 9; i++ )
+		{
+			ELEMENT( pValues, i ) += Random< Scalar >::Value( pSettings->minDelta, pSettings->maxDelta );
 		}
 	}
 
-	void SceneGenerator::Release() {
-		m_pGroundTruth = nullptr;
+	template < typename T >
+	T Clamp( __in const T value, __in const T minVal, __in const T maxVal )
+	{
+		return ( value > maxVal ) ? maxVal : ( value < minVal ) ? minVal : value;
 	}
 
-	void SceneGenerator::CopyGroundTruth() {
-		m_pOutBundle->points.SetCopy( m_pGroundTruth->points.Length(), m_pGroundTruth->points.Data() );
-		m_pOutBundle->cameras.SetCopy( m_pGroundTruth->cameras.Length(), m_pGroundTruth->cameras.Data() );
-		m_pOutBundle->projections.SetCopy( m_pGroundTruth->projections.Length(), m_pGroundTruth->projections.Data() );
-	}
-
-	void SceneGenerator::AddNoiseToPoints() {
-		Bundler::ScalarType noiseStrengthModifier = Bundler::ScalarType( m_params.noiseStrength );
-		Bundler::ScalarType noiseBase = Bundler::ScalarType( m_groundTruthBBox.ptMin.Distance( m_groundTruthBBox.ptMax ) * NOISE_MAX );
-
-		uint pointCount = (uint)m_pOutBundle->points.Length();
-		for ( uint i = 0; i < pointCount; i++ ) {
-			AddNoiseToPoint( noiseBase, noiseStrengthModifier, m_pOutBundle->points[i] );
+	void SceneGen::Clamp(
+		__in const Bundler::Scalar minVal,
+		__in const Bundler::Scalar maxVal,
+		__in const uint n,
+		__inout_ecount( n ) Bundler::Scalar* pValues )
+	{
+		for ( uint i = 0; i < 9; i++ )
+		{
+			ELEMENT( pValues, i ) = SceneGenerator::Clamp< Scalar >( ELEMENT( pValues, i ), Scalar( -1 ), Scalar( 1 ) );
 		}
-	}
-
-	void SceneGenerator::AddNoiseToPoint( __in const Bundler::ScalarType noiseBase, __in const Bundler::ScalarType noiseModifier, __inout Bundler::Vector3& point ) {
-		Vector3f positionNoise;
-		positionNoise[0] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
-		positionNoise[1] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
-		positionNoise[2] = noiseModifier * noiseBase * ( ( 2 * (Bundler::ScalarType)rand() / RAND_MAX ) - 1 );
-
-		point += positionNoise;
-	}
-
-	void SceneGenerator::AddNoiseToCameraPosition() {
-		// TODO later
-	}
-
-	void SceneGenerator::AddNoiseToCameraRotation() {
-		// TODO later
 	}
 
 }

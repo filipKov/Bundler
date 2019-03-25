@@ -79,6 +79,8 @@ namespace Bundler {
 			const size_t parameterCount = GetTotalPrameterCount( pJacobian );
 			Vector< Scalar > updateVector( (uint)parameterCount );
 			Scalar* pUpdateVector = updateVector.Elements( );
+			
+			InitializeUpdateVector( parameterCount, pUpdateVector );
 
 			Scalar geometricError = GetGeometricError( pJacobian );
 			if ( pStats )
@@ -89,8 +91,6 @@ namespace Bundler {
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) && ( geometricError > m_errorTolerance ) )
 			{
-				InitializeUpdateVector( parameterCount, pUpdateVector );
-
 				m_linearSolver.SolveSystem( m_dampeningFactor, pJacobian, (uint)parameterCount, pUpdateVector, NULL );
 				
 				UpdateBundleParams( parameterCount, pUpdateVector, pBundle );
@@ -145,10 +145,7 @@ namespace Bundler {
 			__in const size_t paramCount,
 			__out_ecount( paramCount ) Scalar* pVector )
 		{
-			for ( size_t i = 0; i < paramCount; i++ )
-			{
-				ELEMENT( pVector, i ) = Scalar( rand( ) ) / RAND_MAX;
-			}
+			Random< Scalar >::Fill( -m_dampeningFactor, m_dampeningFactor, paramCount, pVector );
 		}
 
 		void UpdateBundleParams(

@@ -32,3 +32,6 @@
 #include "PCGSolver.h"
 
 #include "BundleOptimizer.h"
+
+#include "SceneGenerator.h"
+

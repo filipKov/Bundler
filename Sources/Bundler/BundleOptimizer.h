@@ -19,6 +19,8 @@ namespace Bundler {
 		Scalar initialGeometricError;
 		Scalar finalGeometricError;
 		uint iterationCount;
+		uint acceptedIterations;
+		uint rejectedIterations;
 	};
 
 	template < class CameraModel, template < class > class Preconditioner >
@@ -89,6 +91,8 @@ namespace Bundler {
 			}
 
 			uint iteration = 0;
+			uint acceptedSteps = 0;
+			uint rejectecSteps = 0;
 			while ( ( iteration < m_maxIterations ) && ( geometricError > m_errorTolerance ) )
 			{
 				m_linearSolver.SolveSystem( m_dampeningFactor, pJacobian, (uint)parameterCount, pUpdateVector, NULL );
@@ -99,13 +103,13 @@ namespace Bundler {
 				if ( newGeometricError < geometricError )
 				{
 					geometricError = newGeometricError;
-					
+					acceptedSteps++;
 					m_dampeningFactor *= m_dampeningDown;
 				}
 				else
 				{
 					ResetBundleParams( parameterCount, pUpdateVector, pBundle );
-
+					rejectecSteps++;
 					m_dampeningFactor *= m_dampeningUp;
 				}
 
@@ -116,6 +120,8 @@ namespace Bundler {
 			{
 				pStats->iterationCount = iteration;
 				pStats->finalGeometricError = geometricError;
+				pStats->acceptedIterations = acceptedSteps;
+				pStats->rejectedIterations = rejectecSteps;
 			}
 		}
 

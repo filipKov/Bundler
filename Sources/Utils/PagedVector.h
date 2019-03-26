@@ -79,6 +79,12 @@ namespace Utils { namespace Containers {
 			return m_pages[index >> pageSizeExponent][index & pageSizeMask];
 		}
 
+		T& GetLast( )
+		{
+			const size_t index = ( m_length - 1 );
+			return m_pages[index >> pageSizeExponent][index & pageSizeMask];
+		}
+
 		void Add( __in ItemType value ) {
 			EnsureCapacity( m_length + 1 );
 			m_pages[m_length >> pageSizeExponent][m_length & pageSizeMask] = value;

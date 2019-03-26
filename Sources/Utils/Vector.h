@@ -86,6 +86,12 @@ namespace Utils { namespace Containers {
 			return *( m_pItems + index );
 		}
 
+		T& GetLast( )
+		{
+			const size_t index = ( m_length - 1 );
+			return *( m_pItems + index );
+		}
+
 		const T* Data() const {
 			return m_pItems;
 		}

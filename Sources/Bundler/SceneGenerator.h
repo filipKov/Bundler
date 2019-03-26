@@ -22,9 +22,22 @@ namespace Bundler { namespace SceneGenerator {
 		uint rngSeed;
 	};
 	
+	enum SceneGenAutoNoiseMask
+	{
+		POINTS = 1,
+		CAMAERA_TRANSLATION = 2,
+		CAMAERA_ROTATION = 4,
+		CAMAERA_CALIBRATION = 8,
+	};
+
 	class SceneGen
 	{
 	public:
+
+		static void GetAutoNoise(
+			__in const Bundle* pBundle,
+			__in const uint noiseMask,
+			__out SceneGenNoiseSettings* pNoise );
 	
 		static void AddNoise(
 			__in const SceneGenNoiseSettings* pNoiseParameters,
@@ -47,6 +60,23 @@ namespace Bundler { namespace SceneGenerator {
 			__in const Scalar maxVal,
 			__in const uint n,
 			__inout_ecount( n ) Scalar* pValues );
+
+		static void GetAutoNoisePoints(
+			__in const uint count,
+			__in_ecount( count ) const Vector3* pPoints,
+			__out SceneGenRange* pNoise );
+
+		static void GetAutoNoiseCameraTranslation(
+			__in const uint count,
+			__in_ecount( count ) const Camera* pCameras,
+			__out SceneGenRange* pNoise );
+
+		static void GetAutoNoiseCameraCalibration(
+			__in const uint count,
+			__in_ecount( count ) const Camera* pCameras,
+			__out SceneGenRange* pNoise );
+
+
 	
 	};
 

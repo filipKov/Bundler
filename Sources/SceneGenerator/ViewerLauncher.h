@@ -41,6 +41,11 @@ public:
 
 	static void InitializeEmpty( );
 
+	static void InitializePointCloud (
+		__in const uint pointCount,
+		__in_ecount( pointCount ) const Bundler::Vector3* pPoints,
+		__in_ecount_opt( pointCount ) const uint* pPointColors );
+
 	static void LaunchViewer();
 	
 };

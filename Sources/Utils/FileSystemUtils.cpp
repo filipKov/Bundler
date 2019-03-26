@@ -4,8 +4,8 @@ namespace Utils { namespace FileSystem {
 
 	const char* GetFilenameStart( __in_z const char* pPath )
 	{
-		const char* pSlash1 = strrchr( pPath, '\\' );
-		const char* pSlash2 = strrchr( pPath, '/' );
+		const char* pSlash1 = strrchr( pPath, '\\' ) + 1;
+		const char* pSlash2 = strrchr( pPath, '/' ) + 1;
 		return min( pSlash1, pSlash2 );
 	}
 

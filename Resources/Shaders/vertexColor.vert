@@ -18,7 +18,7 @@ void main () {
 	if ( hasVertexColors ) {
 		fragmentColor = vec4( vertexColor, 1.0 );
 	} else {
-		fragmentColor = vec4( 1.0, 1.0, 1.0, 1.0 );
+		fragmentColor = vec4( 0.5, 0.5, 0.5, 1.0 );
 	}
 	
 	gl_Position = projectionMatrix * cameraProjectedVertex;

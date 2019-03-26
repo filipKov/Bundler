@@ -1,0 +1,7 @@
+<FileList
+  Identity = "OpenGL Lib, Version=1.0"
+  DisplayName = "OpenGL Lib"
+  AppliesTo = "Native"
+  CopyRedistToSubDirectory = "."
+  MinVSVersion = "11.0">
+</FileList>

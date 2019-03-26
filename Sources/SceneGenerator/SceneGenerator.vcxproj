@@ -65,10 +65,14 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\VisualStudio\CustomProps\CustomProps.props" />
+    <Import Project="..\..\Resources\Resources.props" />
+    <Import Project="..\..\ExternalLibs\OpenGL\PropertySheets\CommonConfiguration\x64\Freeglut.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\VisualStudio\CustomProps\CustomPropsRelease.props" />
+    <Import Project="..\..\Resources\Resources.props" />
+    <Import Project="..\..\ExternalLibs\OpenGL\PropertySheets\CommonConfiguration\x64\Freeglut.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,9 +115,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\ExternalLibs\;$(SolutionDir)..\ExternalLibs\GL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /d /y "$(SolutionDir)..\ExternalLibs\GL\*.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -151,9 +153,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\ExternalLibs\;$(SolutionDir)..\ExternalLibs\GL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /d /y "$(SolutionDir)..\ExternalLibs\GL\*.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlgebraLib.h" />
@@ -201,5 +201,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\ExternalLibs\ExternalLibsDeploy.targets" />
   </ImportGroup>
 </Project>

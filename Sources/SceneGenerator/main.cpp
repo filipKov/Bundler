@@ -8,9 +8,6 @@
 
 #include <thread>
 
-#include "GL/glew.h"
-#include "GL/glut.h"
-
 #include "AlgebraLib.h"
 #include "Camera.h"
 #include "RenderableObject.h"

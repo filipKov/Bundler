@@ -14,29 +14,47 @@ struct CameraBind {
 class CameraController
 {
 public:
-	CameraController( __in Camera& camera );
+	CameraController();
+
+	void SetCamera( __in Camera* pCamera );
 
 	void OnMouseEvent( __in const MouseButton button, __in const MouseState state, __in const int x, __in const int y );
 
 	void OnMouseDrag( __in const int x, __in const int y );
 
+	void OnKeyDown( __in const uint key, __in const int x, __in const int y );
+
+	void OnKeyUp( __in const uint key, __in const int x, __in const int y );
+
+	void SetCtrlActive();
+
+	void SetCrtlInactive();
+
+	void Update( __in const float t );
+
+	void Clear();
+
 protected:
 
 	void LoadDefaultBinds();
 
-	void MoveCamera( __in const Vector2f& delta );
+	void MoveCamera( __in const Vector< float, 2 >& delta );
 
-	void RotateCamera( __in const Vector2f& delta );
+	void RotateCamera( __in const Vector< float, 2 >& delta );
 
-	void ZoomCamera( __in const Vector2f& delta );
+	void ZoomCamera( __in const Vector< float, 2 >& delta );
 
 protected:
 
-	Camera& mCamera;
+	Camera* m_pCamera;
 
-	Vector2f mLastPos;
+	Vector< float, 2 > mLastPos;
+
+	// std::mutex mUpdateLock;
 
 	std::map< MouseButton, CameraBind > mBinds;
+
+	bool mCtrlActive;
 
 };
 

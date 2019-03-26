@@ -1,205 +1,165 @@
 #include "stdafx.h"
-#include <map>
-#include <string>
 
-#include "glslang.h"
-
-#include "Macros.h"
-#include "AlgebraLib.h"
+#include "RenderingHelpers.h"
+#include "IRenderingContext.h"
+#include "IRenderable.h"
 
 #include "Camera.h"
-
-#include "RenderableObject.h"
-
-#include "GlRenderer.h"
-
-
-void GlRenderer::Init() {
-	m_vertexColorDiffuseShader = createShaderProgram( GET_SHADER_PATH( "vertexColor.vert" ), GET_SHADER_PATH( "vertexColor.frag" ) );
-}
-
-void GlRenderer::Render() const {
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-	InitializeShader();
-
-	for ( auto objectIter = m_objects.begin(); objectIter != m_objects.end(); objectIter++ ) {
-		objectIter->second->Render( m_vertexColorDiffuseShader );
-	}
-
-	glutSwapBuffers();
-}
-
-void GlRenderer::SetViewportCamera( __in Camera& camera ) {
-	m_pCamera = &camera;
-}
-
-void GlRenderer::RegisterObject( __in_z const char* pId, __in RenderableObject* pObject ) {
-	m_objects[pId] = pObject;
-}
-
-void GlRenderer::ClearObjects() {
-	m_objects.clear();
-}
-
-void GlRenderer::InitializeShader() const {
-	glUseProgram( m_vertexColorDiffuseShader );
-
-	int projMatrixLocation = glGetUniformLocation( m_vertexColorDiffuseShader, "projectionMatrix" );
-	if ( projMatrixLocation > -1 ) {
-		glUniformMatrix4fv( projMatrixLocation, 1, GL_FALSE, m_pCamera->GetProjectionMatrix().Elements() );
-	}
-
-	int modelViewLocation = glGetUniformLocation( m_vertexColorDiffuseShader, "modelViewMatrix" );
-	if ( modelViewLocation > -1 ) {
-		glUniformMatrix4fv( modelViewLocation, 1, GL_TRUE, m_pCamera->GetViewMatrix().Elements() );
-	}
-}
-
-/*
-
-#include "AlgebraLib.h"
-#include "glStructs.h"
-#include "RenderingUtils.h"
-
-#include "Camera.h"
-
-#include "SceneMesh.h"
-#include "Texture.h"
-#include "ObjectComponent.h"
-#include "SceneObject.h"
-#include "Grid3D.h"
 
 #include "Light.h"
-#include "DiffuseLight.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 
-#include "Scene.h"
+#include "RenderableCartoonMesh.h"
+#include "Grid3D.h"
 
+#include "Shader.h"
+#include "AlbedoShader.h"
+#include "SkyboxShader.h"
+#include "AlbedoPointCloudShader.h"
+#include "RenderToTextureShader.h"
+#include "AmbientOcclusionKernel.h"
+#include "AmbientOcclusionShader.h"
 
 #include "GlRenderer.h"
 
 
-void GlRenderer::Render( __in const Scene& scene ) const {
+void GlRenderer::Initialize() {
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	glFrontFace( GL_CCW );
 
+	glEnable( GL_DEPTH_TEST );
+}
+
+void GlRenderer::SetComponents( __in const RendererComponents& components ) {
+	mComponents = components;
+}
+
+void GlRenderer::SetViewport( __in const Viewport& renderingWindow ) {
+	if ( mComponents.pAlbedoShader ) {
+		mComponents.pAlbedoShader->SetViewport( renderingWindow );
+	}
+	if ( mComponents.pAmbientOcclusionShader ) {
+		mComponents.pAmbientOcclusionShader->SetViewport( renderingWindow );
+	}
+	if ( mComponents.pShadowComponent ) {
+		mComponents.pShadowComponent->SetViewport( renderingWindow );
+	}
+	if ( mComponents.pSkyboxShader ) {
+		mComponents.pSkyboxShader->SetViewport( renderingWindow );
+	}
+
+	if ( mComponents.pPointCloudShader ) {
+		mComponents.pPointCloudShader->SetViewport( renderingWindow );
+	}
+}
+
+size_t GlRenderer::RegisterLight( __in Light* pLight ) {
+	mLights.Add( pLight );
+	return mLights.Length() - 1;
+}
+
+size_t GlRenderer::RegisterRenderable( __in IRenderable* pObject ) {
+	mRenderables.Add( pObject );
+	return mRenderables.Length() - 1;
+}
+
+void GlRenderer::RegisterSkybox( __in IRenderable* pSkybox ) {
+	m_pSkybox = pSkybox;
+}
+
+void GlRenderer::Render( __in const Camera& camera ) const {
+	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-	if ( mGrid.bEnabled ) {
-		RenderGrid( scene.camera );
+	GLuint ambientOcclusionTexture = 0xFFFFFFFF;
+	if ( mComponents.pAmbientOcclusionShader && mComponents.bAoEnabled ) {
+		AmbientOcclusionShader* pAoComponent = (AmbientOcclusionShader*)mComponents.pAmbientOcclusionShader;
+		pAoComponent->SetActive();
+		pAoComponent->SetCamera( &camera );
+		pAoComponent->Render( (uint)mRenderables.Length(), mRenderables.Data() );
+		pAoComponent->GetAmbientOcclusionTexture( ambientOcclusionTexture );
+	}
+	
+	if ( m_pSkybox && mComponents.pSkyboxShader ) {
+		AlbedoShader* pSkyboxShader = (AlbedoShader*)mComponents.pSkyboxShader;
+		pSkyboxShader->SetActive();
+		pSkyboxShader->SetCamera( &camera );
+		pSkyboxShader->Render( 1, &(m_pSkybox) );
+	}
+	
+	if ( m_pGrid && m_pGrid->bEnabled ) {
+		RenderGrid( camera );
 	}
 
-	for ( auto shaderPair = mShaderPrograms.begin(); shaderPair != mShaderPrograms.end(); shaderPair++ ) {
-		const ShaderProgram& shaderProgram = shaderPair->second;
-
-		glUseProgram( shaderProgram.glProgram );
-		InitGlobalShaderParameters( shaderProgram.glProgram, scene );
-
-		for ( auto objectIter = scene.objects.begin(); objectIter != scene.objects.end(); objectIter++ ) {
-			const uint componentCount = objectIter->GetComponentCount();
-			for ( uint componentI = 0; componentI < componentCount; componentI++ ) {
-				const ObjectComponent& component = objectIter->GetComponent( componentI );
-				if ( component.UsesShader( shaderProgram.glProgram ) ) {
-					InitObjectShaderParameters( shaderProgram.glProgram, scene, component );
-					RenderComponent( component );
-				}
-			}
-		}
+	if ( mComponents.pPointCloudShader ) {
+		AlbedoPointCloudShader* pAlbedoShader = (AlbedoPointCloudShader*)mComponents.pPointCloudShader;
+		pAlbedoShader->SetActive();
+		pAlbedoShader->SetCamera( &camera );
+		pAlbedoShader->Render( (uint)mRenderables.Length(), mRenderables.Data() );
 	}
 
+	if ( mComponents.pAlbedoShader ) {
+		AlbedoShader* pAlbedoShader = (AlbedoShader*)mComponents.pAlbedoShader;
+		pAlbedoShader->SetActive();
+		pAlbedoShader->SetCamera( &camera );
+		pAlbedoShader->SetupLights( (uint)mLights.Length(), mLights.Data() );
+		pAlbedoShader->SetupAmbientOcclusionMap( mComponents.bAoEnabled, ambientOcclusionTexture );
+		pAlbedoShader->Render( (uint)mRenderables.Length(), mRenderables.Data() );
+	}
+	
+	if ( mComponents.pAmbientOcclusionShader ) {
+		( (RenderToTextureShader*)mComponents.pAmbientOcclusionShader )->Clear();
+	}
+	
 	glutSwapBuffers();
 }
 
-void GlRenderer::RegisterShaderProgram( __in const std::string identifier, __in const SHADER_TYPE type, __in const GLuint glProgram ) {
-	ShaderProgram sp;
-	sp.type = type;
-	sp.glProgram = glProgram;
-	mShaderPrograms[identifier] = sp;
+void GlRenderer::SetGrid( __in Grid3D* pGrid ) {
+	m_pGrid = pGrid;
 }
 
-void GlRenderer::EnableGrid( __in const Grid3D& grid ) {
-	mGrid = grid;
-	mGrid.bEnabled = true;
+ void GlRenderer::Release() {
+	mComponents.Release();
+	mRenderables.Clear();
+	mLights.Clear();
+	m_pSkybox = nullptr;
+ }
+
+void GlRenderer::SwitchSSAOState() {
+	mComponents.bAoEnabled = !mComponents.bAoEnabled;
 }
-
-void GlRenderer::InitGlobalShaderParameters( __in const GLuint shader, __in const Scene& scene ) const {
-	int projMatrixLocation = glGetUniformLocation( shader, "projectionMatrix" );
-	if ( projMatrixLocation > -1 ) {
-		glUniformMatrix4fv( projMatrixLocation, 1, GL_FALSE, scene.camera.GetProjectionMatrix().Elements() );
-	}
-
-	CreateLights( shader, scene.camera, scene.lights.size(), scene.lights.data() );
-}
-
-void GlRenderer::CreateLights( __in const GLuint shader, __in const Camera& camera, __in const uint lightCnt, __in_ecount( lightCnt ) const Light* pLights ) const {
-	for ( uint i = 0; i < lightCnt; i++ ) {
-		auto lightPos = camera.GetViewMatrix() * pLights->GetPosition();
-
-		int lightPosLocation = glGetUniformLocation( shader, "lightPos" );
-		glUniform3fv( lightPosLocation, 3, lightPos.Elements() );
-
-		int lightColorLocation = glGetUniformLocation( shader, "lightColor" );
-		glUniform3fv( lightColorLocation, 3, pLights->GetColor().Elements() );
-
-		pLights++;
-	}
-}
-
-void GlRenderer::InitObjectShaderParameters( __in const GLuint shader, __in const Scene& scene, __in const ObjectComponent& object ) const {
-	auto modelViewMatrix = scene.camera.GetViewMatrix() * object.GetTransformation();
-	
-	int modelViewLocation = glGetUniformLocation( shader, "modelViewMatrix" );
-	if ( modelViewLocation > -1 ) {
-		glUniformMatrix4fv( modelViewLocation, 1, GL_TRUE, modelViewMatrix.Elements() );
-	}
-
-	int normalMatrixLocation = glGetUniformLocation( shader, "normalMatrix" );
-	if ( normalMatrixLocation > -1 ) {
-		Matrix3x3 normalMatrix( modelViewMatrix );
-		glUniformMatrix3fv( normalMatrixLocation, 1, GL_TRUE, normalMatrix.Elements() );
-	}
-
-	int texturePresentLocation = glGetUniformLocation( shader, "texturePresent" );
-	if ( texturePresentLocation > -1 ) {
-		glUniform1i( texturePresentLocation, object.IsTextured() );
-		if ( object.IsTextured() ) {
-			int textureLocation = glGetUniformLocation( shader, "diffuseTexture" );
-			if ( textureLocation > -1 ) {
-				glUniform1i( textureLocation, 0 );
-			}
-		}
-	}
-}
-
-void GlRenderer::RenderComponent( __in const ObjectComponent& object ) const {
-	const GlGpuObject& mesh = object.GetMesh().mGpuObject;
-	const MeshInfo& meshInfo = object.GetMesh().mProperties;
-	glBindVertexArray( mesh.arrayObject );
-
-	glBindBuffer( GL_ARRAY_BUFFER, mesh.vertexBuffer );
-	glEnableVertexAttribArray( 0 );
-	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, NULL );
-
-	glBindBuffer( GL_ARRAY_BUFFER, mesh.vertexNormalBuffer );
-	glEnableVertexAttribArray( 1 );
-	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_TRUE, 0, NULL );
-
-	glBindBuffer( GL_ARRAY_BUFFER, mesh.textureCoordinateBuffer );
-	glEnableVertexAttribArray( 2 );
-	glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 0, NULL );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mesh.polygonIndexBuffer );
-
-	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, object.GetTexture() );
-
-	glDrawElements( GL_TRIANGLES, 3* meshInfo.faceCount, GL_UNSIGNED_INT, NULL );
+void GlRenderer::SwitchShadowsState() {
+	mComponents.bShadowsEnabled = !mComponents.bShadowsEnabled;
 }
 
 void GlRenderer::RenderGrid( __in const Camera& camera ) const {
-	glUseProgram( mGrid.shader.glProgram );
-	mGrid.SetShaderUniforms( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
+	glUseProgram( m_pGrid->mShaderProgram );
+	m_pGrid->SetShaderUniforms( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 
-	glBindVertexArray( mGrid.gpuObject.arrayObject );
-	glDrawElements( GL_LINES, mGrid.lineIndexCount, GL_UNSIGNED_INT, NULL );
+	glBindVertexArray( m_pGrid->gpuObject.arrayObject );
+
+	glLineWidth( 1.0f );
+	glDrawElements( GL_LINES, m_pGrid->lineIndexCount, GL_UNSIGNED_INT, NULL );
 }
 
-*/
+void GlRenderer::ShowTexture( __in const GLuint textureId ) const {
+	glUseProgram( 0 );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+	glActiveTexture( GL_TEXTURE0 );
+	glBindTexture( GL_TEXTURE_2D, textureId );
+
+	glBegin( GL_QUADS );
+	glTexCoord2f( 0.0f, 0.0f );
+	glVertex3f( -1.0f, -1.0f, 0.0f );
+	glTexCoord2f( 1.0f, 0.0f );
+	glVertex3f( 1.0f, -1.0f, 0.0f );
+	glTexCoord2f( 1.0f, 1.0f );
+	glVertex3f( 1.0f, 1.0f, 0.0f );
+	glTexCoord2f( 0.0f, 1.0f );
+	glVertex3f( -1.0f, 1.0f, 0.0f );
+	glEnd();
+}

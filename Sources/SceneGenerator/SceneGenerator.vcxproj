@@ -156,39 +156,6 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AlgebraLib.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraController.h" />
-    <ClInclude Include="GlRenderer.h" />
-    <ClInclude Include="glslang.h" />
-    <ClInclude Include="Macros.h" />
-    <ClInclude Include="Matrix3x3.h" />
-    <ClInclude Include="matrix4x4.h" />
-    <ClInclude Include="MatrixNxN.h" />
-    <ClInclude Include="Mouse.h" />
-    <ClInclude Include="RenderableObject.h" />
-    <ClInclude Include="SceneVisualiser.h" />
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraController.cpp" />
-    <ClCompile Include="GlRenderer.cpp" />
-    <ClCompile Include="glslang.cpp" />
-    <ClCompile Include="Matrix3x3.cpp" />
-    <ClCompile Include="matrix4x4.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="RenderableObject.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneVisualiser.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Bundler\Bundler.vcxproj">
       <Project>{c4cde5c9-deae-482f-a7aa-9ca1dab85e41}</Project>
     </ProjectReference>
@@ -198,6 +165,94 @@
     <ProjectReference Include="..\Utils\Utils.vcxproj">
       <Project>{6b3885a0-666b-4e5f-bbe9-46261efb59ac}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AlbedoPointCloudShader.cpp" />
+    <ClCompile Include="AlbedoShader.cpp" />
+    <ClCompile Include="AmbientOcclusionKernel.cpp" />
+    <ClCompile Include="AmbientOcclusionShader.cpp" />
+    <ClCompile Include="ApplicationSectionStrings.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="GlRenderer.cpp" />
+    <ClCompile Include="glslang.cpp" />
+    <ClCompile Include="Grid3D.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="loadBMP.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="RenderableCartoonMesh.cpp" />
+    <ClCompile Include="RenderablePointCloud.cpp" />
+    <ClCompile Include="RenderToTextureShader.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneMesh.cpp" />
+    <ClCompile Include="SceneMeshLoader.cpp" />
+    <ClCompile Include="SceneMeshPart.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
+    <ClCompile Include="SceneObjectFactory.cpp" />
+    <ClCompile Include="ScenePointCloud.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SkyboxShader.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureCache.cpp" />
+    <ClCompile Include="Transformable.cpp" />
+    <ClCompile Include="UniformNames.cpp" />
+    <ClCompile Include="ViewerApplication.cpp" />
+    <ClCompile Include="ViewerLauncher.cpp" />
+    <ClCompile Include="ViewerMath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AlbedoPointCloudShader.h" />
+    <ClInclude Include="AlbedoShader.h" />
+    <ClInclude Include="AmbientOcclusionKernel.h" />
+    <ClInclude Include="AmbientOcclusionShader.h" />
+    <ClInclude Include="ApplicationExceptions.h" />
+    <ClInclude Include="ApplicationSectionStrings.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="GlRenderer.h" />
+    <ClInclude Include="glslang.h" />
+    <ClInclude Include="Grid3D.h" />
+    <ClInclude Include="IRenderable.h" />
+    <ClInclude Include="IRenderingContext.h" />
+    <ClInclude Include="KeyMacros.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="loadBMP.h" />
+    <ClInclude Include="Macros.h" />
+    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="ProgressBar.h" />
+    <ClInclude Include="RenderableCartoonMesh.h" />
+    <ClInclude Include="RenderablePointCloud.h" />
+    <ClInclude Include="RenderingHelpers.h" />
+    <ClInclude Include="RenderingLib.h" />
+    <ClInclude Include="RenderToTextureShader.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneMesh.h" />
+    <ClInclude Include="SceneMeshLoader.h" />
+    <ClInclude Include="SceneMeshPart.h" />
+    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="SceneObjectFactory.h" />
+    <ClInclude Include="ScenePointCloud.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="SkyboxShader.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureCache.h" />
+    <ClInclude Include="Transformable.h" />
+    <ClInclude Include="UniformNames.h" />
+    <ClInclude Include="ViewerApplication.h" />
+    <ClInclude Include="ViewerMath.h" />
+    <ClInclude Include="ViewerLauncher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

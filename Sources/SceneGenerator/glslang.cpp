@@ -9,6 +9,29 @@
 #include <stdlib.h>
 #include "glslang.h"
 
+#define MAX_LOG_LENGTH 2048
+
+void printShaderCompilationError( GLuint shader ) {
+	char logBuffer[MAX_LOG_LENGTH + 1];
+	
+	GLint logLength = 0;
+	glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logLength );
+	logLength = logLength < MAX_LOG_LENGTH ? logLength : MAX_LOG_LENGTH;
+
+	glGetShaderInfoLog( shader, logLength, NULL, logBuffer );
+	printf( "%s\n", logBuffer );
+}
+
+void compileShader( GLuint shader ) {
+	glCompileShader( shader );
+
+	GLint compiled = 0;
+	glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
+	if ( compiled == GL_FALSE ) {
+		printShaderCompilationError( shader );
+	}
+}
+
 void printShaderInfoLog(GLuint obj)
 {
     int infologLength = 0;
@@ -49,7 +72,7 @@ char *textFileRead(char *fn) {
 	FILE *fp;
 	char *content = NULL;
 
-	int count=0;
+	size_t count=0;
 
 	if (fn != NULL) {
 		fopen_s(&fp, fn,"rt");
@@ -62,7 +85,7 @@ char *textFileRead(char *fn) {
 
 			if (count > 0) {
 				content = (char *)malloc(sizeof(char) * (count+1));
-				count = (int)fread(content,sizeof(char),count,fp);
+				count = fread(content,sizeof(char),count,fp);
 				content[count] = '\0';
 			}
 			fclose(fp);
@@ -106,11 +129,11 @@ GLuint createShaderProgram2(char *vertex, char *tcontrol, char *tevaluation, cha
 	free(vs);free(tcs);free(tes);free(gs);free(fs);
  
     // Compile all shaders
-    glCompileShader(v);
-	glCompileShader(tc);
-	glCompileShader(te);
-    glCompileShader(g);
-    glCompileShader(f);
+    compileShader(v);
+	compileShader(tc);
+	compileShader(te);
+    compileShader(g);
+    compileShader(f);
  
     // Create the program
     p = glCreateProgram();
@@ -158,9 +181,9 @@ GLuint createShaderProgram1(char *vertex, char *geometry, char *fragment) {
 	free(vs);free(gs);free(fs);
  
     // Compile all shaders
-    glCompileShader(v);
-    glCompileShader(g);
-    glCompileShader(f);
+    compileShader(v);
+    compileShader(g);
+    compileShader(f);
  
     // Create the program
     p = glCreateProgram();
@@ -184,7 +207,7 @@ GLuint createShaderProgram(char *vertex, char *fragment) {
     GLuint v,f,f2,p;
 
 
-	char *vs = NULL,*fs = NULL,*fs2 = NULL;
+	char *vs = NULL, *fs = NULL;
 
 	v = glCreateShader(GL_VERTEX_SHADER);
 	f = glCreateShader(GL_FRAGMENT_SHADER);
@@ -201,8 +224,8 @@ GLuint createShaderProgram(char *vertex, char *fragment) {
 
 	free(vs);free(fs);
 
-	glCompileShader(v);
-	glCompileShader(f);
+	compileShader(v);
+	compileShader(f);
 
 	printShaderInfoLog(v);
 	printShaderInfoLog(f);

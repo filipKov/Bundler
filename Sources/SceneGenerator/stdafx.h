@@ -1,24 +1,25 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently, but
-// are changed infrequently
-//
-
 #pragma once
 
 #include <Windows.h>
+#include <map>
 
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
 
 #include "../LinearAlgebra/LinearAlgebraLib.h"
-#include "../NumericOptimization/DiffNum.h"
-#include "../Bundler/NumericTypes.h"
-#include "../Bundler/BundlerDefs.h"
+using namespace LinearAlgebra;
 
-// #define GLEW_STATIC
-// #define FREEGLUT_STATIC
 
+#include <emmintrin.h>
+#include <wincodec.h>
+#include <DirectXMath.h>
+using namespace DirectX;
+#include <atlbase.h>
+
+#include <thread>
+#include <mutex>
 #include <glew.h>
 #include <freeglut.h>
 
-// TODO: reference additional headers your program requires here
+#include "Macros.h"
+#include "ViewerMath.h"

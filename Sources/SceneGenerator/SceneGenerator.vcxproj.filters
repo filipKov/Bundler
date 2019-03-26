@@ -1,96 +1,282 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="SceneVisualiser.cpp">
-      <Filter>Visualiser</Filter>
+    <ClCompile Include="ViewerApplication.cpp">
+      <Filter>Application\Viewer</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix3x3.cpp">
-      <Filter>Visualiser\Math</Filter>
+    <ClCompile Include="ViewerLauncher.cpp">
+      <Filter>Application\Viewer</Filter>
     </ClCompile>
-    <ClCompile Include="matrix4x4.cpp">
-      <Filter>Visualiser\Math</Filter>
+    <ClCompile Include="ApplicationSectionStrings.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Visualiser\Scene\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraController.cpp">
-      <Filter>Visualiser\UserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Visualiser\UserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="GlRenderer.cpp">
-      <Filter>Visualiser\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableObject.cpp">
-      <Filter>Visualiser\Rendering\Objects</Filter>
+      <Filter>Rendering\Camera</Filter>
     </ClCompile>
     <ClCompile Include="glslang.cpp">
-      <Filter>Visualiser</Filter>
+      <Filter>ExternalTools</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="loadBMP.cpp">
+      <Filter>ExternalTools</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformable.cpp">
+      <Filter>Scene\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectFactory.cpp">
+      <Filter>Scene\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>Scene\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMesh.cpp">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMeshLoader.cpp">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMeshPart.cpp">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenePointCloud.cpp">
+      <Filter>Scene\Objects\PointCloud</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Rendering\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureCache.cpp">
+      <Filter>Rendering\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Rendering\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Rendering\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Rendering\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid3D.cpp">
+      <Filter>Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableCartoonMesh.cpp">
+      <Filter>Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderablePointCloud.cpp">
+      <Filter>Rendering\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxShader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderToTextureShader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="AlbedoPointCloudShader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="AlbedoShader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientOcclusionKernel.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientOcclusionShader.cpp">
+      <Filter>Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GlRenderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformNames.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SceneVisualiser.h">
-      <Filter>Visualiser</Filter>
+    <ClInclude Include="ViewerApplication.h">
+      <Filter>Application\Viewer</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix3x3.h">
-      <Filter>Visualiser\Math</Filter>
+    <ClInclude Include="ViewerLauncher.h">
+      <Filter>Application\Viewer</Filter>
     </ClInclude>
-    <ClInclude Include="matrix4x4.h">
-      <Filter>Visualiser\Math</Filter>
+    <ClInclude Include="ApplicationExceptions.h">
+      <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="MatrixNxN.h">
-      <Filter>Visualiser\Math</Filter>
+    <ClInclude Include="ApplicationSectionStrings.h">
+      <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="AlgebraLib.h">
-      <Filter>Visualiser\Math</Filter>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Visualiser\Scene\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraController.h">
-      <Filter>Visualiser\UserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Visualiser\UserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="GlRenderer.h">
-      <Filter>Visualiser\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableObject.h">
-      <Filter>Visualiser\Rendering\Objects</Filter>
+      <Filter>Rendering\Camera</Filter>
     </ClInclude>
     <ClInclude Include="glslang.h">
-      <Filter>Visualiser</Filter>
+      <Filter>ExternalTools</Filter>
     </ClInclude>
-    <ClInclude Include="Macros.h">
-      <Filter>Visualiser</Filter>
+    <ClInclude Include="loadBMP.h">
+      <Filter>ExternalTools</Filter>
     </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>ExternalTools</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMacros.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformable.h">
+      <Filter>Scene\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectFactory.h">
+      <Filter>Scene\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Scene\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMesh.h">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMeshLoader.h">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMeshPart.h">
+      <Filter>Scene\Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePointCloud.h">
+      <Filter>Scene\Objects\PointCloud</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureCache.h">
+      <Filter>Rendering\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Rendering\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Rendering\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Rendering\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid3D.h">
+      <Filter>Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderable.h">
+      <Filter>Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableCartoonMesh.h">
+      <Filter>Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderablePointCloud.h">
+      <Filter>Rendering\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxShader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderToTextureShader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AlbedoPointCloudShader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AlbedoShader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientOcclusionKernel.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientOcclusionShader.h">
+      <Filter>Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GlRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderingContext.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingHelpers.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformNames.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingLib.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewerMath.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Visualiser">
-      <UniqueIdentifier>{b54a565a-5a3c-48e9-ad14-b85d567426ab}</UniqueIdentifier>
+    <Filter Include="Application">
+      <UniqueIdentifier>{6180685b-9b66-426f-8288-9eb22a70482d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\Math">
-      <UniqueIdentifier>{db4127ea-79d0-4f6f-be81-825f7e83b8c2}</UniqueIdentifier>
+    <Filter Include="Application\Viewer">
+      <UniqueIdentifier>{8f031db1-dae9-42a3-b38a-ddd79c482cce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\UserInterface">
-      <UniqueIdentifier>{e8237083-d0d4-446e-9ec0-69da99fb2156}</UniqueIdentifier>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{973ab7d3-b556-4bdd-bfd9-a5259f6d14ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\Rendering">
-      <UniqueIdentifier>{e30b5613-b9c4-4153-9536-cc8542e25292}</UniqueIdentifier>
+    <Filter Include="Rendering\Camera">
+      <UniqueIdentifier>{f4ce1e52-6075-4251-b7d1-025b203e3077}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\Scene">
-      <UniqueIdentifier>{c0324437-8a3a-47a5-af2a-d90e5c678bd4}</UniqueIdentifier>
+    <Filter Include="ExternalTools">
+      <UniqueIdentifier>{b46f0aa3-5abd-402a-ba6f-3660d611c819}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\Scene\Camera">
-      <UniqueIdentifier>{106d54b7-b892-4b50-a276-ba53fd5a16d1}</UniqueIdentifier>
+    <Filter Include="UserInterface">
+      <UniqueIdentifier>{ad99a78b-18ff-4ddc-b08d-549c38b30b41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Visualiser\Rendering\Objects">
-      <UniqueIdentifier>{d4dbd60d-8ed3-41ab-887b-97e0296ff5f6}</UniqueIdentifier>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{f37eba6a-d35c-426a-82bd-6ef3ba996570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Objects">
+      <UniqueIdentifier>{2f1daeab-8b7d-4342-8203-4d9743b295e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Objects\Mesh">
+      <UniqueIdentifier>{dd79d075-df07-4946-80fe-40b8a6b1ed2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Objects\PointCloud">
+      <UniqueIdentifier>{5109ac47-7f82-432d-8730-b782790e339b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Textures">
+      <UniqueIdentifier>{cce8cd04-0333-47e4-9947-ece9474978ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Objects">
+      <UniqueIdentifier>{d472949c-52ed-4fce-b8ea-25ee87e40d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders">
+      <UniqueIdentifier>{7b5071b3-dad5-469a-85a1-00fb289facb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Lights">
+      <UniqueIdentifier>{4b25a152-adf4-4b84-aa24-d2ea8fe30bed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

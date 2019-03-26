@@ -1,29 +1,77 @@
 #pragma once
 
-class GlRenderer
-{
+struct RendererComponents {
+	RendererComponents() {
+		pAlbedoShader = nullptr;
+		pShadowComponent = nullptr;
+		pSkyboxShader = nullptr;
+		pAmbientOcclusionShader = nullptr;
+		bShadowsEnabled = false;
+		bAoEnabled = false;
+	}
+
+	void Release() {
+		if ( pAlbedoShader ) delete pAlbedoShader;
+		if ( pShadowComponent ) delete pShadowComponent;
+		if ( pSkyboxShader ) delete pSkyboxShader;
+		if ( pAmbientOcclusionShader ) delete pAmbientOcclusionShader;
+		if ( pPointCloudShader ) delete pPointCloudShader;
+	}
+
+	bool bShadowsEnabled;
+	ShaderProgram* pShadowComponent;
+
+	bool bAoEnabled;
+	ShaderProgram* pAmbientOcclusionShader;
+
+	ShaderProgram* pAlbedoShader;
+	ShaderProgram* pSkyboxShader;
+	ShaderProgram* pPointCloudShader;
+};
+
+class GlRenderer {
 public:
 
-	void Init();
+	void Initialize();
 
-	void Render() const;
+	void SetViewport( __in const Viewport& renderingWindow );
 
-	void SetViewportCamera( __in Camera& camera );
+	void SetComponents( __in const RendererComponents& components );
 
-	void RegisterObject( __in_z const char* pId, __in RenderableObject* pObject );
+	
+	size_t RegisterLight( __in Light* pLight );
 
-	void ClearObjects();
+
+	size_t RegisterRenderable( __in IRenderable* pObject );
+
+	void RegisterSkybox( __in IRenderable* pSkybox );
+
+
+	// void Render( __in const Scene& scene ) const;
+	void Render( __in const Camera& camera ) const;
+
+	void SetGrid( __in Grid3D* pGrid );
+
+	void Release();
+
+	void SwitchSSAOState();
+
+	void SwitchShadowsState();
 
 protected:
 
-	void InitializeShader() const;
+	void RenderGrid( __in const Camera& camera ) const;
+
+	void ShowTexture( __in const GLuint textureId ) const;
 
 protected:
 
-	Camera* m_pCamera;
-	std::map< std::string, RenderableObject* > m_objects;
+	RendererComponents mComponents;
+	
+	Grid3D* m_pGrid;
 
-	GLuint m_vertexColorDiffuseShader;
-
+	IRenderable* m_pSkybox;
+	Utils::Containers::Vector< IRenderable* > mRenderables;
+	Utils::Containers::Vector< Light* > mLights;
 };
 

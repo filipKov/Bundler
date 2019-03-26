@@ -1,14 +1,15 @@
 #include "stdafx.h"
 
 #include "Mouse.h"
-#include "AlgebraLib.h"
+
 #include "Camera.h"
 
 #define CAMERA_TARGET_MIN_DISTANCE 3.0f
+#define EPS 0.000001f
 
 Camera::Camera() {
 	mWorldUp = Vector3f( { 0,1,0 } ); // OpenGL Y-up
-	LookAt( Vector3f( { 0,0,0 } ) );
+	SetTarget( Vector3f( { 0,0,0 } ) );
 	SetPosition( Vector3f( { 1,1,1 } ) );
 
 	mProjectionMatrix.SetIdentity();
@@ -16,20 +17,49 @@ Camera::Camera() {
 
 Camera::Camera( __in const Vector3f& position ) {
 	mWorldUp = Vector3f( { 0,1,0 } ); // OpenGL Y-up
-	LookAt( Vector3f( { 0,0,0 } ) );
+	SetTarget( Vector3f( { 0,0,0 } ) );
 	SetPosition( position );
 
 	mProjectionMatrix.SetIdentity();
 }
 
-void Camera::SetPosition( __in const Vector3f& position ) {
-	mPosition = position;
+void Camera::Update( __in const float dt ) {
+	mTarget += mTargetVelocity * ( dt );
+
+	Vector3f newPos = mPosition + ( mCameraVelocity * dt );
+	ClampPosition( newPos );
+	mPosition = newPos;
+
 	RecalcViewMatrix();
+	mCameraVelocity *= 0.9f;
+	mTargetVelocity *= 0.9f;
 }
 
-void Camera::MoveCamera( __in const Vector3f& moveVector ) {
-	mPosition += moveVector;
-	RecalcViewMatrix();
+void Camera::SetPosition( __in const Vector3f& position ) {
+	mPosition = position;
+	mCameraVelocity *= 0;
+	Update( 0.0f );
+}
+
+void Camera::SetTarget( __in const Vector3f& position ) {
+	mTarget = position;
+	mTargetVelocity *= 0;
+	Update( 0.0f );
+}
+
+void Camera::MoveFpsStyle( __in const float forward, __in const float left, __in const float up ) {
+	Vector3f forwardDir = mTarget - mPosition;
+	forwardDir.Normalize();
+
+	Vector3f leftDir = CrossProduct( mWorldUp, forwardDir );
+	leftDir.Normalize();
+
+	Vector3f upDir = CrossProduct( forwardDir, leftDir );
+	upDir.Normalize();
+
+	Vector3f moveVector = ( forwardDir * forward ) + ( leftDir * left ) + ( upDir * up );
+	mCameraVelocity += moveVector;
+	mTargetVelocity += moveVector;
 }
 
 void Camera::MoveSystem( __in const float moveFactorX, __in const float moveFactorY ) {
@@ -47,15 +77,13 @@ void Camera::MoveSystem( __in const float moveFactorX, __in const float moveFact
 	left *= moveFactorX;
 	down *= moveFactorY;
 	Vector3f moveVector = left + down;
-
-	mPosition += moveVector;
-	mTarget += moveVector;
+	
+	mCameraVelocity += moveVector;
+	mTargetVelocity += moveVector;
 
 #ifdef _DEBUG
 	stopwatch.SaveElapsed();
 #endif
-
-	RecalcViewMatrix();
 }
 
 void Camera::Orbit( __in const float yawFactor, __in const float pitchFactor ) {
@@ -64,28 +92,56 @@ void Camera::Orbit( __in const float yawFactor, __in const float pitchFactor ) {
 	stopwatch.Start();
 #endif
 
+	Vector3f forward = ( mTarget - mPosition );
+	forward.Normalize();
+	Vector3f left = CrossProduct( mWorldUp, forward );
+	left.Normalize();
+	Vector3f down = CrossProduct( left, forward );
+
+	float rotationMatrix[16];
+	M44Identity( rotationMatrix );
+	M44Translate( ( -mTarget ).Elements( ), rotationMatrix );
+	M44Rotate( yawFactor, down.Elements( ), rotationMatrix );
+	M44Rotate( pitchFactor, left.Elements( ), rotationMatrix );
+	M44Translate( mTarget.Elements( ), rotationMatrix );
+
+	
+	float pos4[4] = { mPosition[0], mPosition[1], mPosition[2], 1.0f };
+	Vector4f position;
+	
+	M44MulV4( rotationMatrix, pos4, position.Elements( ) );
+	position *= 1.0f / position[3];
+
+	Vector3f moveVector = Vector3f( { position[0], position[1], position[2] } ) - mPosition;
+	mCameraVelocity += moveVector;
+
+#ifdef _DEBUG
+	stopwatch.SaveElapsed();
+#endif
+}
+
+void Camera::OrbitTarget( __in const float yawFactor, __in const float pitchFactor ) {
 	Vector3f forward = ( mPosition - mTarget );
 	forward.Normalize();
 	Vector3f left = CrossProduct( mWorldUp, forward );
 	left.Normalize();
 	Vector3f down = CrossProduct( left, forward );
 
-	Matrix4x4 rotationMatrix;
-	rotationMatrix.SetIdentity();
-	rotationMatrix.Translate( -mTarget[0], -mTarget[1], -mTarget[2] );
-	rotationMatrix.Rotate( yawFactor, down[0], down[1], down[2] );
-	rotationMatrix.Rotate( pitchFactor, left[0], left[1], left[2] );
-	rotationMatrix.Translate( mTarget[0], mTarget[1], mTarget[2] );
+	float rotationMatrix[16];
+	M44Identity( rotationMatrix );
+	M44Translate( ( -mPosition ).Elements( ), rotationMatrix );
+	M44Rotate( yawFactor, down.Elements( ), rotationMatrix );
+	M44Rotate( pitchFactor, left.Elements( ), rotationMatrix );
+	M44Translate( mPosition.Elements( ), rotationMatrix );
 
-	Vector4f position( { mPosition[0], mPosition[1], mPosition[2], 1.0f } );
-	position = rotationMatrix * position;
-	position *= 1.0f/position[3];
+	float target4[4] = { mTarget[0], mTarget[1], mTarget[2], 1.0f };
+	Vector4f newTarget;
 
-#ifdef _DEBUG
-	stopwatch.SaveElapsed();
-#endif
+	M44MulV4( rotationMatrix, target4, newTarget.Elements( ) );
+	newTarget *= 1.0f / newTarget[3];
 
-	SetPosition( Vector3f( { position[0], position[1], position[2] } ) );
+	Vector3f moveVector = Vector3f( { newTarget[0], newTarget[1], newTarget[2] } ) - mTarget;
+	mTargetVelocity += moveVector;
 }
 
 void Camera::Zoom( __in const float zoomFactor ) {
@@ -100,27 +156,12 @@ void Camera::Zoom( __in const float zoomFactor ) {
 
 	Vector3f newPos = mPosition + lookDir;
 
-	Vector3f targetToNewPos = newPos - mTarget;
-	targetToNewPos.Normalize();
-	Vector3f targetToOldPos = mPosition - mTarget;
-	targetToOldPos.Normalize();
-	bool targetOnSameSide = ( targetToNewPos * targetToOldPos ) > 0.0f;
-
-	if ( ( newPos.Distance( mTarget ) < CAMERA_TARGET_MIN_DISTANCE ) || !targetOnSameSide ) {
-		targetToOldPos *= CAMERA_TARGET_MIN_DISTANCE;
-		newPos = mTarget + targetToOldPos;
-	}
+	Vector3f moveVector = newPos - mPosition;
+	mCameraVelocity += moveVector;
 
 #ifdef _DEBUG
 	stopwatch.SaveElapsed();
 #endif
-
-	SetPosition( newPos );
-}
-
-void Camera::LookAt( __in const Vector3f& position ) {
-	mTarget = position;
-	RecalcViewMatrix();
 }
 
 void Camera::SetPerspectiveProjection(
@@ -129,15 +170,30 @@ void Camera::SetPerspectiveProjection(
 	__in const float zNear,
 	__in const float zFar ) 
 {
-	mProjectionMatrix.SetPerspective( fieldOfView, aspectRatio, zNear, zFar );
+	M44SetPerspective( fieldOfView, aspectRatio, zNear, zFar, mProjectionMatrix.Elements( ) );
 }
 
-const Matrix4x4& Camera::GetViewMatrix() const {
+const Matrix4x4f& Camera::GetViewMatrix() const {
 	return mViewMatrix;
 }
 
-const Matrix4x4& Camera::GetProjectionMatrix() const {
+const Matrix4x4f& Camera::GetProjectionMatrix() const {
 	return mProjectionMatrix;
+}
+
+void Camera::ClampPosition( __inout Vector3f& pos ) {
+	Vector3f targetToNewPos = pos - mTarget;
+	targetToNewPos.Normalize();
+	Vector3f targetToOldPos = mPosition - mTarget;
+	targetToOldPos.Normalize();
+	bool targetOnSameSide = ( targetToNewPos * targetToOldPos ) > 0.0f;
+	float distanceToTarget = pos.Distance( mTarget );
+
+	if ( !targetOnSameSide ) {
+		pos = targetToOldPos * CAMERA_TARGET_MIN_DISTANCE;
+	} else if ( distanceToTarget < CAMERA_TARGET_MIN_DISTANCE ) {
+		pos += targetToNewPos * ( CAMERA_TARGET_MIN_DISTANCE - distanceToTarget );
+	}
 }
 
 void Camera::RecalcViewMatrix() {

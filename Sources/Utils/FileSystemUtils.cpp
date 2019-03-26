@@ -4,9 +4,25 @@ namespace Utils { namespace FileSystem {
 
 	const char* GetFilenameStart( __in_z const char* pPath )
 	{
-		const char* pSlash1 = strrchr( pPath, '\\' ) + 1;
-		const char* pSlash2 = strrchr( pPath, '/' ) + 1;
-		return min( pSlash1, pSlash2 );
+		const char* pSlash1 = strrchr( pPath, '\\' );
+		const char* pSlash2 = strrchr( pPath, '/' );
+		
+		if ( !pSlash1 )
+		{
+			if ( !pSlash2 )
+			{
+				return pPath;
+			}
+			return pSlash2 + 1;
+		}
+		else
+		{
+			if ( !pSlash2 )
+			{
+				return pSlash1 + 1;
+			}
+			return min( pSlash1, pSlash2 ) + 1;
+		}
 	}
 
 	const char* GetFileExtension( __in_z const char* pPath )

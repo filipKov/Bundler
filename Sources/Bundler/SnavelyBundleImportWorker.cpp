@@ -264,6 +264,11 @@ namespace Bundler { namespace Import {
 			hr = ParsePoint( i );
 			if ( FAILED( hr ) )
 			{
+				// Workaround bundle export bug in RealityCapture!!!! DELETE WHEN BUG IS FIXED!!!
+				m_pBundleOut->points.RestrictLength( i ); 
+				hr = S_OK;
+				// End of Workaround
+
 				break;
 			}
 		}

@@ -1,0 +1,7 @@
+<FileList
+  Identity = "ReconstrucThorResources, Version=1.0"
+  DisplayName = "ReconstrucThor Resources"
+  AppliesTo = "Native"
+  CopyRedistToSubDirectory = "."
+  MinVSVersion = "11.0">
+</FileList>

@@ -8,6 +8,8 @@ namespace Bundler { namespace CameraModels {
 		
 		void UpdateCamera( __in_ecount( 3 ) const Scalar* pDeltaParams ) override;
 
+		void ResetLastUpdate( __in_ecount( 3 ) const Scalar* pDeltaParams ) override;
+
 	protected:
 
 		void RotatePoint(

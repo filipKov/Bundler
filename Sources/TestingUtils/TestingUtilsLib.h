@@ -9,5 +9,4 @@ namespace TestingUtils { namespace Settings {
 } }
 
 #include "TestingUtils.h"
-#include "InputGenerators.h"
 #include "MatrixUtils.h"

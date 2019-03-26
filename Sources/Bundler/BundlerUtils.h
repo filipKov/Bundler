@@ -19,7 +19,7 @@ namespace Bundler { namespace Utils {
 	inline const Scalar* GetPointParamPtr( __in const size_t pointIndex, __in const size_t cameraCount, __in const Scalar* pParameterVector )
 	{
 		constexpr const size_t pointParamCount = CameraModel::totalParamCount - CameraModel::cameraParameterCount;
-		return pParameterVector + cameraCount * CameraModel::cameraParameterCount * pointIndex * pointParamCount;
+		return pParameterVector + cameraCount * CameraModel::cameraParameterCount + pointIndex * pointParamCount;
 	}
 
 	template < class CameraModel >

@@ -30,9 +30,6 @@
       <Filter>Visualiser</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneGenerator.cpp">
-      <Filter>Generator</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -72,9 +69,6 @@
     <ClInclude Include="Macros.h">
       <Filter>Visualiser</Filter>
     </ClInclude>
-    <ClInclude Include="SceneGenerator.h">
-      <Filter>Generator</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Visualiser">
@@ -97,9 +91,6 @@
     </Filter>
     <Filter Include="Visualiser\Rendering\Objects">
       <UniqueIdentifier>{d4dbd60d-8ed3-41ab-887b-97e0296ff5f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Generator">
-      <UniqueIdentifier>{957c6073-6b65-4ccf-88bf-1d2868a8beae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

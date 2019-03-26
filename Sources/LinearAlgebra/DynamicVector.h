@@ -26,9 +26,6 @@ namespace LinearAlgebra {
 	
 		Vector( __in Vector< Scalar, MatrixBase::Dynamic >&& src ) : Matrix< Scalar, MatrixBase::Dynamic >( std::move( src ) ) {};
 	
-		virtual ~Vector() {};
-	
-	
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors overrides
 		// -------------------------------------------------------------------------------------------------------

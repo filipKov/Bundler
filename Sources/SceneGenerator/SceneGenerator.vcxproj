@@ -65,10 +65,14 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\VisualStudio\CustomProps\CustomProps.props" />
+    <Import Project="..\..\Resources\Resources.props" />
+    <Import Project="..\..\ExternalLibs\OpenGL\PropertySheets\CommonConfiguration\x64\Freeglut.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\VisualStudio\CustomProps\CustomPropsRelease.props" />
+    <Import Project="..\..\Resources\Resources.props" />
+    <Import Project="..\..\ExternalLibs\OpenGL\PropertySheets\CommonConfiguration\x64\Freeglut.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,9 +115,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\ExternalLibs\;$(SolutionDir)..\ExternalLibs\GL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /d /y "$(SolutionDir)..\ExternalLibs\GL\*.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -151,9 +153,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\ExternalLibs\;$(SolutionDir)..\ExternalLibs\GL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /d /y "$(SolutionDir)..\ExternalLibs\GL\*.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlgebraLib.h" />
@@ -167,7 +167,6 @@
     <ClInclude Include="MatrixNxN.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="RenderableObject.h" />
-    <ClInclude Include="SceneGenerator.h" />
     <ClInclude Include="SceneVisualiser.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -181,7 +180,6 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneGenerator.cpp" />
     <ClCompile Include="SceneVisualiser.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -190,7 +188,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bundler\Bundler.vcxproj">
+      <Project>{c4cde5c9-deae-482f-a7aa-9ca1dab85e41}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">
+      <Project>{6d15bc33-ea80-476e-8fa9-e323c1ac208d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.vcxproj">
+      <Project>{6b3885a0-666b-4e5f-bbe9-46261efb59ac}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\ExternalLibs\ExternalLibsDeploy.targets" />
   </ImportGroup>
 </Project>

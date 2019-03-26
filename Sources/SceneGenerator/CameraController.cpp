@@ -2,9 +2,6 @@
 
 #include <map>
 
-#include "GL\glew.h"
-#include "GL\glut.h"
-
 #include "AlgebraLib.h"
 
 #include "Mouse.h"

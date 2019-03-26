@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+     <OpenGlDir Condition="'$(OpenGlDir)' == ''">$([MSBUILD]::GetDirectoryNameOfFileAbove('$(MSBUILDTHISFILEDIRECTORY)', 'glmanifest.xml'))</OpenGlDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludePath>$(OpenGlDir)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OpenGlDir)\Libs\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+
+    <Link>
+      <AdditionalDependencies>freeglut.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+
+  </ItemDefinitionGroup>
+
+</Project>
+

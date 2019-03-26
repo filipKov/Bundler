@@ -14,6 +14,8 @@ namespace Bundler { namespace CameraModels {
 
 		virtual void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) = 0;
 
+		virtual void ResetLastUpdate( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) = 0;
+
 		virtual void ProjectPoint( 
 			__in_ecount( 3 ) const Scalar* pPointCoords, 
 			__in_ecount( 2 ) const Scalar* pFeatureCoords,

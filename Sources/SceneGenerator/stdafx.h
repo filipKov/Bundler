@@ -18,4 +18,7 @@ using namespace Utils;
 // #define GLEW_STATIC
 // #define FREEGLUT_STATIC
 
+#include <glew.h>
+#include <freeglut.h>
+
 // TODO: reference additional headers your program requires here

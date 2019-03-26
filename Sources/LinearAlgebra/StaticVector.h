@@ -29,7 +29,7 @@ namespace LinearAlgebra {
 
 		Vector( __in const Matrix< Scalar, dimension, 1 >& src ) : Matrix< Scalar, dimension, 1 >( src ) {};
 
-		virtual ~Vector() {};
+		~Vector() {};
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors overrides

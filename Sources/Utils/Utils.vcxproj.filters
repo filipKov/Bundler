@@ -52,6 +52,9 @@
     <ClInclude Include="FileSystemUtils.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Random</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -80,6 +83,9 @@
     </Filter>
     <Filter Include="Filesystem">
       <UniqueIdentifier>{0b0106e5-4bfb-48e4-a15c-ef3889ac26ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Random">
+      <UniqueIdentifier>{8c8d3492-30f1-4e5c-956b-322cd126053e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

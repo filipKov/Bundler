@@ -72,6 +72,9 @@
     <ClInclude Include="BundleOptimizer.h">
       <Filter>Optimization</Filter>
     </ClInclude>
+    <ClInclude Include="SceneGenerator.h">
+      <Filter>SceneGenerator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="SnavelyBundleImportWorker.cpp">
       <Filter>Import\Workers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGenerator.cpp">
+      <Filter>SceneGenerator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +124,9 @@
     </Filter>
     <Filter Include="Optimization">
       <UniqueIdentifier>{0c8eb5e0-4720-4e44-8107-c4ce404bb3a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneGenerator">
+      <UniqueIdentifier>{e405f382-66af-404e-b100-4e0f76a81b78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

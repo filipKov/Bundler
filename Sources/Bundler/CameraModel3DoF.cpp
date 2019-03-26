@@ -7,7 +7,14 @@ namespace Bundler { namespace CameraModels {
 
 	void CameraModel3DoF::UpdateCamera( __in_ecount( 3 ) const Scalar* pDeltaParams ) 
 	{
-		m_pCamera->t += pDeltaParams;
+		Scalar* pTranslation = m_pCamera->t.Elements( );
+		V3AddV3( pTranslation, pDeltaParams, pTranslation );
+	}
+
+	void CameraModel3DoF::ResetLastUpdate( __in_ecount( 3 ) const Scalar* pDeltaParams )
+	{
+		Scalar* pTranslation = m_pCamera->t.Elements( );
+		V3SubV3( pTranslation, pDeltaParams, pTranslation );
 	}
 
 	void CameraModel3DoF::RotatePoint(

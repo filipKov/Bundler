@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<Target Name="OpenGLDeploy" AfterTargets="AfterBuild" >
+		<Exec Command="echo ------ Deploy OpenGL ------" />
+		<Exec Command="xcopy /B /Y $(OpenGlDir)\Redist\CommonConfiguration\x64\*.* $(OutDir)" />
+		<Exec Command="echo ------ OpenGL Deployed ------" />
+	</Target>
+	
+	<Target Name="ResourceDeploy" AfterTargets="AfterBuild">
+		<Exec Command="echo ------ Copying Resources ------" />
+		<Exec Command="xcopy /b /y /s /i /exclude:$(ResourcesDir)_ignore $(ResourcesDir)*.* $(OutDir)Resources" />
+		<Exec Command="echo ------ Resources Copied ------" />
+	</Target>
+	
+</Project>

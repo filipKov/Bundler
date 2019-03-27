@@ -86,7 +86,7 @@ namespace Bundler { namespace Import {
 			GetImageListPath( pFilename, imageListPath );
 			if ( FileExists( imageListPath ) )
 			{
-				std::ifstream imageListStream = OpenStreamOnFile< std::ifstream >( pFilename );
+				std::ifstream imageListStream = OpenStreamOnFile< std::ifstream >( imageListPath );
 				hr = Import( &bundleStream, &imageListStream, pBundle, pAdditionalData );
 
 				imageListStream.close();
@@ -105,10 +105,16 @@ namespace Bundler { namespace Import {
 	void BundleImporter::GetImageListPath( __in_z const char* pBundlePath, __out_ecount( 512 ) char* pImListPath )
 	{
 		const char* pBundleName = GetFilenameStart( pBundlePath );
-		const char* pBundleExt = GetFileExtension( pBundlePath );
+
+		const size_t pathLength = pBundleName - pBundlePath;
+		strncpy_s( pImListPath, 512, pBundlePath, pathLength );
+
+		const char* pBundleExt = GetFileExtension( pBundleName );
+
 		const size_t nameLength = pBundleExt - pBundleName;
-		strncpy_s( pImListPath, 512, pBundleName, nameLength );
-		sprintf_s( pImListPath + nameLength, 512 - nameLength, IMAGE_LIST_EXTENSION );
+		strncpy_s( pImListPath + pathLength, 512 - pathLength, pBundleName, nameLength );
+
+		sprintf_s( pImListPath + pathLength + nameLength, 512 - pathLength - nameLength, IMAGE_LIST_EXTENSION );
 	}
 
 	HRESULT BundleImporter::ParseHeader( __in std::istream* pStream, __out_z char( &header )[ 256 ] )

@@ -150,12 +150,12 @@ namespace Bundler { namespace LinearSolver {
 		{
 			const size_t cameraCount = pJacobian->GetCameraCount();
 
-			Matrix< Scalar, 2, CameraModel::cameraParameterCount > camTemp;
-			Matrix< Scalar, 2, POINT_PARAM_COUNT > pointTemp;
-			Vector< Scalar, 2 > residualTemp;
+			Scalar camTemp[2 * CameraModel::cameraParameterCount];
+			Scalar pointTemp[2 * POINT_PARAM_COUNT];
+			Scalar residualTemp[2];
 
-			Vector< Scalar, CameraModel::cameraParameterCount > camXTemp;
-			Vector< Scalar, POINT_PARAM_COUNT > pointXTemp;
+			Scalar camXTemp[CameraModel::cameraParameterCount];
+			Scalar pointXTemp[POINT_PARAM_COUNT];
 
 			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 			{
@@ -165,17 +165,16 @@ namespace Bundler { namespace LinearSolver {
 					const size_t projectionIx = pJacobian->GetCameraProjectionIndex( cameraIx, projI );
 					const size_t pointIx = pJacobian->GetPointIndex( projectionIx );
 
-					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, camTemp.Elements(), pointTemp.Elements(), residualTemp.Elements() );
+					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, camTemp, pointTemp, residualTemp );
 
-					MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp.Elements(), residualTemp.Elements(), camXTemp.Elements() );
-					MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp.Elements(), residualTemp.Elements(), pointXTemp.Elements() );
-
+					MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp, residualTemp, camXTemp );
+					MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp, residualTemp, pointXTemp );
 
 					Scalar* pCamXDestination = Bundler::Utils::GetCameraParamPtr< CameraModel >( cameraIx, pX );
 					Scalar* pPtXDestination = Bundler::Utils::GetPointParamPtr< CameraModel >( pointIx, cameraCount, pX );
 
-					MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( camXTemp.Elements(), pCamXDestination, pCamXDestination );
-					MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pointXTemp.Elements(), pPtXDestination, pPtXDestination );
+					MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( camXTemp, pCamXDestination, pCamXDestination );
+					MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pointXTemp, pPtXDestination, pPtXDestination );
 				}
 			}
 

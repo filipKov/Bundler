@@ -54,6 +54,45 @@ namespace Bundler {
 			MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pY, cameraBlockAccumulator, pY );
 		}
 
+		static Scalar GetFrobeniusNorm( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
+		{
+			HessianBlockProvider< CameraModel > hessian;
+			hessian.Initialize( pProjectionProvider );
+
+			Scalar totalNorm = 0;
+
+			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
+			Scalar cameraBlock[cameraParamCount * cameraParamCount];
+			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
+
+			const size_t cameraCount = hessian.GetCameraCount( );
+			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
+			{
+				hessian.GetCameraBlock( cameraIx, cameraBlock );
+				totalNorm += MatrixFrobeniusNorm< Scalar, cameraParamCount, cameraParamCount >( cameraBlock );
+
+				const size_t projectionCount = hessian.GetCameraProjectionCount( cameraIx );
+				for ( size_t projI = 0; projI < projectionCount; projI++ )
+				{
+					size_t ptIxDummy = 0;
+					hessian.GetCameraPointBlockCam( cameraIx, projI, &ptIxDummy, cameraPointBlock );
+					
+					totalNorm += 2 * MatrixFrobeniusNorm< Scalar, cameraParamCount, POINT_PARAM_COUNT >( cameraPointBlock );
+				}
+			}
+
+			Scalar pointBlock[POINT_PARAM_COUNT * POINT_PARAM_COUNT];
+			
+			const size_t pointCount = hessian.GetPointCount( );
+			for ( size_t pointIx = 0; pointIx < pointCount; pointIx++ )
+			{
+				hessian.GetPointBlock( pointIx, pointBlock );
+				totalNorm += MatrixFrobeniusNorm< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT >( pointBlock );
+			}
+
+			return totalNorm;
+		}
+
 	protected:
 
 		void MultiplyByCameraBlock(

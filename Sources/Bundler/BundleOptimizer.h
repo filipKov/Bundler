@@ -45,6 +45,12 @@ namespace Bundler {
 			ProjectionProvider< CameraModel > jacobian;
 			InitializeJacobian( pBundle, &jacobian );
 
+			if ( m_dampeningFactor <= 0 )
+			{
+				m_dampeningFactor = HessianMultiplicationEngine< CameraModel >::GetFrobeniusNorm( &jacobian );
+				m_dampeningFactor *= Scalar( 0.0000001 );
+			}
+
 			Scalar geometricError = 0;
 			uint finalIteration = 0;
 			OptimizeLoop( &jacobian, pBundle, pStats );
@@ -90,6 +96,8 @@ namespace Bundler {
 				pStats->initialGeometricError = geometricError;
 			}
 
+			printf( "Pre-optimization: error: %f | dampening: %f\n", geometricError, m_dampeningFactor );
+
 			uint iteration = 0;
 			uint acceptedSteps = 0;
 			uint rejectecSteps = 0;
@@ -105,12 +113,16 @@ namespace Bundler {
 					geometricError = newGeometricError;
 					acceptedSteps++;
 					m_dampeningFactor *= m_dampeningDown;
+
+					printf( "Iteration %u: step ACCEPTED | error: %f | dampening: %f\n", iteration, geometricError, m_dampeningFactor );
 				}
 				else
 				{
 					ResetBundleParams( parameterCount, pUpdateVector, pBundle );
 					rejectecSteps++;
 					m_dampeningFactor *= m_dampeningUp;
+
+					printf( "Iteration %u: step REJECTED | error: %f | dampening: %f\n", iteration, geometricError, m_dampeningFactor );
 				}
 
 				iteration++;

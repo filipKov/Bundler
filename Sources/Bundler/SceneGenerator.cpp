@@ -129,16 +129,21 @@ namespace Bundler { namespace SceneGenerator {
 		__in_ecount( count ) const Vector3* pPoints,
 		__out SceneGenRange* pNoise )
 	{
-		Vector3 minPt( { FLT_MAX, FLT_MAX, FLT_MAX } );
-		Vector3 maxPt = -minPt;
-		for ( uint i = 0; i < count; i++ )
-		{
-			minPt = GetByElements( GetMin, minPt, *pPoints );
-			maxPt = GetByElements( GetMax, maxPt, *pPoints );
-			pPoints++;
-		}
+		// Vector3 minPt( { FLT_MAX, FLT_MAX, FLT_MAX } );
+		// Vector3 maxPt = -minPt;
+		// for ( uint i = 0; i < count; i++ )
+		// {
+		// 	minPt = GetByElements( GetMin, minPt, *pPoints );
+		// 	maxPt = GetByElements( GetMax, maxPt, *pPoints );
+		// 	pPoints++;
+		// }
+		// 
+		// Scalar noiseFactor = minPt.Distance( maxPt ) * Scalar( 0.05 );
 
-		Scalar noiseFactor = minPt.Distance( maxPt ) * Scalar( 0.05 );
+		pPoints;
+		count;
+
+		Scalar noiseFactor = Scalar( 1 );
 
 		pNoise->minDelta = -noiseFactor;
 		pNoise->maxDelta = noiseFactor;

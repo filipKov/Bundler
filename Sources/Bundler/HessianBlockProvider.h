@@ -2,8 +2,6 @@
 
 namespace Bundler {
 
-	
-
 	template < class CameraModel >
 	class HessianBlockProvider
 	{
@@ -124,7 +122,6 @@ namespace Bundler {
 			MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, POINT_PARAM_COUNT >(
 				cameraBlock, pointBlock, pBlock );
 		}
-
 
 	protected:
 

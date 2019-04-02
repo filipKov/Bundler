@@ -22,6 +22,14 @@
 #include "ProjectionProvider.h"
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
+#include "LocalProjectionProvider.h"
+#include "LocalHessianBlockProvider.h"
+#include "LocalHessianMultiplicationEngine.h"
+
+#include "ITask.h"
+#include "HessianCameraRowMultiplicationTask.h"
+#include "HessianPointRowMultiplicationTask.h"
+// #include "WorkerThread.h"
 
 #include "Preconditioner.h"
 #include "JacobiPreconditioner.h"
@@ -30,6 +38,7 @@
 
 #include "PCGStructs.h"
 #include "PCGSolver.h"
+#include "ParallelPCGSolver.h"
 
 #include "BundleOptimizer.h"
 

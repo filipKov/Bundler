@@ -75,6 +75,27 @@
     <ClInclude Include="SceneGenerator.h">
       <Filter>SceneGenerator</Filter>
     </ClInclude>
+    <ClInclude Include="ITask.h">
+      <Filter>Async\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProvider.h">
+      <Filter>JacobianAndHessian\Local</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianBlockProvider.h">
+      <Filter>JacobianAndHessian\Local</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianMultiplicationEngine.h">
+      <Filter>JacobianAndHessian\Local</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianCameraRowMultiplicationTask.h">
+      <Filter>Async\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGSolver.h">
+      <Filter>LinearSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianPointRowMultiplicationTask.h">
+      <Filter>Async\Tasks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -127,6 +148,15 @@
     </Filter>
     <Filter Include="SceneGenerator">
       <UniqueIdentifier>{e405f382-66af-404e-b100-4e0f76a81b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async">
+      <UniqueIdentifier>{4428c055-e0ce-4875-b22f-1aaa4aee19b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async\Tasks">
+      <UniqueIdentifier>{b8deb9d5-1086-4b98-a864-d327b29d002b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local">
+      <UniqueIdentifier>{e68b2a83-5508-4650-b3fb-45357d1d2cf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

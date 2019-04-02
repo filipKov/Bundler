@@ -3,6 +3,9 @@
 namespace Bundler {
 
 	template < class CameraModel >
+	class LocalProjectionProvider;
+
+	template < class CameraModel >
 	class ProjectionProvider
 	{
 	public:
@@ -152,6 +155,7 @@ namespace Bundler {
 
 		Structure::BundleStructureMapping m_mapping;
 
+		friend class LocalProjectionProvider< CameraModel >;
 	};
 
 }

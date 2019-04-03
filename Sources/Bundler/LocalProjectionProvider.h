@@ -16,6 +16,9 @@ namespace Bundler {
 
 	template < class CameraModel >
 	class MemoryLimitedPreciseFastStrategy;
+
+	template < class CameraModel >
+	class CountLimitStrategy;
 	// end
 
 	template < class CameraModel >
@@ -162,6 +165,7 @@ namespace Bundler {
 
 		friend class MemoryLimitedPreciseStrategy< CameraModel >;
 		friend class MemoryLimitedPreciseFastStrategy< CameraModel >;
+		friend class CountLimitStrategy< CameraModel >;
 	};
 
 }

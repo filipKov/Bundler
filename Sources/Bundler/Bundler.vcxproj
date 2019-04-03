@@ -137,6 +137,7 @@
     <ClInclude Include="CachedJacobiPreconditioner.h" />
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
+    <ClInclude Include="CountLimitStrategy.h" />
     <ClInclude Include="HessianBlockProvider.h" />
     <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
@@ -147,6 +148,8 @@
     <ClInclude Include="LocalHessianBlockProvider.h" />
     <ClInclude Include="LocalHessianMultiplicationEngine.h" />
     <ClInclude Include="LocalProjectionProvider.h" />
+    <ClInclude Include="MemoryLimitPreciseFastStrategy.h" />
+    <ClInclude Include="MemoryLimitPreciseStrategy.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ParallelPCGSolver.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="SnavelyBundleImportWorker.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextStreamReader.h" />
+    <ClInclude Include="WorkerThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BundleImporter.cpp" />

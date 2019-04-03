@@ -28,6 +28,7 @@
 #include "LocalHessianMultiplicationEngine.h"
 #include "MemoryLimitPreciseStrategy.h"
 #include "MemoryLimitPreciseFastStrategy.h"
+#include "CountLimitStrategy.h"
 
 #include "ITask.h"
 #include "HessianCameraRowMultiplicationTask.h"

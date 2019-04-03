@@ -2,8 +2,13 @@
 
 namespace Bundler {
 
+	// Forward declarations for local provider factory strategies
 	template < class CameraModel >
-	class LocalProjectionProvider;
+	class MemoryLimitedPreciseStrategy;
+
+	template < class CameraModel >
+	class MemoryLimitedPreciseFastStrategy;
+	// end
 
 	template < class CameraModel >
 	class ProjectionProvider
@@ -155,7 +160,9 @@ namespace Bundler {
 
 		Structure::BundleStructureMapping m_mapping;
 
-		friend class LocalProjectionProvider< CameraModel >;
+		friend class MemoryLimitedPreciseStrategy< CameraModel >;
+		friend class MemoryLimitedPreciseFastStrategy< CameraModel >;
+
 	};
 
 }

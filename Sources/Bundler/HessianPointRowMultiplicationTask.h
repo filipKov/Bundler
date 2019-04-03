@@ -20,7 +20,7 @@ namespace Bundler { namespace Async {
 			__in_ecount( parameterCount ) const Scalar* pX,
 			__out_ecount( parameterCount ) Scalar* pDestination )
 		{
-			m_jacobian.InitializeForPoints( pJacobian, pointStartIx, m_memoryLimitKB );
+			MemoryLimitedPreciseFastStrategy< CameraModel >::InitializeForPoints( pJacobian, pointStartIx, m_memoryLimitKB, &m_jacobian );
 	
 			m_dampeningFactor = dampeningFactor;
 	

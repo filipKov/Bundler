@@ -22,9 +22,12 @@
 #include "ProjectionProvider.h"
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
+
 #include "LocalProjectionProvider.h"
 #include "LocalHessianBlockProvider.h"
 #include "LocalHessianMultiplicationEngine.h"
+#include "MemoryLimitPreciseStrategy.h"
+#include "MemoryLimitPreciseFastStrategy.h"
 
 #include "ITask.h"
 #include "HessianCameraRowMultiplicationTask.h"

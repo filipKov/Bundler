@@ -120,6 +120,9 @@
     <ClInclude Include="AMPUtils.h">
       <Filter>Async</Filter>
     </ClInclude>
+    <ClInclude Include="IWorkerThreadCallback.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

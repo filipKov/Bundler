@@ -36,6 +36,7 @@
 #include "HessianCameraRowMultiplicationTask.h"
 #include "HessianPointRowMultiplicationTask.h"
 
+#include "IWorkerThreadCallback.h"
 #include "WorkerThreadDefs.h"
 #include "WorkerThread.h"
 #include "WorkerThreadGPU.h"

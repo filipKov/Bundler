@@ -12,7 +12,7 @@ namespace Bundler { namespace Async {
 
 		~WorkerThread( );
 
-		void SetReturnWorkerCallback ( __in void ( WorkerPool::*callback )( WorkerThread* ) );
+		void SetReturnWorkerCallback ( IWorkerThreadCallback* pCallback );
 
 		const WorkerThreadInfo* GetInfo( ) const;
 
@@ -31,7 +31,7 @@ namespace Bundler { namespace Async {
 
 		WorkerThreadInfo m_info;
 
-		void ( WorkerPool::*m_returnWorkerCallback )( WorkerThread* );
+		IWorkerThreadCallback* m_pReturnWorkerCallback;
 
 		std::unique_ptr< std::thread > m_spExecutionThread;
 

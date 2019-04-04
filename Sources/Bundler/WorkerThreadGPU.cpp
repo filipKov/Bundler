@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ITask.h"
+#include "IWorkerThreadCallback.h"
 #include "WorkerThreadDefs.h"
 #include "WorkerThread.h"
 #include "WorkerThreadGPU.h"

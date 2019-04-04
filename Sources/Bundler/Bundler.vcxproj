@@ -145,6 +145,7 @@
     <ClInclude Include="HessianPointRowMultiplicationTask.h" />
     <ClInclude Include="IBundleImportWorker.h" />
     <ClInclude Include="ITask.h" />
+    <ClInclude Include="IWorkerThreadCallback.h" />
     <ClInclude Include="JacobiPreconditioner.h" />
     <ClInclude Include="LocalHessianBlockProvider.h" />
     <ClInclude Include="LocalHessianMultiplicationEngine.h" />

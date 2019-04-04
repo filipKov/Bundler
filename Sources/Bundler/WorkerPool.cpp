@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AMPUtils.h"
 #include "ITask.h"
+#include "IWorkerThreadCallback.h"
 #include "WorkerThreadDefs.h"
 #include "WorkerThread.h"
 #include "WorkerThreadGPU.h"
@@ -28,33 +29,41 @@ namespace Bundler { namespace Async {
 		m_stackPoll.notify_one( );
 	}
 
+	void WorkerStack::OnFinishTask( __in WorkerThread* pWorker )
+	{
+		ReturnWorker( pWorker );
+	}
+
 	bool WorkerStack::HasAvailableWorker( )
 	{
 		return m_stack.Length( ) > 0;
 	}
 
-	template < WorkerThreadType type, typename ReturnWorkerCallback >
-	void CreateWorkers( __in const uint count, __out_ecount( count ) WorkerThread** ppWorkers )
-	{
-		if ( type == WorkerThreadType::CPU )
-		{
-			for ( uint i = 0; i < count; i++ )
-			{
-				*ppWorkers = new WorkerThread< ReturnWorkerCallback >();
-				ppWorkers++;
-			}
-		}
-		else if ( type == WorkerThreadType::GPU )
-		{
-			Containers::Buffer< accelerator > accelerators;
-			accelerators.Allocate( count );
-			GetAccelerators( count, IsGPU );
 
-			for ( uint i = 0; i < count; i++ )
-			{
-				*ppWorkers = new WorkerThreadGPU< ReturnWorkerCallback >( accelerators[i] );
-				ppWorkers++;
-			}
+	template < WorkerThreadType type >
+	void CreateWorkers( __in const uint count, __out_ecount( count ) WorkerThread** ppWorkers );
+
+	template <>
+	void CreateWorkers< WorkerThreadType::CPU >( __in const uint count, __out_ecount( count ) WorkerThread** ppWorkers )
+	{
+		for ( uint i = 0; i < count; i++ )
+		{
+			*ppWorkers = new WorkerThread( );
+			ppWorkers++;
+		}
+	}
+
+	template <>
+	void CreateWorkers< WorkerThreadType::GPU >( __in const uint count, __out_ecount( count ) WorkerThread** ppWorkers )
+	{
+		Containers::Buffer< accelerator > accelerators;
+		accelerators.Allocate( count );
+		GetAccelerators( count, accelerators.Data(), IsGPU );
+
+		for ( uint i = 0; i < count; i++ )
+		{
+			*ppWorkers = new WorkerThreadGPU( accelerators[i] );
+			ppWorkers++;
 		}
 	}
 
@@ -67,15 +76,14 @@ namespace Bundler { namespace Async {
 		m_workerStack.Initialize( workerCount );
 		m_workers.Allocate( workerCount );
 
-		WorkerThread< ** ppWorkers = m_workers.Data( );
-		
-		auto returnWorkerCallback = std::bind( &WorkerStack::ReturnWorker, this->m_workerStack );
-		CreateWorkers< WorkerThreadType::CPU >( &m_workerStack.ReturnWorker, cpuWorkerCount, ppWorkers );
-		CreateWorkers< WorkerThreadType::GPU >( &m_workerStack.ReturnWorker, gpuWorkerCount, ppWorkers + cpuWorkerCount );
+		WorkerThread** ppWorkers = m_workers.Data( );
+
+		CreateWorkers< WorkerThreadType::CPU >( cpuWorkerCount, ppWorkers );
+		CreateWorkers< WorkerThreadType::GPU >( gpuWorkerCount, ppWorkers + cpuWorkerCount );
 
 		for ( uint i = 0; i < workerCount; i++ )
 		{
-			(*ppWorkers)->
+			( *ppWorkers )->SetReturnWorkerCallback( &m_workerStack );
 			m_workerStack.ReturnWorker( *ppWorkers );
 			ppWorkers++;
 		}

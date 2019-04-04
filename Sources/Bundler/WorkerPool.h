@@ -2,7 +2,7 @@
 
 namespace Bundler { namespace Async {
 
-	class WorkerStack
+	class WorkerStack : public IWorkerThreadCallback
 	{
 	public:
 
@@ -11,6 +11,8 @@ namespace Bundler { namespace Async {
 		WorkerThread* GetWorker( );
 
 		void ReturnWorker( WorkerThread* pWorker );
+
+		void OnFinishTask( __in WorkerThread* pWorker ) override;
 
 	protected:
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ITask.h"
+#include "IWorkerThreadCallback.h"
 #include "WorkerThreadDefs.h"
 #include "WorkerThread.h"
 
@@ -25,9 +26,9 @@ namespace Bundler { namespace Async {
 		m_spExecutionThread->join( );
 	}
 
-	void WorkerThread::SetReturnWorkerCallback ( __in void ( WorkerPool::*callback )( WorkerThread* ) )
+	void WorkerThread::SetReturnWorkerCallback ( __in IWorkerThreadCallback* pCallback )
 	{
-		m_returnWorkerCallback = callback;
+		m_pReturnWorkerCallback = pCallback;
 	}
 
 	const WorkerThreadInfo* WorkerThread::GetInfo( ) const
@@ -62,7 +63,7 @@ namespace Bundler { namespace Async {
 			m_pTaskToExecute->Execute( );
 			ReleaseTask( );
 
-			m_returnWorkerCallback( this );
+			m_pReturnWorkerCallback->OnFinishTask( this );
 		}
 	}
 

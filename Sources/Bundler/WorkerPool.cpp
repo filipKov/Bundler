@@ -22,7 +22,7 @@ namespace Bundler { namespace Async {
 		return m_stack.RemoveLast( );
 	}
 
-	void WorkerStack::ReturnWorker( WorkerThread* pWorker )
+	void WorkerStack::ReturnWorker( __in WorkerThread* pWorker )
 	{
 		std::lock_guard< std::mutex > autoLock( m_stackLock );
 		m_stack.Add( pWorker );
@@ -77,7 +77,6 @@ namespace Bundler { namespace Async {
 		m_workers.Allocate( workerCount );
 
 		WorkerThread** ppWorkers = m_workers.Data( );
-
 		CreateWorkers< WorkerThreadType::CPU >( cpuWorkerCount, ppWorkers );
 		CreateWorkers< WorkerThreadType::GPU >( gpuWorkerCount, ppWorkers + cpuWorkerCount );
 
@@ -110,6 +109,11 @@ namespace Bundler { namespace Async {
 		SYSTEM_INFO sysinfo;
 		GetSystemInfo( &sysinfo );
 		return sysinfo.dwNumberOfProcessors;
+	}
+
+	WorkerThread* WorkerPool::GetWorker( )
+	{
+		return m_workerStack.GetWorker( );
 	}
 
 } }

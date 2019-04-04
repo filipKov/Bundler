@@ -63,7 +63,10 @@ namespace Bundler { namespace Async {
 			m_pTaskToExecute->Execute( );
 			ReleaseTask( );
 
-			m_pReturnWorkerCallback->OnFinishTask( this );
+			if ( m_pReturnWorkerCallback )
+			{
+				m_pReturnWorkerCallback->OnFinishTask( this );
+			}
 		}
 	}
 

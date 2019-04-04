@@ -108,6 +108,18 @@
     <ClInclude Include="CountLimitStrategy.h">
       <Filter>JacobianAndHessian\Local\CreationStrategy</Filter>
     </ClInclude>
+    <ClInclude Include="WorkerThreadDefs.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThreadGPU.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerPool.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="AMPUtils.h">
+      <Filter>Async</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -128,6 +140,18 @@
     </ClCompile>
     <ClCompile Include="SceneGenerator.cpp">
       <Filter>SceneGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerPool.cpp">
+      <Filter>Async\Workers</Filter>
+    </ClCompile>
+    <ClCompile Include="AMPUtils.cpp">
+      <Filter>Async</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThread.cpp">
+      <Filter>Async\Workers</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThreadGPU.cpp">
+      <Filter>Async\Workers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

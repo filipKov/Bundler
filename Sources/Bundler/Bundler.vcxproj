@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AMPUtils.h" />
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BundleImporter.h" />
@@ -163,9 +164,13 @@
     <ClInclude Include="SnavelyBundleImportWorker.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextStreamReader.h" />
+    <ClInclude Include="WorkerPool.h" />
     <ClInclude Include="WorkerThread.h" />
+    <ClInclude Include="WorkerThreadDefs.h" />
+    <ClInclude Include="WorkerThreadGPU.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AMPUtils.cpp" />
     <ClCompile Include="BundleImporter.cpp" />
     <ClCompile Include="Bundler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -184,6 +189,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WorkerPool.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
+    <ClCompile Include="WorkerThreadGPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">

@@ -23,6 +23,8 @@
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
 
+#include "AMPUtils.h"
+
 #include "LocalProjectionProvider.h"
 #include "LocalHessianBlockProvider.h"
 #include "LocalHessianMultiplicationEngine.h"
@@ -33,7 +35,11 @@
 #include "ITask.h"
 #include "HessianCameraRowMultiplicationTask.h"
 #include "HessianPointRowMultiplicationTask.h"
-// #include "WorkerThread.h"
+
+#include "WorkerThreadDefs.h"
+#include "WorkerThread.h"
+#include "WorkerThreadGPU.h"
+#include "WorkerPool.h"
 
 #include "Preconditioner.h"
 #include "JacobiPreconditioner.h"

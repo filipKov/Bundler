@@ -26,7 +26,7 @@ namespace Bundler { namespace Async {
 	template < typename Predicate >
 	void GetAccelerators( __in const uint count, __out accelerator* pAccelerators, __in Predicate pred )
 	{
-		_ASSERT_EXPR( count == GetAcceleratorCount< Predicate >( ), "accelerator count does not match" );
+		_ASSERT_EXPR( count == GetAcceleratorCount( pred ), "accelerator count does not match" );
 		
 		std::vector < accelerator > accelerators = accelerator::get_all( );
 

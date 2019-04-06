@@ -32,6 +32,12 @@ namespace Utils { namespace Containers {
 			Clear();
 		}
 
+		PagedVector& operator= ( __in const PagedVector< T, pageSizeExponent >& source )
+		{
+			SetCopy( source );
+			return *this;
+		}
+
 	public:
 
 		// Capacity

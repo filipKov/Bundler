@@ -26,6 +26,9 @@ namespace Utils { namespace Containers {
 			Clear();
 		}
 
+		MemoryHeap( __in const MemoryHeap< pageSizeExponent >& source ) = delete; // No copying
+		MemoryHeap& operator=( __in const MemoryHeap< pageSizeExponent >& source ) = delete; // No copying
+
 		void Allocate( __in const size_t size, __deref_out void** ppDestination ) {
 			_ASSERT_EXPR( size > 0, L"cannot allocate 0 bytes" );
 

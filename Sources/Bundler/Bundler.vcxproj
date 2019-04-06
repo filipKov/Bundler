@@ -141,6 +141,8 @@
     <ClInclude Include="CountLimitStrategy.h" />
     <ClInclude Include="HessianBlockProvider.h" />
     <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
+    <ClInclude Include="HessianMulCamRowCPU.h" />
+    <ClInclude Include="HessianMulPointRowCPU.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
     <ClInclude Include="HessianPointRowMultiplicationTask.h" />
     <ClInclude Include="IBundleImportWorker.h" />
@@ -155,7 +157,9 @@
     <ClInclude Include="MemoryLimitPreciseStrategy.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
+    <ClInclude Include="ParallelPcgFunctions.h" />
     <ClInclude Include="ParallelPCGSolver.h" />
+    <ClInclude Include="ParallelPcgTaskFactory.h" />
     <ClInclude Include="PCGSolver.h" />
     <ClInclude Include="PCGStructs.h" />
     <ClInclude Include="Preconditioner.h" />

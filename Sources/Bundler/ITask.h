@@ -6,6 +6,11 @@ namespace Bundler { namespace Async {
 	{
 	public:
 
+		virtual ~ITask( )
+		{
+
+		}
+
 		virtual void Execute( ) = 0;
 
 	};

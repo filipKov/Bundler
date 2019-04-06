@@ -25,6 +25,12 @@ namespace Bundler { namespace Structure {
 			}
 		}
 
+		void CopyTo( __out BundleStructureMapping* pDestination ) const
+		{
+			pDestination->m_cameraToProjectionMapping.SetCopy( m_cameraToProjectionMapping );
+			pDestination->m_pointToProjectionMapping.SetCopy( m_pointToProjectionMapping );
+		}
+
 		size_t GetCameraProjectionCount( __in const size_t cameraIx ) const
 		{
 			return m_cameraToProjectionMapping[ cameraIx ].Length();

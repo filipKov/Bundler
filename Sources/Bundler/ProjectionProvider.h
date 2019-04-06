@@ -38,6 +38,17 @@ namespace Bundler {
 			m_mapping.Initialize( cameraCount, pointCount, projectionCount, pProjections );
 		}
 
+		void CopyTo( __out ProjectionProvider< CameraModel >* pDestination ) const
+		{
+			pDestination->m_cameraCount = m_cameraCount;
+			pDestination->m_pCameras = m_pCameras;
+			pDestination->m_pointCount;
+			pDestination->m_pPoints = m_pPoints;
+			pDestination->m_projectionCount = m_projectionCount;
+			pDestination->m_pProjections = m_pProjections;
+			m_mapping.CopyTo( &pDestination->m_mapping );
+		}
+
 		size_t GetCameraCount() const
 		{
 			return m_cameraCount;

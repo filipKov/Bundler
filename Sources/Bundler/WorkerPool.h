@@ -16,6 +16,8 @@ namespace Bundler { namespace Async {
 
 		void WaitForIdleWorkers( );
 
+		uint GetWorkerCount( __in const WorkerThreadType type ) const;
+
 	protected:
 
 		bool HasAvailableWorker( );
@@ -43,6 +45,8 @@ namespace Bundler { namespace Async {
 
 		void WaitForIdleWorkers( );
 
+		uint GetWorkerCount( __in const WorkerThreadType type ) const;
+
 	protected:
 
 		uint GetCpuThreadCount( );
@@ -52,6 +56,9 @@ namespace Bundler { namespace Async {
 		WorkerStack m_workerStack;
 
 		Containers::Buffer< WorkerThread* > m_workers;
+
+		uint m_cpuWorkerCount;
+		uint m_gpuWorkerCount;
 	};
 
 } }

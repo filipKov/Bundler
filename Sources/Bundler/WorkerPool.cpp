@@ -126,6 +126,19 @@ namespace Bundler { namespace Async {
 		m_workerStack.WaitForIdleWorkers( );
 	}
 
+	uint WorkerPool::GetWorkerCount( __in const WorkerThreadType type ) const
+	{
+		switch ( type )
+		{
+		case WorkerThreadType::CPU:
+			return m_cpuWorkerCount;
+		case WorkerThreadType::GPU:
+			return m_gpuWorkerCount;
+		default:
+			return 0;
+		}
+	}
+
 	uint WorkerPool::GetCpuThreadCount( )
 	{
 		SYSTEM_INFO sysinfo;

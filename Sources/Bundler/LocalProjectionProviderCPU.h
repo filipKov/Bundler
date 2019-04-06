@@ -33,7 +33,7 @@ namespace Bundler {
 			m_localCameraStartIx = cameraStartIx;
 			m_localCameraCount = count;
 			m_localPointStartIx = 0;
-			m_loclaPointCount = m_pointCount;
+			m_loclaPointCount = (uint)m_pointCount;
 		}
 
 		void InitializeForPoints(
@@ -43,7 +43,7 @@ namespace Bundler {
 		{
 			pGlobalProvider->CopyTo( this );
 			m_localCameraStartIx = 0;
-			m_localCameraCount = m_cameraCount;
+			m_localCameraCount = (uint)m_cameraCount;
 			m_localPointStartIx = pointStartIx;
 			m_loclaPointCount = count;
 		}

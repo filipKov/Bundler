@@ -23,11 +23,13 @@
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
 
+#include "LocalProjectionProviderCPU.h"
+#include "LocalHessianBlockProviderCPU.h"
+#include "LocalHessianMultiplicationEngineCPU.h"
+
 #include "AMPUtils.h"
 
 #include "LocalProjectionProvider.h"
-#include "LocalHessianBlockProvider.h"
-#include "LocalHessianMultiplicationEngine.h"
 #include "MemoryLimitPreciseStrategy.h"
 #include "MemoryLimitPreciseFastStrategy.h"
 #include "CountLimitStrategy.h"

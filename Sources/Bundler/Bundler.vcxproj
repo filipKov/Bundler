@@ -147,9 +147,10 @@
     <ClInclude Include="ITask.h" />
     <ClInclude Include="IWorkerThreadCallback.h" />
     <ClInclude Include="JacobiPreconditioner.h" />
-    <ClInclude Include="LocalHessianBlockProvider.h" />
-    <ClInclude Include="LocalHessianMultiplicationEngine.h" />
+    <ClInclude Include="LocalHessianBlockProviderCPU.h" />
+    <ClInclude Include="LocalHessianMultiplicationEngineCPU.h" />
     <ClInclude Include="LocalProjectionProvider.h" />
+    <ClInclude Include="LocalProjectionProviderCPU.h" />
     <ClInclude Include="MemoryLimitPreciseFastStrategy.h" />
     <ClInclude Include="MemoryLimitPreciseStrategy.h" />
     <ClInclude Include="NumericTypes.h" />

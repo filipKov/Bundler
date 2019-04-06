@@ -78,15 +78,6 @@
     <ClInclude Include="ITask.h">
       <Filter>Async\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="LocalProjectionProvider.h">
-      <Filter>JacobianAndHessian\Local</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalHessianBlockProvider.h">
-      <Filter>JacobianAndHessian\Local</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalHessianMultiplicationEngine.h">
-      <Filter>JacobianAndHessian\Local</Filter>
-    </ClInclude>
     <ClInclude Include="HessianCameraRowMultiplicationTask.h">
       <Filter>Async\Tasks</Filter>
     </ClInclude>
@@ -122,6 +113,18 @@
     </ClInclude>
     <ClInclude Include="IWorkerThreadCallback.h">
       <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProvider.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianBlockProviderCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianMultiplicationEngineCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +205,12 @@
     </Filter>
     <Filter Include="JacobianAndHessian\Local\CreationStrategy">
       <UniqueIdentifier>{f5463613-7d3b-479d-943c-70e009b24664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local\AMP">
+      <UniqueIdentifier>{747b23f9-2b3c-4961-a4e8-5ea1f39468e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local\CPU">
+      <UniqueIdentifier>{cc117dcb-a63a-46e9-92bc-38b8bd3b8da3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

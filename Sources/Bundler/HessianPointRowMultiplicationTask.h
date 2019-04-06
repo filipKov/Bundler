@@ -20,7 +20,7 @@ namespace Bundler { namespace Async {
 			__in_ecount( parameterCount ) const Scalar* pX,
 			__out_ecount( parameterCount ) Scalar* pDestination )
 		{
-			MemoryLimitedPreciseFastStrategy< CameraModel >::InitializeForPoints( pJacobian, pointStartIx, m_memoryLimitKB, &m_jacobian );
+			// MemoryLimitedPreciseFastStrategy< CameraModel >::InitializeForPoints( pJacobian, pointStartIx, m_memoryLimitKB, &m_jacobian );
 	
 			m_dampeningFactor = dampeningFactor;
 	
@@ -35,14 +35,14 @@ namespace Bundler { namespace Async {
 			m_pDestination = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pDestination );
 		}
 	
-		const LocalProjectionProvider< CameraModel >& GetJacobian( ) const
+		const LocalProjectionProviderCPU< CameraModel >& GetJacobian( ) const
 		{
 			return m_jacobian;
 		}
 	
 		void Execute( ) override
 		{
-			LocalHessianMultiplicationEngine< CameraModel > hessian;
+			LocalHessianMultiplicationEngineCPU< CameraModel > hessian;
 			hessian.Initialize( &m_jacobian, m_dampeningFactor );
 	
 			for ( uint pointIx = 0; pointIx < hessian.GetPointCount( ); pointIx++ )
@@ -61,7 +61,7 @@ namespace Bundler { namespace Async {
 	
 		int64 m_memoryLimitKB;
 	
-		LocalProjectionProvider< CameraModel > m_jacobian;
+		LocalProjectionProviderCPU< CameraModel > m_jacobian;
 	
 		Scalar m_dampeningFactor;
 	

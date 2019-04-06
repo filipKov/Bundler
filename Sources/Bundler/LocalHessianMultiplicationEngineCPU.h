@@ -3,22 +3,22 @@
 namespace Bundler {
 
 	template < class CameraModel >
-	class LocalHessianMultiplicationEngine
+	class LocalHessianMultiplicationEngineCPU
 	{
 	public:
 	
-		void Initialize( __in const LocalProjectionProvider< CameraModel >* pProjectionProvider, __in const Scalar dampeningFactor )
+		void Initialize( __in const LocalProjectionProviderCPU< CameraModel >* pProjectionProvider, __in const Scalar dampeningFactor )
 		{
 			m_hessian.Initialize( pProjectionProvider );
 			m_diagonalFactor = 1 + dampeningFactor;
 		}
 	
-		inline uint GetCameraCount( ) const
+		__forceinline uint GetCameraCount( ) const
 		{
 			return m_hessian.GetCameraCount( );
 		}
 	
-		inline uint GetPointCount( ) const
+		__forceinline uint GetPointCount( ) const
 		{
 			return m_hessian.GetPointCount( );
 		}
@@ -147,7 +147,7 @@ namespace Bundler {
 	
 	protected:
 	
-		LocalHessianBlockProvider< CameraModel > m_hessian;
+		LocalHessianBlockProviderCPU< CameraModel > m_hessian;
 	
 		Scalar m_diagonalFactor;
 	

@@ -3,41 +3,41 @@
 namespace Bundler {
 
 	template < class CameraModel >
-	class LocalHessianBlockProvider
+	class LocalHessianBlockProviderCPU
 	{
 	public:
 	
-		void Initialize( __in const LocalProjectionProvider< CameraModel >* pProjectionProvider )
+		void Initialize( __in const LocalProjectionProviderCPU< CameraModel >* pProjectionProvider )
 		{
 			m_pJacobian = pProjectionProvider;
 		}
 	
-		inline uint GetCameraCount( ) const
+		__forceinline uint GetCameraCount( ) const
 		{
 			return m_pJacobian->GetCameraCount( );
 		}
 	
-		inline uint GetCameraProjectionCount( __in const uint localCameraIx ) const
+		__forceinline uint GetCameraProjectionCount( __in const uint localCameraIx ) const
 		{
 			return m_pJacobian->GetCameraProjectionCount( localCameraIx );
 		}
 
-		uint GetGlobalCameraIndex( __in const uint localCameraIx ) const
+		__forceinline uint GetGlobalCameraIndex( __in const uint localCameraIx ) const
 		{
 			return m_pJacobian->GetGlobalCameraIndex( localCameraIx );
 		}
 	
-		inline uint GetPointCount( ) const
+		__forceinline uint GetPointCount( ) const
 		{
 			return m_pJacobian->GetPointCount( );
 		}
 	
-		inline uint GetPointProjectionCount( __in const uint localPointIx ) const
+		__forceinline uint GetPointProjectionCount( __in const uint localPointIx ) const
 		{
 			return m_pJacobian->GetPointProjectionCount( localPointIx );
 		}
 
-		uint GetGlobalPointIndex( __in const uint localPointIx ) const
+		__forceinline uint GetGlobalPointIndex( __in const uint localPointIx ) const
 		{
 			return m_pJacobian->GetGlobalPointIndex( localPointIx );
 		}
@@ -135,7 +135,7 @@ namespace Bundler {
 	
 	protected:
 	
-		const LocalProjectionProvider< CameraModel >* m_pJacobian;
+		const LocalProjectionProviderCPU< CameraModel >* m_pJacobian;
 	
 	};
 

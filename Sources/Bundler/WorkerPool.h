@@ -14,9 +14,13 @@ namespace Bundler { namespace Async {
 
 		void OnFinishTask( __in WorkerThread* pWorker ) override;
 
+		void WaitForIdleWorkers( );
+
 	protected:
 
 		bool HasAvailableWorker( );
+
+		bool AllWorkersIdle( );
 
 	protected:
 
@@ -24,7 +28,7 @@ namespace Bundler { namespace Async {
 		std::mutex m_stackLock;
 
 		Containers::Vector< WorkerThread* > m_stack;
-
+		uint m_stackCapacity;
 	};
 
 	class WorkerPool
@@ -36,6 +40,8 @@ namespace Bundler { namespace Async {
 		~WorkerPool( );
 
 		WorkerThread* GetWorker( );
+
+		void WaitForIdleWorkers( );
 
 	protected:
 

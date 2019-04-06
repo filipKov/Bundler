@@ -12,6 +12,7 @@ namespace Bundler { namespace Async {
 	void WorkerStack::Initialize( __in const uint workerCount )
 	{
 		m_stack.EnsureCapacity( workerCount );
+		m_stackCapacity = workerCount;
 	}
 
 	WorkerThread* WorkerStack::GetWorker( )
@@ -34,9 +35,20 @@ namespace Bundler { namespace Async {
 		ReturnWorker( pWorker );
 	}
 
+	void WorkerStack::WaitForIdleWorkers( )
+	{
+		std::unique_lock< std::mutex > autoLock( m_stackLock );
+		m_stackPoll.wait( autoLock, std::bind( &WorkerStack::AllWorkersIdle, this ) );
+	}
+
 	bool WorkerStack::HasAvailableWorker( )
 	{
 		return m_stack.Length( ) > 0;
+	}
+
+	bool WorkerStack::AllWorkersIdle( )
+	{
+		return m_stack.Length( ) == m_stackCapacity;
 	}
 
 
@@ -104,16 +116,21 @@ namespace Bundler { namespace Async {
 		}
 	}
 
+	WorkerThread* WorkerPool::GetWorker( )
+	{
+		return m_workerStack.GetWorker( );
+	}
+
+	void WorkerPool::WaitForIdleWorkers( )
+	{
+		m_workerStack.WaitForIdleWorkers( );
+	}
+
 	uint WorkerPool::GetCpuThreadCount( )
 	{
 		SYSTEM_INFO sysinfo;
 		GetSystemInfo( &sysinfo );
 		return sysinfo.dwNumberOfProcessors;
-	}
-
-	WorkerThread* WorkerPool::GetWorker( )
-	{
-		return m_workerStack.GetWorker( );
 	}
 
 } }

@@ -2,13 +2,15 @@
 
 namespace Bundler { namespace Async { namespace LinearSolver {
 
-	using CameraModel = CameraModels::CameraModel6DoF< 10 >;
+	// using CameraModel = CameraModels::CameraModel6DoF< 10 >;
 	
+	template < class CameraModel >
 	void MultiplyByHessian(
 		__in const ProjectionProvider< CameraModel >* pGlobalJacobian,
 		__in const Scalar diagonalDampeningFactor,
 		__in const uint vectorSize,
 		__in_ecount( vectorSize ) const Scalar* pX,
+		__in Task::ParallelPcgTaskFactory< CameraModel >* pTaskFactory,
 		__inout Async::WorkerPool* pWorkerPool,
 		__out_ecount( vectorSize ) Scalar* pY )
 	{
@@ -17,42 +19,27 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 		{
 			Async::WorkerThread* pWorker = pWorkerPool->GetWorker( );
 		
-			// TODO: create task
+			Async::ITask* pTask = NULL;
+			cameraStartIx += pTaskFactory->GetHessianMulCamRowTask( pGlobalJacobian, cameraStartIx, diagonalDampeningFactor, vectorSize, pX, pY, pWorker, &pTask );
 	
-			pWorker->ExecuteTask( NULL );
-	
-			// Async::HessianCameraRowMultiplicationTask< CameraModel > task;
-			// task.Initialize( 512000 );
-			// 
-			// task.InitializeWorkload( pJacobian, cameraStartIx, diagonalDampeningFactor, vectorSize, pX, pY );
-			// 
-			// cameraStartIx += task.GetJacobian( ).GetCameraCount( );
-			// 
-			// task.Execute( ); // TODO: execute task async
+			pWorker->ExecuteTask( pTask );
 		}
 	
 		const uint pointCount = ( uint )pGlobalJacobian->GetPointCount( );
 		for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 		{
 			Async::WorkerThread* pWorker = pWorkerPool->GetWorker( );
-	
-			// TODO: create task
-	
-			pWorker->ExecuteTask( NULL );
-	
-			// Async::HessianPointRowMultiplicationTask< CameraModel > task;
-			// task.Initialize( 512000 );
-			// 
-			// task.InitializeWorkload( pJacobian, pointStartIx, diagonalDampeningFactor, vectorSize, pX, pY );
-			// 
-			// pointStartIx += task.GetJacobian( ).GetPointCount( );
-			// 
-			// task.Execute( ); // TODO: execute task async
+
+			Async::ITask* pTask = NULL;
+			pointStartIx += pTaskFactory->GetHessianMulPointRowTask( pGlobalJacobian, pointStartIx, diagonalDampeningFactor, vectorSize, pX, pY, pWorker, &pTask );
+
+			pWorker->ExecuteTask( pTask );
 		}
 	
 		pWorkerPool->WaitForIdleWorkers( );
 	}
 	
+	template < class CameraModel >
 	void JtfNegSubtractX(
 		__in const ProjectionProvider< CameraModel >* pGlobalJacobian,
 		__in const uint vectorSize,

@@ -2,6 +2,11 @@
 
 namespace Bundler { namespace Async { namespace LinearSolver {
 
+	using PCGSolverSettings = Bundler::LinearSolver::PCGSolverSettings;
+	using PCGSolverStatistics = Bundler::LinearSolver::PCGSolverStatistics;
+	using PCGSolverTemp = Bundler::LinearSolver::PCGSolverTemp;
+
+
 	template < class CameraModel >
 	class ParallelPCGSolver
 	{
@@ -10,24 +15,24 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 		void Initialize(
 			__in const uint maxIterations,
 			__in const Scalar errorTolerance,
-			__in const Preconditioner< CameraModel >* pPreconditioner,
+			// __in const Preconditioner< CameraModel >* pPreconditioner,
 			__in Async::WorkerPool* pWorkerPool )
 		{
 			m_maxIterations = maxIterations;
 			m_errorToleranceSq = errorTolerance * errorTolerance;
-			m_pPreconditioner = pPreconditioner;
+			// m_pPreconditioner = pPreconditioner;
 			m_pWorkerPool = pWorkerPool;
 		}
 	
 		void Initialize(
 			__in const PCGSolverSettings& settings,
-			__in const Preconditioner< CameraModel >* pPreconditioner,
+			// __in const Preconditioner< CameraModel >* pPreconditioner,
 			__in Async::WorkerPool* pWorkerPool )
 		{
 			Initialize(
 				settings.maxIterations,
 				settings.errorTolerance,
-				pPreconditioner,
+				// pPreconditioner,
 				pWorkerPool );
 		}
 	
@@ -210,7 +215,7 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 		uint m_maxIterations;
 		Scalar m_errorToleranceSq;
 	
-		const Preconditioner< CameraModel >* m_pPreconditioner;
+		// const Preconditioner< CameraModel >* m_pPreconditioner;
 	
 		Async::WorkerPool* m_pWorkerPool;
 	

@@ -14,10 +14,16 @@ namespace BundlerTest {
 	{
 		void GetTestBundle( __out Bundle* pBundle, __out_opt BundleAdditionalPayload* pMetadata )
 		{
-			std::istringstream bundleStream( cubesMaskedBundle );
-			std::istringstream imListStream( cubesMaskedImageList );
+			HRESULT hr = Import::BundleImporter::Import( "Resources/dragon.out", pBundle, pMetadata );
+			if ( FAILED( hr ) )
+			{
+				std::istringstream bundleStream( cubesMaskedBundle );
+				std::istringstream imListStream( cubesMaskedImageList );
 
-			Import::BundleImporter::Import( &bundleStream, &imListStream, pBundle, pMetadata );
+				hr = Import::BundleImporter::Import( &bundleStream, &imListStream, pBundle, pMetadata );
+			}
+
+			Assert::IsTrue( SUCCEEDED( hr ) );
 		}
 
 		void GetGlobalProjectionProvider( __in Bundle* pBundle, __inout CamModel* pCameras, __out ProjectionProvider< CamModel >* pProj )
@@ -208,7 +214,7 @@ namespace BundlerTest {
 			Scalar gy[POINT_PARAM_COUNT];
 			Scalar ly[POINT_PARAM_COUNT];
 
-			const uint count = pLJacobian->GetCameraCount( );
+			const uint count = pLJacobian->GetPointCount( );
 			for ( uint localIx = 0; localIx < count; localIx++ )
 			{
 				const uint globalIx = pLJacobian->GetGlobalPointIndex( localIx );
@@ -217,6 +223,35 @@ namespace BundlerTest {
 				localHessian.MultiplyPointRow( localIx, camParamCount, x.Elements( ), pointParamCount, x.Elements( ) + camParamCount, ly );
 
 				AssertAreEqual( gy, ly );
+			}
+		}
+
+		void MultiplyByHessian(
+			__in const ProjectionProvider< CamModel >* pJacobian,
+			__in const Scalar diagonalFactor,
+			__in const size_t vectorSize,
+			__in_ecount( vectorSize ) const Scalar* pX,
+			__out_ecount( vectorSize ) Scalar* pY ) const
+		{
+			HessianMultiplicationEngine< CamModel > hessian;
+			hessian.Initialize( pJacobian, diagonalFactor );
+
+			auto pHessian = &hessian;
+
+			Scalar* pYDestination = pY;
+
+			const size_t cameraCount = pHessian->GetCameraCount( );
+			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
+			{
+				pHessian->MultiplyCameraRow( cameraIx, vectorSize, pX, pYDestination );
+				pYDestination += CamModel::cameraParameterCount;
+			}
+
+			const size_t pointCount = pHessian->GetPointCount( );
+			for ( size_t pointIx = 0; pointIx < pointCount; pointIx++ )
+			{
+				pHessian->MultiplyPointRow( pointIx, vectorSize, pX, pYDestination );
+				pYDestination += POINT_PARAM_COUNT;
 			}
 		}
 
@@ -326,6 +361,43 @@ namespace BundlerTest {
 
 				TestLocalHessianMEPoints( &globalJacobian, &localJacobian );
 			}
+		}
+
+		TEST_METHOD( ParallelMultiplyByHessian0 )
+		{
+			Bundle bundle;
+			BundleAdditionalPayload metadata;
+
+			GetTestBundle( &bundle, &metadata );
+
+			Containers::Buffer< CamModel > cameras;
+			cameras.Allocate( bundle.cameras.Length( ) );
+
+			ProjectionProvider< CamModel > globalJacobian;
+			GetGlobalProjectionProvider( &bundle, cameras.Data( ), &globalJacobian );
+
+			uint camParamCount = ( uint )( globalJacobian.GetCameraCount( ) * CamModel::cameraParameterCount );
+			uint pointParamCount = ( uint )( globalJacobian.GetPointCount( ) * POINT_PARAM_COUNT );
+			uint totalParamCount = camParamCount + pointParamCount;
+
+			Vector< Scalar > x( totalParamCount );
+			Random< Scalar >::Fill( totalParamCount, x.Elements( ) );
+
+			Vector< Scalar > gy( totalParamCount );
+			Vector< Scalar > ly( totalParamCount );
+			
+
+			Async::WorkerPool wpool;
+			Async::LinearSolver::Task::ParallelPcgTaskFactory< CamModel > taskFactory;
+			taskFactory.Initialize( &wpool );
+
+			MultiplyByHessian( &globalJacobian, 1, totalParamCount, x.Elements( ), gy.Elements( ) );
+
+			Async::LinearSolver::MultiplyByHessian< CamModel >(
+				&globalJacobian,
+				1, totalParamCount, x.Elements( ), &taskFactory, &wpool, ly.Elements( ) );
+
+			AssertAreEqual( totalParamCount, gy.Elements( ), ly.Elements( ) );
 		}
 
 	};

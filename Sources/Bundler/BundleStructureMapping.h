@@ -25,12 +25,6 @@ namespace Bundler { namespace Structure {
 			}
 		}
 
-		void CopyTo( __out BundleStructureMapping* pDestination ) const
-		{
-			pDestination->m_cameraToProjectionMapping.SetCopy( m_cameraToProjectionMapping );
-			pDestination->m_pointToProjectionMapping.SetCopy( m_pointToProjectionMapping );
-		}
-
 		size_t GetCameraProjectionCount( __in const size_t cameraIx ) const
 		{
 			return m_cameraToProjectionMapping[ cameraIx ].Length();
@@ -54,7 +48,7 @@ namespace Bundler { namespace Structure {
 	protected:
 
 		Containers::Buffer< Containers::PagedVector< size_t, 13 > > m_cameraToProjectionMapping;
-		Containers::Buffer< Containers::PagedVector< size_t, 5 > > m_pointToProjectionMapping;
+		Containers::Buffer< Containers::PagedVector< size_t, 3 > > m_pointToProjectionMapping;
 
 	};
 

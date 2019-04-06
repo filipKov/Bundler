@@ -3,37 +3,22 @@
 namespace Bundler {
 	
 	template < class CameraModel >
-	class LocalProjectionProviderCPU : public ProjectionProvider< CameraModel >
+	class LocalProjectionProviderCPU 
 	{
 	public:
-
-		void Initialize(
-			__in const size_t cameraCount,
-			__in const CameraModel* pCameras,
-			__in const size_t pointCount,
-			__in const Vector3* pPoints,
-			__in const size_t projectionCount,
-			__in const Projection* pProjections ) 
-		{
-			ProjectionProvider< CameraModel >::Initialize( cameraCount, pCameras, pointCount, pPoints, projectionCount, pProjections );
-			
-			m_localCameraStartIx = 0;
-			m_localCameraCount = (uint)cameraCount;
-
-			m_localPointStartIx = 0;
-			m_loclaPointCount = (uint)pointCount;
-		}
 
 		void InitializeForCameras(
 			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
 			__in const uint cameraStartIx,
 			__in const uint count )
 		{
-			pGlobalProvider->CopyTo( this );
 			m_localCameraStartIx = cameraStartIx;
 			m_localCameraCount = count;
+
 			m_localPointStartIx = 0;
-			m_loclaPointCount = (uint)m_pointCount;
+			m_localPointCount = ( uint )pGlobalProvider->GetPointCount( );
+
+			m_pProvider = pGlobalProvider;
 		}
 
 		void InitializeForPoints(
@@ -41,11 +26,13 @@ namespace Bundler {
 			__in const uint pointStartIx,
 			__in const uint count )
 		{
-			pGlobalProvider->CopyTo( this );
 			m_localCameraStartIx = 0;
-			m_localCameraCount = (uint)m_cameraCount;
+			m_localCameraCount = ( uint )pGlobalProvider->GetCameraCount( );
+
 			m_localPointStartIx = pointStartIx;
-			m_loclaPointCount = count;
+			m_localPointCount = count;
+
+			m_pProvider = pGlobalProvider;
 		}
 
 		__forceinline uint GetCameraCount( ) const
@@ -56,18 +43,19 @@ namespace Bundler {
 		__forceinline uint GetCameraProjectionCount( __in const uint localCameraIx ) const
 		{
 			const uint globalCameraIx = GetGlobalCameraIndex( localCameraIx );
-			return (uint)m_mapping.GetCameraProjectionCount( globalCameraIx );
+			return ( uint )m_pProvider->GetCameraProjectionCount( globalCameraIx );
 		}
 
 		__forceinline uint GetCameraProjectionIndex( __in const uint localCameraIx, __in const uint ix ) const
 		{
 			const uint globalCameraIx = GetGlobalCameraIndex( localCameraIx );
-			return (uint)m_mapping.GetCameraProjectionIndex( globalCameraIx, ix );
+			return ( uint )m_pProvider->GetCameraProjectionIndex( globalCameraIx, ix );
 		}
 
 		__forceinline uint GetCameraIndex( __in const uint projectionIx ) const
 		{
-			return GetLocalCameraIndex( ELEMENT( m_pProjections, projectionIx ).cameraIndex );
+			const uint globalCameraIndex = ( uint )m_pProvider->GetCameraIndex( projectionIx );
+			return GetLocalCameraIndex( globalCameraIndex );
 		}
 
 		__forceinline uint GetGlobalCameraIndex( __in const uint localCameraIx ) const
@@ -75,31 +63,43 @@ namespace Bundler {
 			return m_localCameraStartIx + localCameraIx;
 		}
 
+
 		__forceinline uint GetPointCount( ) const
 		{
-			return m_loclaPointCount;
+			return m_localPointCount;
 		}
 
 		__forceinline uint GetPointProjectionCount( __in const uint localPointIx ) const
 		{
 			const uint globalPointIx = GetGlobalPointIndex ( localPointIx );
-			return (uint)m_mapping.GetPointProjectionCount( globalPointIx );
+			return ( uint )m_pProvider->GetPointProjectionCount( globalPointIx );
 		}
 
 		__forceinline uint GetPointProjectionIndex( __in const uint localPointIx, __in const uint ix ) const
 		{
 			const uint globalPointIx = GetGlobalPointIndex ( localPointIx );
-			return (uint)m_mapping.GetPointProjectionIndex( globalPointIx, ix );
+			return (uint)m_pProvider->GetPointProjectionIndex( globalPointIx, ix );
 		}
 
 		__forceinline uint GetPointIndex( __in const uint projectionIx ) const
 		{
-			return GetLocalPointIndex( ELEMENT( m_pProjections, projectionIx ).pointIndex );
+			const uint globalPointIndex = (uint)m_pProvider->GetPointIndex( projectionIx );
+			return GetLocalPointIndex( globalPointIndex );
 		}
 
 		__forceinline uint GetGlobalPointIndex( __in const uint localPointIx ) const
 		{
 			return m_localPointStartIx + localPointIx;
+		}
+
+		template < bool getCameraBlock, bool getPointBlock, bool getResiduals >
+		__forceinline void GetProjectionBlock(
+			__in const size_t projectionIx,
+			__out_ecount_opt( 2 * CameraModel::cameraParameterCount ) Scalar* pCameraBlock,
+			__out_ecount_opt( 2 * POINT_PARAM_COUNT ) Scalar* pPointBlock,
+			__out_ecount_opt( 2 ) Scalar* pResiduals ) const
+		{
+			m_pProvider->GetProjectionBlock< getCameraBlock, getPointBlock, getResiduals >( projectionIx, pCameraBlock, pPointBlock, pResiduals );
 		}
 
 	protected:
@@ -120,7 +120,9 @@ namespace Bundler {
 		uint m_localCameraCount;
 
 		uint m_localPointStartIx;
-		uint m_loclaPointCount;
+		uint m_localPointCount;
+
+		const ProjectionProvider< CameraModel >* m_pProvider;
 
 	};
 

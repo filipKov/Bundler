@@ -25,7 +25,7 @@ namespace Bundler { namespace Async { namespace LinearSolver {namespace Task {
 			m_pointParamCount = ( uint )( pJacobian->GetPointCount( ) * POINT_PARAM_COUNT );
 			m_pPointX = pX + m_cameraParamCount;
 
-			m_pDestination = Utils::GetCameraParamPtr( cameraStartIx, pY );
+			m_pDestination = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pY );
 		}
 
 		void Execute( ) override

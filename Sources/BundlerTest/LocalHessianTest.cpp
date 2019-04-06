@@ -45,7 +45,6 @@ namespace BundlerTest {
 			Scalar gPtBlock[2 * POINT_PARAM_COUNT], lPtBlock[2 * POINT_PARAM_COUNT];
 			Scalar gResiduals[2], lResiduals[2];
 
-
 			const uint count = pLJacobian->GetCameraCount( );
 			for ( uint localIx = 0; localIx < count; localIx++ )
 			{
@@ -70,6 +69,154 @@ namespace BundlerTest {
 					AssertAreEqual( gPtBlock, lPtBlock );
 					AssertAreEqual( gResiduals, lResiduals );
 				}
+			}
+		}
+
+		void TestLocalHessianCamera(
+			__in const ProjectionProvider< CamModel >* pGJacobian,
+			__in const LocalProjectionProviderCPU< CamModel >* pLJacobian )
+		{
+			HessianBlockProvider< CamModel > hessian;
+			hessian.Initialize( pGJacobian );
+
+			LocalHessianBlockProviderCPU< CamModel > localHessian;
+			localHessian.Initialize( pLJacobian );
+
+			Scalar gCamBlock[CamModel::cameraParameterCount * CamModel::cameraParameterCount], lCamBlock[CamModel::cameraParameterCount * CamModel::cameraParameterCount];
+			Scalar gCamPtBlock[CamModel::cameraParameterCount * POINT_PARAM_COUNT], lCamPtBlock[CamModel::cameraParameterCount * POINT_PARAM_COUNT];
+
+			const uint count = pLJacobian->GetCameraCount( );
+			for ( uint localIx = 0; localIx < count; localIx++ )
+			{
+				const uint globalIx = pLJacobian->GetGlobalCameraIndex( localIx );
+
+				hessian.GetCameraBlock( globalIx, gCamBlock );
+				localHessian.GetCameraBlock( localIx, lCamBlock );
+
+				AssertAreEqual( gCamBlock, lCamBlock );
+
+				const uint globalProjCount = ( uint )hessian.GetCameraProjectionCount( globalIx );
+				const uint localProjCount = localHessian.GetCameraProjectionCount( localIx );
+
+				Assert::AreEqual( globalProjCount, localProjCount );
+
+				for ( uint projI = 0; projI < globalProjCount; projI++ )
+				{
+					size_t gPtIx = 0;
+					uint lPtIx = 0;
+
+					hessian.GetCameraPointBlockCam( globalIx, projI, &gPtIx, gCamPtBlock );
+					localHessian.GetCameraPointBlockCam( localIx, projI, &lPtIx, lCamPtBlock );
+
+					Assert::AreEqual( ( uint )gPtIx, localHessian.GetGlobalPointIndex( lPtIx ) );
+					AssertAreEqual( gCamPtBlock, lCamPtBlock );
+				}
+			}
+		}
+
+		void TestLocalHessianPoints(
+			__in const ProjectionProvider< CamModel >* pGJacobian,
+			__in const LocalProjectionProviderCPU< CamModel >* pLJacobian )
+		{
+			HessianBlockProvider< CamModel > hessian;
+			hessian.Initialize( pGJacobian );
+
+			LocalHessianBlockProviderCPU< CamModel > localHessian;
+			localHessian.Initialize( pLJacobian );
+
+			Scalar gPtBlock[POINT_PARAM_COUNT * POINT_PARAM_COUNT], lPtBlock[POINT_PARAM_COUNT * POINT_PARAM_COUNT];
+			Scalar gPtCamBlock[CamModel::cameraParameterCount * POINT_PARAM_COUNT], lPtCamBlock[CamModel::cameraParameterCount * POINT_PARAM_COUNT];
+
+			const uint count = pLJacobian->GetPointCount( );
+			for ( uint localIx = 0; localIx < count; localIx++ )
+			{
+				const uint globalIx = pLJacobian->GetGlobalPointIndex( localIx );
+
+				hessian.GetPointBlock( globalIx, gPtBlock );
+				localHessian.GetPointBlock( localIx, lPtBlock );
+
+				AssertAreEqual( gPtBlock, lPtBlock );
+
+				const uint globalProjCount = ( uint )hessian.GetPointProjectionCount( globalIx );
+				const uint localProjCount = localHessian.GetPointProjectionCount( localIx );
+
+				Assert::AreEqual( globalProjCount, localProjCount );
+
+				for ( uint projI = 0; projI < globalProjCount; projI++ )
+				{
+					size_t gCamIx = 0;
+					uint lCamIx = 0;
+
+					hessian.GetCameraPointBlockPt( globalIx, projI, &gCamIx, gPtCamBlock );
+					localHessian.GetCameraPointBlockPt( localIx, projI, &lCamIx, lPtCamBlock );
+
+					Assert::AreEqual( ( uint )gCamIx, localHessian.GetGlobalCameraIndex( lCamIx ) );
+					AssertAreEqual( gPtCamBlock, lPtCamBlock );
+				}
+			}
+		}
+
+		void TestLocalHessianMECamera(
+			__in const ProjectionProvider< CamModel >* pGJacobian,
+			__in const LocalProjectionProviderCPU< CamModel >* pLJacobian )
+		{
+			HessianMultiplicationEngine< CamModel > hessian;
+			hessian.Initialize( pGJacobian, 1 );
+
+			LocalHessianMultiplicationEngineCPU< CamModel > localHessian;
+			localHessian.Initialize( pLJacobian, 1 );
+				
+			uint camParamCount = ( uint )( hessian.GetCameraCount( ) * CamModel::cameraParameterCount );
+			uint pointParamCount = ( uint )( hessian.GetPointCount( ) * POINT_PARAM_COUNT );
+			uint totalParamCount = camParamCount + pointParamCount;
+
+			Vector< Scalar > x( totalParamCount );
+			Random< Scalar >::Fill( totalParamCount, x.Elements( ) );
+
+			Scalar gy[CamModel::cameraParameterCount];
+			Scalar ly[CamModel::cameraParameterCount];
+
+			const uint count = pLJacobian->GetCameraCount( );
+			for ( uint localIx = 0; localIx < count; localIx++ )
+			{
+				const uint globalIx = pLJacobian->GetGlobalCameraIndex( localIx );
+
+				hessian.MultiplyCameraRow( globalIx, totalParamCount, x.Elements(), gy );
+				localHessian.MultiplyCameraRow( localIx, camParamCount, x.Elements(), pointParamCount, x.Elements() + camParamCount, ly );
+
+				AssertAreEqual( gy, ly );
+			}
+		}
+
+		void TestLocalHessianMEPoints(
+			__in const ProjectionProvider< CamModel >* pGJacobian,
+			__in const LocalProjectionProviderCPU< CamModel >* pLJacobian )
+		{
+			HessianMultiplicationEngine< CamModel > hessian;
+			hessian.Initialize( pGJacobian, 1 );
+
+			LocalHessianMultiplicationEngineCPU< CamModel > localHessian;
+			localHessian.Initialize( pLJacobian, 1 );
+
+			uint camParamCount = ( uint )( hessian.GetCameraCount( ) * CamModel::cameraParameterCount );
+			uint pointParamCount = ( uint )( hessian.GetPointCount( ) * POINT_PARAM_COUNT );
+			uint totalParamCount = camParamCount + pointParamCount;
+
+			Vector< Scalar > x( totalParamCount );
+			Random< Scalar >::Fill( totalParamCount, x.Elements( ) );
+
+			Scalar gy[POINT_PARAM_COUNT];
+			Scalar ly[POINT_PARAM_COUNT];
+
+			const uint count = pLJacobian->GetCameraCount( );
+			for ( uint localIx = 0; localIx < count; localIx++ )
+			{
+				const uint globalIx = pLJacobian->GetGlobalPointIndex( localIx );
+
+				hessian.MultiplyPointRow( globalIx, totalParamCount, x.Elements( ), gy );
+				localHessian.MultiplyPointRow( localIx, camParamCount, x.Elements( ), pointParamCount, x.Elements( ) + camParamCount, ly );
+
+				AssertAreEqual( gy, ly );
 			}
 		}
 
@@ -100,6 +247,87 @@ namespace BundlerTest {
 				TestProjections( &globalJacobian, &localJacobian );
 			}
 		}
+
+		TEST_METHOD( LocalHessianBlockProvider0 )
+		{
+			Bundle bundle;
+			BundleAdditionalPayload metadata;
+
+			GetTestBundle( &bundle, &metadata );
+
+			Containers::Buffer< CamModel > cameras;
+			cameras.Allocate( bundle.cameras.Length( ) );
+
+			ProjectionProvider< CamModel > globalJacobian;
+			GetGlobalProjectionProvider( &bundle, cameras.Data( ), &globalJacobian );
+
+			const uint localCount = 3;
+			const uint cameraCount = ( uint )cameras.Length( );
+			for ( uint i = 0; i < cameraCount; )
+			{
+				const uint trueLocalCount = min( localCount, cameraCount - i );
+
+				LocalProjectionProviderCPU< CamModel > localJacobian;
+				localJacobian.InitializeForCameras( &globalJacobian, i, trueLocalCount );
+				i += trueLocalCount;
+
+				TestLocalHessianCamera( &globalJacobian, &localJacobian );
+			}
+
+			const uint localPtCount = 50;
+			const uint pointCount = ( uint )globalJacobian.GetPointCount( );
+			for ( uint i = 0; i < pointCount; )
+			{
+				const uint trueLocalCount = min( localPtCount, pointCount - i );
+
+				LocalProjectionProviderCPU< CamModel > localJacobian;
+				localJacobian.InitializeForPoints( &globalJacobian, i, trueLocalCount );
+				i += trueLocalCount;
+
+				TestLocalHessianPoints( &globalJacobian, &localJacobian );
+			}
+		}
+
+		TEST_METHOD( LocalHessianMultiplicationEngine0 )
+		{
+			Bundle bundle;
+			BundleAdditionalPayload metadata;
+
+			GetTestBundle( &bundle, &metadata );
+
+			Containers::Buffer< CamModel > cameras;
+			cameras.Allocate( bundle.cameras.Length( ) );
+
+			ProjectionProvider< CamModel > globalJacobian;
+			GetGlobalProjectionProvider( &bundle, cameras.Data( ), &globalJacobian );
+
+			const uint localCount = 3;
+			const uint cameraCount = ( uint )cameras.Length( );
+			for ( uint i = 0; i < cameraCount; )
+			{
+				const uint trueLocalCount = min( localCount, cameraCount - i );
+
+				LocalProjectionProviderCPU< CamModel > localJacobian;
+				localJacobian.InitializeForCameras( &globalJacobian, i, trueLocalCount );
+				i += trueLocalCount;
+
+				TestLocalHessianMECamera( &globalJacobian, &localJacobian );
+			}
+
+			const uint localPtCount = 50;
+			const uint pointCount = ( uint )globalJacobian.GetPointCount( );
+			for ( uint i = 0; i < pointCount; )
+			{
+				const uint trueLocalCount = min( localPtCount, pointCount - i );
+
+				LocalProjectionProviderCPU< CamModel > localJacobian;
+				localJacobian.InitializeForPoints( &globalJacobian, i, trueLocalCount );
+				i += trueLocalCount;
+
+				TestLocalHessianMEPoints( &globalJacobian, &localJacobian );
+			}
+		}
+
 	};
 
 }

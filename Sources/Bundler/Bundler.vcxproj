@@ -133,6 +133,7 @@
     <ClInclude Include="CachedJacobiPreconditioner.h" />
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
+    <ClInclude Include="CameraModelAMP6DoF.h" />
     <ClInclude Include="CountLimitStrategy.h" />
     <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />

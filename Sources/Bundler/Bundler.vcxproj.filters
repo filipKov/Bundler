@@ -138,6 +138,18 @@
     <ClInclude Include="ParallelPcgTaskFactory.h">
       <Filter>LinearSolver\Parallel\Tasks</Filter>
     </ClInclude>
+    <ClInclude Include="ParallelPCGDefs.h">
+      <Filter>LinearSolver\Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGLoopTasksCPU.h">
+      <Filter>LinearSolver\Parallel\Tasks\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalBlockJacobiPreconditioner.h">
+      <Filter>LinearSolver\Parallel\Preconditioning</Filter>
+    </ClInclude>
+    <ClInclude Include="InterlockedVariable.h">
+      <Filter>Async</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -238,6 +250,9 @@
     </Filter>
     <Filter Include="LinearSolver\Parallel\Tasks\AMP">
       <UniqueIdentifier>{a6b3f49d-97ff-43ea-abed-9a11c44c25fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Preconditioning">
+      <UniqueIdentifier>{4751b948-b925-4637-8124-abdda94eaa46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -47,6 +47,8 @@
 
 
 // Async lib
+#include "InterlockedVariable.h"
+
 #include "ITask.h"
 #include "HessianCameraRowMultiplicationTask.h"
 #include "HessianPointRowMultiplicationTask.h"
@@ -69,6 +71,12 @@
 
 
 // Parallel PCG
+#include "LocalBlockJacobiPreconditioner.h"
+
+#include "ParallelPCGDefs.h" 
+
+#include "ParallelPCGLoopTasksCPU.h"
+
 #include "HessianMulCamRowCPU.h"
 #include "HessianMulPointRowCPU.h"
 

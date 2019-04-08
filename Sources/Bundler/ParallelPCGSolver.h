@@ -1,11 +1,6 @@
 #pragma once
 
-namespace Bundler { namespace Async { namespace LinearSolver {
-
-	using PCGSolverSettings = Bundler::LinearSolver::PCGSolverSettings;
-	using PCGSolverStatistics = Bundler::LinearSolver::PCGSolverStatistics;
-	using PCGSolverTemp = Bundler::LinearSolver::PCGSolverTemp;
-
+namespace Bundler { namespace LinearSolver {
 
 	template < class CameraModel >
 	class ParallelPCGSolver
@@ -79,7 +74,7 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 			__in const Scalar diagonalDampeningFactor,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__inout PCGSolverTemp* pTemp )
+			__inout ParallelPCGSolverTemp* pTemp )
 		{
 			Vector< Scalar > x( parameterVectorSize, pX );
 	
@@ -87,20 +82,27 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 			while ( ( iteration < m_maxIterations ) &&
 				( pTemp->errSq > m_errorToleranceSq ) )
 			{
-				MultiplyByHessian( pJacobian, diagonalDampeningFactor, parameterVectorSize, pTemp->d.Elements( ), pTemp->Ad.Elements( ) );
-	
-				Scalar alpha = pTemp->errSq / ( pTemp->d.Dot( pTemp->Ad ) );
-				x += alpha * pTemp->d;
-				pTemp->r -= alpha * pTemp->Ad; // maybe do "r = b - Ax" every 50th iter or so
-	
-				ApplyPreconditioner( pJacobian, parameterVectorSize, pTemp->r.Elements( ), pTemp->MInvR.Elements( ) );
-	
-				Scalar errSqOld = pTemp->errSq;
-				pTemp->errSq = pTemp->r.Dot( pTemp->MInvR );
-				Scalar beta = pTemp->errSq / errSqOld;
+				pTemp->dDotAd = 0;
+				LoopPart0Cameras( pJacobian, diagonalDampeningFactor, pTemp );
+				LoopPart0Points( pJacobian, diagonalDampeningFactor, pTemp );
+
+				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
+
+				Scalar alpha = pTemp->errSq / dDotAd;
+
+				pTemp->errSqNew = 0;
+				LoopPart1Cameras( pJacobian, alpha, parameterVectorSize, pX, pTemp );
+				LoopPart1Points( pJacobian, alpha, parameterVectorSize, pX, pTemp );
+
+				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
+
+				Scalar beta = pTemp->newErrSq / pTemp->errSq;
+				pTemp->errSq = pTemp->newErrSq;
+
+				// Not really a point in doing this in parallel ( probably ), maybe on CPU
 				pTemp->d *= beta;
 				pTemp->d += pTemp->MInvR;
-	
+
 				iteration++;
 			}
 	
@@ -108,6 +110,98 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 		}
 	
 	protected:
+
+		// Perfoms following operations of PCG Loop ( for camera part of the hessian ):
+		// 0) Ad = A * d;
+		// 1) partDot = d * Ad;
+		// 2) dot += partDot (atomically)
+		void LoopPart0Cameras( 
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar diagonalDampeningFactor,
+			__inout ParallelPCGSolverTemp* pTemp )
+		{
+			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
+			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+				
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
+
+		// Perfoms following operations of PCG Loop ( for point part of the hessian ):
+		// 0) Ad = A * d;
+		// 1) partDot = d * Ad;
+		// 2) dot += partDot (atomically)
+		void LoopPart0Points(
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar diagonalDampeningFactor,
+			__inout ParallelPCGSolverTemp* pTemp )
+		{
+			const uint pointCount = ( uint )pJacobian->GetPointCount( );
+			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
+
+		// Perfoms following operations of PCG Loop ( for camera part of the hessian ):
+		// 0) x += alpha * d;
+		// 1) r -= alpha * Ad;
+		// 2) mr = M^-1 * r;
+		// 3) errNewPart = r * mr
+		// 4) errNew += errNewPart( atomically )
+		void LoopPart1Cameras(
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar alpha,
+			__in const uint parameterVectorSize,
+			__inout_ecount( parameterVectorSize ) Scalar* pX,
+			__inout ParallelPCGSolverTemp* pTemp )
+		{
+			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
+			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
+
+		// Perfoms following operations of PCG Loop ( for point part of the hessian ):
+		// 0) x += alpha * d;
+		// 1) r -= alpha * Ad;
+		// 2) mr = M^-1 * r;
+		// 3) errNewPart = r * mr
+		// 4) errNew += errNewPart( atomically )
+		void LoopPart1Points(
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar alpha,
+			__in const uint parameterVectorSize,
+			__inout_ecount( parameterVectorSize ) Scalar* pX,
+			__inout ParallelPCGSolverTemp* pTemp )
+		{
+			const uint pointCount = ( uint )pJacobian->GetPointCount( );
+			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
 	
 		void MultiplyByHessian(
 			__in const ProjectionProvider< CameraModel >* pJacobian,
@@ -221,4 +315,4 @@ namespace Bundler { namespace Async { namespace LinearSolver {
 	
 	};
 
-} } }
+} }

@@ -56,6 +56,27 @@ namespace Bundler { namespace Async {
 				wprintf_s( L"\tHas attached display: %s\n", it->get_has_display( ) ? L"True" : L"False" );
 				wprintf_s( L"\tIs emulated: %s\n", it->get_is_emulated( ) ? L"True" : L"False" );
 				wprintf_s( L"\tSupports shared memory: %s\n", it->get_supports_cpu_shared_memory( ) ? L"True" : L"False" );
+				
+				wprintf_s( L"\tDefault CPU access type: " );
+				switch ( it->get_default_cpu_access_type() )
+				{
+				case access_type_read:
+					wprintf_s( L"read-only\n" );
+					break;
+				case access_type_read_write:
+					wprintf_s( L"read-write\n" );
+					break;
+				case access_type_auto:
+					wprintf_s( L"auto\n" );
+					break;
+				case access_type_none:
+					wprintf_s( L"none\n" );
+					break;
+				case access_type_write:
+					wprintf_s( L"write-only\n" );
+					break;
+				}
+
 				wprintf_s( L"\tSupports double precision: %s\n", it->get_supports_double_precision( ) ? L"True" : L"False" );
 				wprintf_s( L"\tSupports limited double precision: %s\n", it->get_supports_limited_double_precision( ) ? L"True" : L"False" );
 				wprintf_s( L"\tVersion: %u\n", it->get_version( ) );

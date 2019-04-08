@@ -134,6 +134,7 @@
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
     <ClInclude Include="CountLimitStrategy.h" />
+    <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />
     <ClInclude Include="HessianBlockProvider.h" />
     <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
@@ -146,9 +147,12 @@
     <ClInclude Include="IWorkerThreadCallback.h" />
     <ClInclude Include="JacobiPreconditioner.h" />
     <ClInclude Include="LocalBlockJacobiPreconditioner.h" />
+    <ClInclude Include="LocalHessianBlockProviderAMP.h" />
     <ClInclude Include="LocalHessianBlockProviderCPU.h" />
+    <ClInclude Include="LocalHessianMultiplicationEngineAMP.h" />
     <ClInclude Include="LocalHessianMultiplicationEngineCPU.h" />
     <ClInclude Include="LocalProjectionProvider.h" />
+    <ClInclude Include="LocalProjectionProviderAMP.h" />
     <ClInclude Include="LocalProjectionProviderCPU.h" />
     <ClInclude Include="MemoryLimitPreciseFastStrategy.h" />
     <ClInclude Include="MemoryLimitPreciseStrategy.h" />

@@ -40,6 +40,10 @@
 // Local Hessian - GPU
 #include "AMPUtils.h"
 
+#include "LocalProjectionProviderAMP.h"
+#include "LocalHessianBlockProviderAMP.h"
+#include "LocalHessianMultiplicationEngineAMP.h"
+
 #include "LocalProjectionProvider.h"
 #include "MemoryLimitPreciseStrategy.h"
 #include "MemoryLimitPreciseFastStrategy.h"
@@ -58,6 +62,8 @@
 #include "WorkerThread.h"
 #include "WorkerThreadGPU.h"
 #include "WorkerPool.h"
+
+#include "ITaskSizeEstimator.h"
 
 
 // PCG

@@ -150,6 +150,18 @@
     <ClInclude Include="InterlockedVariable.h">
       <Filter>Async</Filter>
     </ClInclude>
+    <ClInclude Include="ITaskSizeEstimator.h">
+      <Filter>LinearSolver\Parallel\Tasks\SizeEstimators</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianBlockProviderAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianMultiplicationEngineAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -253,6 +265,9 @@
     </Filter>
     <Filter Include="LinearSolver\Parallel\Preconditioning">
       <UniqueIdentifier>{4751b948-b925-4637-8124-abdda94eaa46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Tasks\SizeEstimators">
+      <UniqueIdentifier>{eabf4c59-fb4b-45c6-93d8-3122184b4a29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

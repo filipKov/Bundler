@@ -190,6 +190,12 @@ namespace LinearAlgebra {
 				MatrixIterator< T, m, n, row, col - 1 >::Add( A, B, C );
 			}
 
+			static __forceinline void AddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) + ( cnst * ELEMENT( B, row * n + col ) );
+				MatrixIterator< T, m, n, row, col - 1 >::AddC( A, B, cnst, C );
+			}
+
 			static __forceinline void Subtract( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n + col ) = ELEMENT( A, row * n + col ) - ELEMENT( B, row * n + col );
@@ -229,6 +235,12 @@ namespace LinearAlgebra {
 				MatrixIterator< T, m, n, row - 1, n - 1 >::Add( A, B, C );
 			}
 
+			static __forceinline void AddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) + ( cnst * ELEMENT( B, row * n ) );
+				MatrixIterator< T, m, n, row, col - 1 >::AddC( A, B, cnst, C );
+			}
+
 			static __forceinline void Subtract( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) - ELEMENT( B, row * n );
@@ -265,6 +277,11 @@ namespace LinearAlgebra {
 			static __forceinline void Add( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) + ELEMENT( B, 0 );
+			}
+
+			static __forceinline void AddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C )
+			{
+				ELEMENT( C, 0 ) = ELEMENT( A, 0 ) + ( cnst * ELEMENT( B, 0 ) );
 			}
 
 			static __forceinline void Subtract( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
@@ -342,6 +359,40 @@ namespace LinearAlgebra {
 
 	}
 
+	namespace Internal {
+		
+		template < typename T, uint n, uint i >
+		struct VectorIteratorImpl
+		{
+			static __forceinline void Dot( __in_ecount( n ) const T* v1, __in_ecount( n ) const T* v2, __out T* res )
+			{
+				VectorIteratorImpl< T, n, i - 1 >::Dot( v1, v2, res );
+				( *res ) += ELEMENT( v1, i ) * ELEMENT( v2, i );
+			}
+		};
+
+		template < typename T, uint n >
+		struct VectorIteratorImpl< T, n, 0 >
+		{
+			static __forceinline void Dot( __in_ecount( n ) const T* v1, __in_ecount( n ) const T* v2, __out T* res )
+			{
+				( *res ) += ELEMENT( v1, 0 ) * ELEMENT( v2, 0 );
+			}
+		};
+
+		template < typename T, uint n >
+		struct VectorIterator
+		{
+			static __forceinline T Dot( __in_ecount( n ) const T* v1, __in_ecount( n ) const T* v2 )
+			{
+				T dotProd = T( 0 );
+				VectorIteratorImpl< T, n, n - 1 >::Dot( v1, v2, &dotProd );
+				return dotProd;
+			}
+		};
+
+	}
+
 	template < typename T, size_t m, size_t n, size_t p >
 	__forceinline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C )
 	{
@@ -370,6 +421,12 @@ namespace LinearAlgebra {
 	__forceinline void MatrixAdd( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::Add( A, B, C );
+	}
+
+	template < typename T, size_t m, size_t n >
+	__forceinline void MatrixAddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C )
+	{
+		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::AddC( A, B, cnst, C );
 	}
 
 	template < typename T, size_t m, size_t n >
@@ -413,5 +470,11 @@ namespace LinearAlgebra {
 	__forceinline T MatrixFrobeniusNorm( __in_ecount( m * n ) const T* A )
 	{
 		return sqrt( Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::FrobeniusNorm( A ) );
+	}
+
+	template < typename T, uint n >
+	__forceinline T VectorDot( __in_ecount( n ) const T* v1, __in_ecount( n ) const T* v2 )
+	{
+		return Internal::VectorIterator< T, n >::Dot( v1, v2 );
 	}
 }

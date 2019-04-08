@@ -10,24 +10,20 @@ namespace Bundler { namespace LinearSolver {
 		void Initialize(
 			__in const uint maxIterations,
 			__in const Scalar errorTolerance,
-			// __in const Preconditioner< CameraModel >* pPreconditioner,
 			__in Async::WorkerPool* pWorkerPool )
 		{
 			m_maxIterations = maxIterations;
 			m_errorToleranceSq = errorTolerance * errorTolerance;
-			// m_pPreconditioner = pPreconditioner;
 			m_pWorkerPool = pWorkerPool;
 		}
 	
 		void Initialize(
 			__in const PCGSolverSettings& settings,
-			// __in const Preconditioner< CameraModel >* pPreconditioner,
 			__in Async::WorkerPool* pWorkerPool )
 		{
 			Initialize(
 				settings.maxIterations,
 				settings.errorTolerance,
-				// pPreconditioner,
 				pWorkerPool );
 		}
 	
@@ -308,8 +304,6 @@ namespace Bundler { namespace LinearSolver {
 	
 		uint m_maxIterations;
 		Scalar m_errorToleranceSq;
-	
-		// const Preconditioner< CameraModel >* m_pPreconditioner;
 	
 		Async::WorkerPool* m_pWorkerPool;
 	

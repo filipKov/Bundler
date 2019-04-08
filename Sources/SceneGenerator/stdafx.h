@@ -7,6 +7,7 @@
 #include <map>
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 #include <glew.h>
 #include <freeglut.h>

@@ -6,6 +6,8 @@
 #pragma once
 
 #include <Windows.h>
+#include <thread>
+#include <atomic>
 #include <amp.h>
 using namespace Concurrency;
 

@@ -5,7 +5,7 @@ namespace LinearAlgebra {
 	namespace Internal {
 
 		template < typename T, uint n >
-		struct GaussJordanEliminationUnrolledCore
+		struct GaussJordanEliminationUnrolledCoreAMP
 		{
 			template < uint iter >
 			inline static void GetRowEschelonForm( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp )
@@ -132,8 +132,8 @@ namespace LinearAlgebra {
 			{
 				MatrixIdentity< T, n >( InvertedA );
 				
-				GaussJordanEliminationUnrolledCore< T, n >::GetRowEschelonForm< n >( A, InvertedA );
-				GaussJordanEliminationUnrolledCore< T, n >::BackSubstitute< n >( A, InvertedA );
+				GaussJordanEliminationUnrolledCoreAMP< T, n >::GetRowEschelonForm< n >( A, InvertedA );
+				GaussJordanEliminationUnrolledCoreAMP< T, n >::BackSubstitute< n >( A, InvertedA );
 			}
 		};
 

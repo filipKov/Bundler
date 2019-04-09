@@ -24,3 +24,13 @@
 #include "MatrixInvertGJUnrolled.h"
 #include "MatrixInvertGJ.h"
 
+#ifdef IMPORT_AMP_LINEAR_ALGEBRA
+	
+	#include "FastVector3AMP.h"
+	#include "FastVector4AMP.h"
+	#include "FastMatrix33AMP.h"
+	#include "FastMatrix44AMP.h"
+	#include "FastLinAlgFunctionsAMP.h"
+	#include "MatrixInvertGaussJordanAMP.h"
+
+#endif

@@ -60,6 +60,24 @@
     <ClInclude Include="MatrixInvertGJUnrolled.h">
       <Filter>FastAlgebra</Filter>
     </ClInclude>
+    <ClInclude Include="FastLinAlgFunctionsAMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMatrix33AMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMatrix44AMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="FastVector3AMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="FastVector4AMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixInvertGaussJordanAMP.h">
+      <Filter>FastAlgebraAMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Matrix">
@@ -73,6 +91,9 @@
     </Filter>
     <Filter Include="FastAlgebra">
       <UniqueIdentifier>{ff8c8f6f-d086-473b-8ccd-a5a1219fb307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FastAlgebraAMP">
+      <UniqueIdentifier>{780240ae-850f-4ce9-ad32-1615447a89a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

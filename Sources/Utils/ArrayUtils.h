@@ -14,4 +14,49 @@ namespace Utils { namespace Containers {
 
 	#define ELEMENT( arrayPtr, index ) (*( arrayPtr + index ))
 
+	template < typename T >
+	struct ArrayUtils
+	{
+
+		static __forceinline void Copy( __in const T* pSrc, __in const uint count, __out T* pDst ) restrict( amp, cpu )
+		{
+			for ( uint i = 0; i < count; i++ )
+			{
+				*pDst = *pSrc;
+				pDst++;
+				pSrc++;
+			}
+		}
+
+		template < uint count >
+		static __forceinline void Copy( __in const T* pSrc, __out T* pDst ) restrict( amp, cpu )
+		{
+			for ( uint i = 0; i < count; i++ )
+			{
+				*pDst = *pSrc;
+				pDst++;
+				pSrc++;
+			}
+		}
+
+		template < uint count >
+		static __forceinline void Fill( __in const DefaultItemType< T > value, __out T* pDst ) restrict( amp, cpu )
+		{
+			for ( uint i = 0; i < count; i++ )
+			{
+				*pDst = value;
+				pDst++;
+			}
+		}
+
+		static __forceinline void Fill( __in const DefaultItemType< T > value, __in const uint count, __out T* pDst ) restrict( amp, cpu )
+		{
+			for ( uint i = 0; i < count; i++ )
+			{
+				*pDst = value;
+				pDst++;
+			}
+		}
+	};
+
 } }

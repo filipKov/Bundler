@@ -71,7 +71,7 @@ namespace Bundler {
 
 		template < bool getCameraBlock, bool getPointBlock, bool getResiduals >
 		__forceinline void GetProjectionBlock(
-			__in const size_t projectionIx,
+			__in const uint projectionIx,
 			__out_ecount_opt( 2 * CameraModel::cameraParameterCount ) Scalar* pCameraBlock,
 			__out_ecount_opt( 2 * POINT_PARAM_COUNT ) Scalar* pPointBlock,
 			__out_ecount_opt( 2 ) Scalar* pResiduals ) const __GPU
@@ -81,21 +81,21 @@ namespace Bundler {
 
 			if ( getCameraBlock )
 			{
-				_ASSERT_EXPR( pCameraBlock != NULL, "Camera block must not be null" );
+				// _ASSERT_EXPR( pCameraBlock != NULL, "Camera block must not be null" );
 				ExtractCameraParameters( residuals + 0, pCameraBlock + 0 );
 				ExtractCameraParameters( residuals + 1, pCameraBlock + CameraModel::cameraParameterCount );
 			}
 
 			if ( getPointBlock )
 			{
-				_ASSERT_EXPR( pPointBlock != NULL, "Point block must not be null" );
+				// _ASSERT_EXPR( pPointBlock != NULL, "Point block must not be null" );
 				ExtractPointParameters( residuals + 0, pPointBlock + 0 );
 				ExtractPointParameters( residuals + 1, pPointBlock + POINT_PARAM_COUNT );
 			}
 
 			if ( getResiduals )
 			{
-				_ASSERT_EXPR( pResiduals != NULL, "Residual block must not be null" );
+				// _ASSERT_EXPR( pResiduals != NULL, "Residual block must not be null" );
 				ELEMENT( pResiduals, 0 ) = ELEMENT( residuals, 0 ).GetFx( );
 				ELEMENT( pResiduals, 1 ) = ELEMENT( residuals, 1 ).GetFx( );
 			}
@@ -112,14 +112,14 @@ namespace Bundler {
 			const uint cameraIndex = pProjection->cameraIndex;
 			const uint pointIndex = pProjection->pointIndex;
 
-			m_cameraModels[cameraIndex].ProjectPoint( m_points[pointIndex].Elements( ), pProjection->projectedPoint.Elements( ), pResiduals );
+			m_cameras[cameraIndex].ProjectPoint( m_points[pointIndex].Elements( ), pProjection->projectedPoint.Elements( ), pResiduals );
 		}
 
 		inline void ExtractCameraParameters(
 			__in const DScalar< CameraModel::totalParamCount >* pResidual,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pDestination ) const __GPU
 		{
-			Async::AmpArrayUtils< Scalar >::Copy< CameraModel::cameraParameterCount >(
+			Containers::ArrayUtils< Scalar >::Copy< CameraModel::cameraParameterCount >(
 				pResidual->GetDiff( ).Elements( ),
 				pDestination );
 		}
@@ -128,7 +128,7 @@ namespace Bundler {
 			__in const DScalar< CameraModel::totalParamCount >* pResidual,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pDestination ) const __GPU
 		{
-			Async::AmpArrayUtils< Scalar >::Copy< POINT_PARAM_COUNT >(
+			Containers::ArrayUtils< Scalar >::Copy< POINT_PARAM_COUNT >(
 				pResidual->GetDiff( ).Elements( ) + CameraModel::pointParamStartIx,
 				pDestination );
 		}

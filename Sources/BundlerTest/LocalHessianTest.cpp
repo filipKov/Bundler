@@ -363,43 +363,6 @@ namespace BundlerTest {
 			}
 		}
 
-		TEST_METHOD( ParallelMultiplyByHessian0 )
-		{
-			Bundle bundle;
-			BundleAdditionalPayload metadata;
-
-			GetTestBundle( &bundle, &metadata );
-
-			Containers::Buffer< CamModel > cameras;
-			cameras.Allocate( bundle.cameras.Length( ) );
-
-			ProjectionProvider< CamModel > globalJacobian;
-			GetGlobalProjectionProvider( &bundle, cameras.Data( ), &globalJacobian );
-
-			uint camParamCount = ( uint )( globalJacobian.GetCameraCount( ) * CamModel::cameraParameterCount );
-			uint pointParamCount = ( uint )( globalJacobian.GetPointCount( ) * POINT_PARAM_COUNT );
-			uint totalParamCount = camParamCount + pointParamCount;
-
-			Vector< Scalar > x( totalParamCount );
-			Random< Scalar >::Fill( totalParamCount, x.Elements( ) );
-
-			Vector< Scalar > gy( totalParamCount );
-			Vector< Scalar > ly( totalParamCount );
-			
-
-			Async::WorkerPool wpool;
-			Async::LinearSolver::Task::ParallelPcgTaskFactory< CamModel > taskFactory;
-			taskFactory.Initialize( &wpool );
-
-			MultiplyByHessian( &globalJacobian, 1, totalParamCount, x.Elements( ), gy.Elements( ) );
-
-			Async::LinearSolver::MultiplyByHessian< CamModel >(
-				&globalJacobian,
-				1, totalParamCount, x.Elements( ), &taskFactory, &wpool, ly.Elements( ) );
-
-			AssertAreEqual( totalParamCount, gy.Elements( ), ly.Elements( ) );
-		}
-
 	};
 
 }

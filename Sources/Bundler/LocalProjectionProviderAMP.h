@@ -30,13 +30,10 @@ namespace Bundler {
 				// ELEMENT( pPoints, i ) = pProvider->...;
 			}
 
-			
-			for ( int i = 0; i < projectionCount; i++ )
-			{
-				// ELEMENT( pProjections, i ) = pProvider->...;
-			}
-
-			
+			// for ( int i = 0; i < projectionCount; i++ )
+			// {
+			// 	// ELEMENT( pProjections, i ) = pProvider->...;
+			// }
 		}
 
 		__forceinline uint GetCameraCount( ) const __GPU

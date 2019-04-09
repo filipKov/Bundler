@@ -82,14 +82,11 @@
 
 #include "ParallelPCGDefs.h" 
 
+#include "ParallelPCGInitTasksCPU.h"
 #include "ParallelPCGLoopTasksCPU.h"
-
-#include "HessianMulCamRowCPU.h"
-#include "HessianMulPointRowCPU.h"
 
 #include "ParallelPcgTaskFactory.h"
 
-#include "ParallelPcgFunctions.h"
 #include "ParallelPCGSolver.h"
 
 

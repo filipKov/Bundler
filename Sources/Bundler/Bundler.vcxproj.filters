@@ -78,15 +78,6 @@
     <ClInclude Include="WorkerThread.h">
       <Filter>Async\Workers</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryLimitPreciseStrategy.h">
-      <Filter>JacobianAndHessian\Local\CreationStrategy</Filter>
-    </ClInclude>
-    <ClInclude Include="MemoryLimitPreciseFastStrategy.h">
-      <Filter>JacobianAndHessian\Local\CreationStrategy</Filter>
-    </ClInclude>
-    <ClInclude Include="CountLimitStrategy.h">
-      <Filter>JacobianAndHessian\Local\CreationStrategy</Filter>
-    </ClInclude>
     <ClInclude Include="WorkerThreadDefs.h">
       <Filter>Async\Workers</Filter>
     </ClInclude>
@@ -104,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="LocalProjectionProviderCPU.h">
       <Filter>JacobianAndHessian\Local\CPU</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalProjectionProvider.h">
-      <Filter>JacobianAndHessian\Local\AMP</Filter>
     </ClInclude>
     <ClInclude Include="LocalHessianBlockProviderCPU.h">
       <Filter>JacobianAndHessian\Local\CPU</Filter>
@@ -238,9 +226,6 @@
     </Filter>
     <Filter Include="Async\Workers">
       <UniqueIdentifier>{e15da832-f775-4691-a995-aafa71d2a4a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JacobianAndHessian\Local\CreationStrategy">
-      <UniqueIdentifier>{f5463613-7d3b-479d-943c-70e009b24664}</UniqueIdentifier>
     </Filter>
     <Filter Include="JacobianAndHessian\Local\AMP">
       <UniqueIdentifier>{747b23f9-2b3c-4961-a4e8-5ea1f39468e5}</UniqueIdentifier>

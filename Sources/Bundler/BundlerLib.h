@@ -47,11 +47,6 @@
 #include "LocalHessianBlockProviderAMP.h"
 #include "LocalHessianMultiplicationEngineAMP.h"
 
-// #include "LocalProjectionProvider.h"
-// #include "MemoryLimitPreciseStrategy.h"
-// #include "MemoryLimitPreciseFastStrategy.h"
-// #include "CountLimitStrategy.h"
-
 
 // Async lib
 #include "InterlockedVariable.h"

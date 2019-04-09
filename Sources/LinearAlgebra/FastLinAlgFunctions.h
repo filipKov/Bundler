@@ -25,7 +25,7 @@ namespace LinearAlgebra {
 			BOTH_TRANSPOSED
 		};
 
-		template < typename T, size_t m, size_t n, size_t p, size_t row, size_t col, size_t i >
+		template < typename T, uint m, uint n, uint p, uint row, uint col, uint i >
 		struct MatrixEntry
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
@@ -57,7 +57,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t m, size_t n, size_t p, size_t row, size_t col >
+		template < typename T, uint m, uint n, uint p, uint row, uint col >
 		struct MatrixEntry< T, m, n, p, row, col, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
@@ -86,7 +86,7 @@ namespace LinearAlgebra {
 		};
 
 
-		template < typename T, size_t m, size_t n, size_t p, size_t row, size_t col >
+		template < typename T, uint m, uint n, uint p, uint row, uint col >
 		struct MatrixRow
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
@@ -118,7 +118,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t m, size_t n, size_t p, size_t row >
+		template < typename T, uint m, uint n, uint p, uint row >
 		struct MatrixRow< T, m, n, p, row, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
@@ -150,7 +150,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t m, size_t n, size_t p  >
+		template < typename T, uint m, uint n, uint p  >
 		struct MatrixRow< T, m, n, p, 0, 0 >
 		{
 			template < MatrixMultiplicationType type = MatrixMultiplicationType::NORMAL >
@@ -181,7 +181,7 @@ namespace LinearAlgebra {
 
 	namespace Internal {
 
-		template < typename T, size_t m, size_t n, size_t row, size_t col >
+		template < typename T, uint m, uint n, uint row, uint col >
 		struct MatrixIterator
 		{
 			static __forceinline void Add( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
@@ -232,7 +232,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t m, size_t n, size_t row >
+		template < typename T, uint m, uint n, uint row >
 		struct MatrixIterator< T, m, n, row, 0 >
 		{
 			static __forceinline void Add( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
@@ -283,7 +283,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t m, size_t n >
+		template < typename T, uint m, uint n >
 		struct MatrixIterator< T, m, n, 0, 0 >
 		{
 			static __forceinline void Add( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
@@ -330,7 +330,7 @@ namespace LinearAlgebra {
 
 	namespace Internal {
 
-		template < typename T, size_t n, size_t diagIx >
+		template < typename T, uint n, uint diagIx >
 		struct MatrixDiagonalIteratorImpl
 		{
 			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A ) 
@@ -346,7 +346,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t n >
+		template < typename T, uint n >
 		struct MatrixDiagonalIteratorImpl< T, n, 0 >
 		{
 			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A ) 
@@ -360,7 +360,7 @@ namespace LinearAlgebra {
 			}
 		};
 
-		template < typename T, size_t n >
+		template < typename T, uint n >
 		struct MatrixDiagonalIterator
 		{
 			static __forceinline void SetTo( __in const T cnst, __out_ecount( n * n ) T* A ) 
@@ -410,86 +410,86 @@ namespace LinearAlgebra {
 
 	}
 
-	template < typename T, size_t m, size_t n, size_t p >
+	template < typename T, uint m, uint n, uint p >
 	__forceinline void MatrixMultiply( __in_ecount( m * n ) const T* A, __in_ecount( n * p ) const T* B, __out_ecount( m * p ) T* C ) 
 	{
 		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::NORMAL >( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n, size_t p >
+	template < typename T, uint m, uint n, uint p >
 	__forceinline void MatrixMultiplyAtB( __in_ecount( m * n ) const T* A, __in_ecount( m * p ) const T* B, __out_ecount( n * p ) T* C ) 
 	{
 		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::A_TRANSPOSED >( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n, size_t p >
+	template < typename T, uint m, uint n, uint p >
 	__forceinline void MatrixMultiplyABt( __in_ecount( m * n ) const T* A, __in_ecount( p * n ) const T* B, __out_ecount( m * p ) T* C ) 
 	{
 		Internal::MatrixRow< T, m, n, p, m - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::B_TRANSPOSED >( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n, size_t p >
+	template < typename T, uint m, uint n, uint p >
 	__forceinline void MatrixMultiplyAtBt( __in_ecount( m * n ) const T* A, __in_ecount( p * m ) const T* B, __out_ecount( n * p ) T* C ) 
 	{
 		Internal::MatrixRow< T, m, n, p, n - 1, p - 1 >::Get< Internal::MatrixMultiplicationType::BOTH_TRANSPOSED >( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixAdd( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::Add( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixAddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::AddC( A, B, cnst, C );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixSub( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::Subtract( A, B, C );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixSubC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::SubtractC( A, B, cnst, C );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixMultiplyElementWise( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::MulElementWise( A, B, C );
 	}
 
-	template < typename T, size_t n >
+	template < typename T, uint n >
 	__forceinline void MatrixIdentity( __out_ecount( n * n ) T* A )
 	{
 		ByteFill< T >( 0, n * n, A );
 		Internal::MatrixDiagonalIterator< T, n >::SetTo( T( 1 ), A );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixMultiplyC( __in_ecount( m * n ) const T* A, __in const T cnst, __out_ecount( m * n ) T* B ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::MultiplyByCnst( A, cnst, B );
 	}
 
-	template < typename T, size_t n >
+	template < typename T, uint n >
 	__forceinline void MatrixMultiplyDiagonal( __in const T cnst, __inout_ecount( n * n ) T* A ) 
 	{
 		Internal::MatrixDiagonalIterator< T, n >::MultiplyBy( cnst, A );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline T MatrixFrobeniusNorm( __in_ecount( m * n ) const T* A ) 
 	{
 		return sqrt( Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::FrobeniusNorm( A ) );
 	}
 
-	template < typename T, size_t m, size_t n >
+	template < typename T, uint m, uint n >
 	__forceinline void MatrixNegate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B ) 
 	{
 		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::Negate( A, B );

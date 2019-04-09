@@ -13,19 +13,22 @@ namespace LinearAlgebra {
 	}
 
 	template < typename T1 >
-	__forceinline void V3UnitX( __out_ecount( 3 ) T1* v ) {
+	__forceinline void V3UnitX( __out_ecount( 3 ) T1* v ) 
+	{
 		V3Zero( v );
 		ELEMENT( v, 0 ) = T1( 1 );
 	}
 
 	template < typename T1 >
-	__forceinline void V3UnitY( __out_ecount( 3 ) T1* v ) {
+	__forceinline void V3UnitY( __out_ecount( 3 ) T1* v ) 
+	{
 		V3Zero( v );
 		ELEMENT( v, 1 ) = T1( 1 );
 	}
 
 	template < typename T1 >
-	__forceinline void V3UnitZ( __out_ecount( 3 ) T1* v ) {
+	__forceinline void V3UnitZ( __out_ecount( 3 ) T1* v ) 
+	{
 		V3Zero( v );
 		ELEMENT( v, 2 ) = T1( 1 );
 	}

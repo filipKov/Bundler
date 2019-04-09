@@ -1,8 +1,5 @@
 #pragma once
 
-#include "stdafx.h"
-#include "Matrix.h"
-
 namespace LinearAlgebra {
 
 	// -------------------------------------------------------------------------------------------------------
@@ -16,7 +13,7 @@ namespace LinearAlgebra {
 	template < typename Scalar >
 	class Matrix< Scalar, MatrixBase::Dynamic > {
 
-		using Allocator = MemoryAllocator<Scalar>;
+		using Allocator = Utils::MemoryAllocator<Scalar>;
 
 	public:
 

@@ -17,8 +17,14 @@
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
 
-#include "../LinearAlgebra/LinearAlgebraLib.h"
+#define IMPORT_AMP_LINEAR_ALGEBRA
+#include "..\LinearAlgebra\LinearAlgebraLib.h"
 using namespace LinearAlgebra;
+
+#define IMPORT_AMP_DIFFNUM
+#include "..\NumericOptimization\DiffNum.h"
+using namespace NumericOptimization::AutomaticDifferentiation;
+
 
 #include "../NumericOptimization/DiffNum.h"
 #include "../Bundler/BundlerLib.h"

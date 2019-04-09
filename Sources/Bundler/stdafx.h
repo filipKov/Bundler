@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <thread>
 #include <atomic>
+#include <cmath>
 #include <amp.h>
 using namespace Concurrency;
 
@@ -16,13 +17,13 @@ using namespace Concurrency;
 #include "..\Utils\UtilsLib.h"
 using namespace Utils;
 
+// #define IMPORT_AMP_LINEAR_ALGEBRA
 #include "..\LinearAlgebra\LinearAlgebraLib.h"
+using namespace LinearAlgebra;
 
+// #define IMPORT_AMP_DIFFNUM
 #include "..\NumericOptimization\DiffNum.h"
-#include "..\NumericOptimization\ILinearSolver.h"
-#include "..\NumericOptimization\ConjugateGradientsSolver.h"
 using namespace NumericOptimization::AutomaticDifferentiation;
-using namespace NumericOptimization::LinearSolver;
 
 #include "NumericTypes.h"
 

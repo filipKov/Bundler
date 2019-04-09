@@ -22,7 +22,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	
 			m_Ad = Utils::GetCameraParamPtr( cameraStartIx, pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
-			m_dDotAd = &pTemp->dDotAd;
+			m_pDotOut = &pTemp->dDotAd;
 		}
 	
 		void Execute( ) override
@@ -54,7 +54,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				m_Ad += cameraParamCount;
 			}
 	
-			m_dDotAd += partialDot;
+			m_pDotOut->operator+=( partialDot );
 		}
 	
 	protected:
@@ -67,7 +67,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	
 		Scalar* m_Ad;
 		Scalar* m_d;
-		Async::InterlockedVariable< Scalar >* m_dDotAd;
+		Async::InterlockedVariable< Scalar >* m_pDotOut;
 	};
 
 	template < class CameraModel >
@@ -90,7 +90,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			m_Ad = Utils::GetPointParamPtr( pointStartIx, pJacobian->GetCameraCount(), pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
-			m_dDotAd = &pTemp->dDotAd;
+			m_pDotOut = &pTemp->dDotAd;
 		}
 
 		void Execute( ) override
@@ -122,7 +122,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				m_Ad += POINT_PARAM_COUNT;
 			}
 
-			m_dDotAd += partialDot;
+			m_pDotOut->operator+=( partialDot );
 		}
 
 	protected:
@@ -135,7 +135,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 		Scalar* m_Ad;
 		Scalar* m_d;
-		Async::InterlockedVariable< Scalar >* m_dDotAd;
+		Async::InterlockedVariable< Scalar >* m_pDotOut;
 	};
 
 	template < class CameraModel >
@@ -161,7 +161,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			m_r = Utils::GetCameraParamPtr( cameraStartIx, pTemp->r.Elements( ) );
 			m_mr = Utils::GetCameraParamPtr( cameraStartIx, pTemp->MInvR.Elements( ) );
-			m_errSqNew = &pTemp->errSqNew;
+			m_pErrSqNew = &pTemp->errSqNew;
 		}
 
 		void Execute( ) override
@@ -191,7 +191,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				m_mr += cameraParamCount;
 			}
 
-			m_errSqNew += errSqNewPart;
+			m_pErrSqNew->operator+=( errSqNewPart );
 		}
 
 	protected:
@@ -208,7 +208,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		Scalar* m_r;
 		Scalar* m_mr;
 
-		Async::InterlockedVariable< Scalar >* m_errSqNew;
+		Async::InterlockedVariable< Scalar >* m_pErrSqNew;
 
 	};
 
@@ -237,7 +237,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			m_r = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->r.Elements( ) );
 			m_mr = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->MInvR.Elements( ) );
-			m_errSqNew = &pTemp->errSqNew;
+			m_pErrSqNew = &pTemp->errSqNew;
 		}
 
 		void Execute( ) override
@@ -265,7 +265,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				m_mr += POINT_PARAM_COUNT;
 			}
 
-			m_errSqNew += errSqNewPart;
+			m_pErrSqNew->operator+=( errSqNewPart );
 		}
 
 	protected:
@@ -282,7 +282,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		Scalar* m_r;
 		Scalar* m_mr;
 
-		Async::InterlockedVariable< Scalar >* m_errSqNew;
+		Async::InterlockedVariable< Scalar >* m_pErrSqNew;
 
 	};
 

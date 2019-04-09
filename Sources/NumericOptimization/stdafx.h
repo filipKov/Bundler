@@ -8,10 +8,12 @@
 #include <Windows.h>
 #include <memory>
 #include <amp.h>
+#include <cmath>
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
 #include "..\Utils\UtilsLib.h"
-#include "..\LinearAlgebra\LinearAlgebraLib.h"
+using namespace Utils;
 
+#include "..\LinearAlgebra\LinearAlgebraLib.h"
 using namespace LinearAlgebra;

@@ -5,7 +5,7 @@ namespace Bundler { namespace CameraModels {
 	template < uint maxRotations >
 	class CameraModelAMP6DoF : public Camera
 	{
-	protected:
+	public:
 	
 		static constexpr const uint rotationParamStartIx = 0;
 		
@@ -35,6 +35,11 @@ namespace Bundler { namespace CameraModels {
 			m_currentRotationCount = 0;
 	
 			AddInitialRotation( r.Elements( ) );
+		}
+
+		void SetCopy( __in const CameraModelAMP6DoF< maxRotations >* pSource ) __CPU_ONLY
+		{
+			*this = *pSource;
 		}
 	
 		// void MakeCopy( __out Camera* pCamera, __out CameraModel6DoF< maxRotations >* pModel ) const __CPU_ONLY

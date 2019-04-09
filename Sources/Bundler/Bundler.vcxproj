@@ -135,6 +135,7 @@
     <ClInclude Include="CameraModel6DoF.h" />
     <ClInclude Include="CameraModelAMP6DoF.h" />
     <ClInclude Include="CountLimitStrategy.h" />
+    <ClInclude Include="IProjectionProviderData.h" />
     <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />
     <ClInclude Include="HessianBlockProvider.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="LocalProjectionProvider.h" />
     <ClInclude Include="LocalProjectionProviderAMP.h" />
     <ClInclude Include="LocalProjectionProviderCPU.h" />
+    <ClInclude Include="LocalProjectionProviderDataAMP.h" />
     <ClInclude Include="MemoryLimitPreciseFastStrategy.h" />
     <ClInclude Include="MemoryLimitPreciseStrategy.h" />
     <ClInclude Include="NumericTypes.h" />

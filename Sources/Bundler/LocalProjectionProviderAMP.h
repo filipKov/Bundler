@@ -2,53 +2,19 @@
 
 namespace Bundler {
 
-	namespace Structure {
-		struct LocalBundleStructureMapping
-		{
-			uint startIndex;
-			uint projectionCount;
-		};
-	}
-
 	template < class CameraModel >
 	class LocalProjectionProviderAMP
 	{
 	public:
 
-		static void CreateForCameras(
-			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
-			__in const int cameraCount,
-			__in_ecount( cameraCount ) const uint* pCamerasToCopy,
-			__in const int pointCount,
-			__in_ecount( pointCount ) const uint* pPointsToCopy,
-			__in const int projectionCount,
-			__deref_out LocalProjectionProviderAMP< CameraModel >** ppProvider ) __CPU_ONLY
+		LocalProjectionProviderAMP ( __in LocalProjectionProviderDataAMP< CameraModel >* pData ) __CPU_ONLY
+			: m_cameras( pData->m_cameras ),
+			m_points( pData->m_points ),
+			m_projections( pData->m_projections ),
+			m_globalMappingCameras( pData->m_globalMappingCameras ),
+			m_globalMappingPoints( pData->m_globalMappingPoints ),
+			m_projectionMapping( pData->m_projectionMapping )
 		{
-			_ASSERT_EXPR( ppProvider != NULL, "Deref to provider cannot be NULL" );
-
-			*ppProvider = new LocalProjectionProviderAMP< CameraModel >( 
-				cameraCount,  pointCount, projectionCount,  cameraCount,
-				pCamerasToCopy, pPointsToCopy );
-
-			( *ppProvider )->InitializeForCameras( pGlobalProvider );
-		}
-
-		static void CreateForPoints(
-			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
-			__in const int cameraCount,
-			__in_ecount( cameraCount ) const uint* pCamerasToCopy,
-			__in const int pointCount,
-			__in_ecount( pointCount ) const uint* pPointsToCopy,
-			__in const int projectionCount,
-			__deref_out LocalProjectionProviderAMP< CameraModel >** ppProvider ) __CPU_ONLY
-		{
-			_ASSERT_EXPR( ppProvider != NULL, "Deref to provider cannot be NULL" );
-
-			*ppProvider = new LocalProjectionProviderAMP< CameraModel >(
-				cameraCount, pointCount, projectionCount, pointCount,
-				pCamerasToCopy, pPointsToCopy );
-
-			( *ppProvider )->InitializeForPoints( pGlobalProvider );
 		}
 
 		__forceinline uint GetCameraCount( ) const __GPU
@@ -137,34 +103,8 @@ namespace Bundler {
 
 	protected:
 
-		LocalProjectionProviderAMP (
-			__in const int cameraCount,
-			__in const int pointCount,
-			__in const int projectionCount,
-			__in const int projectionMappingSize,
-			__in_ecount( cameraCount ) const uint* pGlobalCameraMapping,
-			__in_ecount( pointCount ) const uint* pGlobalPointMapping ) __CPU_ONLY
-			: m_cameras( cameraCount ),
-			  m_points( pointCount ),
-			  m_projection( projectionCount ),
-			  m_globalMappingCameras( cameraCount, pGlobalCameraMapping ),
-			  m_globalMappingPoints( pointCount, pGlobalPointMapping ),
-			  m_projectionMapping( projectionMappingSize )
-		{
-		}
-
-		void InitializeForCameras( __in const ProjectionProvider< CameraModel >* pProvider ) __CPU_ONLY
-		{
-			// TODO
-		}
-
-		void InitializeForPoints( __in const ProjectionProvider< CameraModel >* pProvider ) __CPU_ONLY
-		{
-			// TODO
-		}
-
 		void GetProjection(
-			__in const size_t projectionIx,
+			__in const uint projectionIx,
 			__out_ecount( 2 ) DScalar< CameraModel::totalParamCount >* pResiduals ) const __GPU
 		{
 			const Projection* pProjection = m_projections.data( ) + projectionIx;
@@ -196,15 +136,15 @@ namespace Bundler {
 	protected:
 
 		// Bundle
-		array_view< const CameraModel, 1 > m_cameras;
-		array_view< const Vector3, 1 > m_points;
-		array_view< const Projection, 1 > m_projections;
+		array< CameraModel, 1 >& m_cameras;
+		array< Vector3, 1 >& m_points;
+		array< Projection, 1 >& m_projections;
 
 		// Mapping
-		array_view< const uint, 1 > m_globalMappingCameras;
-		array_view< const uint, 1 > m_globalMappingPoints;
+		array< uint, 1 >& m_globalMappingCameras;
+		array< uint, 1 >& m_globalMappingPoints;
 
-		array_view< const Structure::LocalBundleStructureMapping, 1 > m_projectionMapping;
+		array< Structure::LocalBundleStructureMapping, 1 >& m_projectionMapping;
 	};
 
 }

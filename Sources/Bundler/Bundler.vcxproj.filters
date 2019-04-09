@@ -159,6 +159,12 @@
     <ClInclude Include="ParallelPCGInitTasksCPU.h">
       <Filter>LinearSolver\Parallel\Tasks\CPU</Filter>
     </ClInclude>
+    <ClInclude Include="IProjectionProviderData.h">
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderDataAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

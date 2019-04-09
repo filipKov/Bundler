@@ -27,6 +27,7 @@
 // Hessian 
 #include "BundleStructureMapping.h"
 
+#include "IProjectionProviderData.h"
 #include "ProjectionProvider.h"
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
@@ -41,6 +42,7 @@
 // Local Hessian - GPU
 #include "AMPUtils.h"
 
+#include "LocalProjectionProviderDataAMP.h"
 #include "LocalProjectionProviderAMP.h"
 #include "LocalHessianBlockProviderAMP.h"
 #include "LocalHessianMultiplicationEngineAMP.h"

@@ -164,7 +164,7 @@
     <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="CameraModel6DoFTest.cpp" />
     <ClCompile Include="HessianTest.cpp" />
-    <ClCompile Include="JacobiPreconditionerTest.cpp" />
+    <ClCompile Include="LocalHessianAmpTest.cpp" />
     <ClCompile Include="LocalHessianTest.cpp" />
     <ClCompile Include="MatrixBenchmark.cpp" />
     <ClCompile Include="ProjectionProviderTest.cpp" />
@@ -175,7 +175,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="unittest1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="testMatrices.txt" />

@@ -244,7 +244,7 @@ namespace LinearAlgebra {
 			static __forceinline void AddC( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __in const T cnst, __out_ecount( m * n ) T* C )
 			{
 				ELEMENT( C, row * n ) = ELEMENT( A, row * n ) + ( cnst * ELEMENT( B, row * n ) );
-				MatrixIterator< T, m, n, row, col - 1 >::AddC( A, B, cnst, C );
+				MatrixIterator< T, m, n, row - 1 , n - 1 >::AddC( A, B, cnst, C );
 			}
 
 			static __forceinline void Subtract( __in_ecount( m * n ) const T* A, __in_ecount( m * n ) const T* B, __out_ecount( m * n ) T* C )

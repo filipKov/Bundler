@@ -34,7 +34,7 @@ namespace Bundler { namespace LinearSolver {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__out_opt PCGSolverStatistics* pStatistics )
 		{
-			PCGSolverTemp temp( parameterVectorSize );
+			ParallelPCGSolverTemp temp( parameterVectorSize );
 	
 			InitSolve( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, &temp );
 			uint finalIter = SolveLoop( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, &temp );
@@ -52,17 +52,14 @@ namespace Bundler { namespace LinearSolver {
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const Scalar diagonalDampeningFactor,
 			__in const uint parameterVectorSize,
-			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__out PCGSolverTemp* pTemp )
+			__in_ecount( parameterVectorSize ) const Scalar* pX0,
+			__out ParallelPCGSolverTemp* pTemp )
 		{
-			// parallel
-			GetInitialResidual( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, pTemp->r.Elements( ) );
-			ApplyPreconditioner( pJacobian, parameterVectorSize, pTemp->r.Elements( ), pTemp->d.Elements( ) );
-	
-			// sync here
-	
-			// seq
-			pTemp->errSq = pTemp->r.Dot( pTemp->d );
+			InitSolveCameras( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX0, pTemp );
+			InitSolvePoints( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX0, pTemp );
+
+			m_pWorkerPool->WaitForIdleWorkers( );
+			pTemp->errSq = pTemp->errSqNew;
 		}
 	
 		uint SolveLoop(
@@ -106,6 +103,56 @@ namespace Bundler { namespace LinearSolver {
 		}
 	
 	protected:
+
+		// Performs initializations of PCG ( for camera part of the hessian ):
+		// 0.1) r = A * x0;
+		// 0.2) r = b - r;
+		// 1) d = M^-1;
+		// 2) errPart = r * d
+		// 3) errSqNew += errPart( atomically )
+		void InitSolveCameras(
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar diagonalDampeningFactor,
+			__in const uint parameterVectorSize,
+			__in_ecount( parameterVectorSize ) const Scalar* pX0,
+			__out ParallelPCGSolverTemp* pTemp )
+		{
+			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
+			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
+
+		// Performs initializations of PCG ( for point part of the hessian ):
+		// 0.1) r = A * x0;
+		// 0.2) r = b - r;
+		// 1) d = M^-1;
+		// 2) errPart = r * d
+		// 3) errSqNew += errPart( atomically )
+		void InitSolvePoints(
+			__in const ProjectionProvider< CameraModel >* pJacobian,
+			__in const Scalar diagonalDampeningFactor,
+			__in const uint parameterVectorSize,
+			__in_ecount( parameterVectorSize ) const Scalar* pX0,
+			__out ParallelPCGSolverTemp* pTemp )
+		{
+			const uint pointCount = ( uint )pJacobian->GetPointCount( );
+			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
+			{
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+
+				Async::ITask* pTask = NULL;
+
+				// TODO: createTask
+				pWorker->ExecuteTask( pTask );
+			}
+		}
 
 		// Perfoms following operations of PCG Loop ( for camera part of the hessian ):
 		// 0) Ad = A * d;
@@ -197,107 +244,6 @@ namespace Bundler { namespace LinearSolver {
 				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
-		}
-	
-		void MultiplyByHessian(
-			__in const ProjectionProvider< CameraModel >* pJacobian,
-			__in const Scalar diagonalDampeningFactor,
-			__in const uint vectorSize,
-			__in_ecount( vectorSize ) const Scalar* pX,
-			__out_ecount( vectorSize ) Scalar* pY )
-		{
-			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
-			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
-			{
-				Async::HessianCameraRowMultiplicationTask< CameraModel > task;
-				task.Initialize( 512000 );
-	
-				task.InitializeWorkload( pJacobian, cameraStartIx, diagonalDampeningFactor, vectorSize, pX, pY );
-	
-				cameraStartIx += task.GetJacobian( ).GetCameraCount( );
-	
-				task.Execute( ); // TODO: execute task async
-			}
-	
-			const uint pointCount = ( uint )pJacobian->GetPointCount( );
-			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
-			{
-				Async::HessianPointRowMultiplicationTask< CameraModel > task;
-				task.Initialize( 512000 );
-	
-				task.InitializeWorkload( pJacobian, pointStartIx, diagonalDampeningFactor, vectorSize, pX, pY );
-	
-				pointStartIx += task.GetJacobian( ).GetPointCount( );
-	
-				task.Execute( ); // TODO: execute task async
-			}
-	
-			// TODO: wait for all tasks to finish
-		}
-	
-		void ApplyPreconditioner(
-			__in const ProjectionProvider< CameraModel >* pJacobian,
-			__in const uint vectorSize,
-			__in_ecount( vectorSize ) const Scalar* pX,
-			__out_ecount( vectorSize ) Scalar* pPreconditionedX )
-		{
-			HessianBlockProvider< CameraModel > hessian;
-			hessian.Initialize( pJacobian );
-	
-			m_pPreconditioner->Apply( &hessian, vectorSize, pX, pPreconditionedX );
-		}
-	
-		void GetInitialResidual(
-			__in const ProjectionProvider< CameraModel >* pJacobian,
-			__in const Scalar diagonalDampeningFactor,
-			__in const uint parameterVectorSize,
-			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__out_ecount( totalParamCount ) Scalar* pResidual )
-		{
-			MultiplyByHessian( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, pResidual );
-			JtfNegSubtractX( pJacobian, parameterVectorSize, pResidual );
-		}
-	
-	
-		// ( x = -J^Tf - x )  <=>  ( x = -( x + J^Tf ) )
-		//                         ---------------------
-		void JtfNegSubtractX(
-			__in const ProjectionProvider< CameraModel >* pJacobian,
-			__in const uint vectorSize,
-			__inout_ecount( vectorSize ) Scalar* pX )
-		{
-			const size_t cameraCount = pJacobian->GetCameraCount( );
-	
-			Scalar camTemp[2 * CameraModel::cameraParameterCount];
-			Scalar pointTemp[2 * POINT_PARAM_COUNT];
-			Scalar residualTemp[2];
-	
-			Scalar camXTemp[CameraModel::cameraParameterCount];
-			Scalar pointXTemp[POINT_PARAM_COUNT];
-	
-			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
-			{
-				const size_t projectionCount = pJacobian->GetCameraProjectionCount( cameraIx );
-				for ( size_t projI = 0; projI < projectionCount; projI++ )
-				{
-					const size_t projectionIx = pJacobian->GetCameraProjectionIndex( cameraIx, projI );
-					const size_t pointIx = pJacobian->GetPointIndex( projectionIx );
-	
-					pJacobian->GetProjectionBlock< true, true, true >( projectionIx, camTemp, pointTemp, residualTemp );
-	
-					MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp, residualTemp, camXTemp );
-					MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp, residualTemp, pointXTemp );
-	
-					Scalar* pCamXDestination = Bundler::Utils::GetCameraParamPtr< CameraModel >( cameraIx, pX );
-					Scalar* pPtXDestination = Bundler::Utils::GetPointParamPtr< CameraModel >( pointIx, cameraCount, pX );
-	
-					MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( camXTemp, pCamXDestination, pCamXDestination );
-					MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pointXTemp, pPtXDestination, pPtXDestination );
-				}
-			}
-	
-			Vector< Scalar > x( vectorSize, pX );
-			x.Negate( );
 		}
 	
 	protected:

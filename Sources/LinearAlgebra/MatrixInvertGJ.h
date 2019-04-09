@@ -85,7 +85,7 @@ namespace LinearAlgebra {
 		struct GaussJordanEliminationImpl< true >
 		{
 			template < typename T, uint n >
-			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( cpu )
+			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
 				MatrixIdentity< T >( n, InvertedA );
 
@@ -98,7 +98,7 @@ namespace LinearAlgebra {
 		struct GaussJordanEliminationImpl< false >
 		{
 			template < typename T, uint n >
-			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp, cpu )
+			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
 				MatrixIdentity< T, n >( InvertedA );
 

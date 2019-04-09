@@ -37,17 +37,16 @@ namespace Bundler { namespace CameraModels {
 			AddInitialRotation( r.Elements( ) );
 		}
 
+		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY
+		{
+			ShallowCopy( &src, 1, this );
+			return *this;
+		}
+
 		void SetCopy( __in const CameraModelAMP6DoF< maxRotations >* pSource ) __CPU_ONLY
 		{
 			*this = *pSource;
 		}
-	
-		// void MakeCopy( __out Camera* pCamera, __out CameraModel6DoF< maxRotations >* pModel ) const __CPU_ONLY
-		// {
-		// 	*pCamera = *m_pCamera;
-		// 	*pModel = *this;
-		// 	pModel->m_pCamera = pCamera;
-		// }
 	
 		void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) __CPU_ONLY
 		{
@@ -69,9 +68,9 @@ namespace Bundler { namespace CameraModels {
 		{
 			DScalar< totalParamCount > pt1[3] =
 			{
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 0 ), cameraParamCount + 0 ),
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 1 ), cameraParamCount + 1 ),
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 2 ), cameraParamCount + 2 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 0 ), cameraParameterCount + 0 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 1 ), cameraParameterCount + 1 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 2 ), cameraParameterCount + 2 ),
 			};
 	
 			DScalar< totalParamCount > pt2[3];
@@ -90,7 +89,7 @@ namespace Bundler { namespace CameraModels {
 			__out_ecount( 3 ) DScalar< totalParamCount >* pRotatedPoint ) const __GPU
 		{
 			DScalar< totalParamCount > tempPoint[3];
-			ShallowCopy( pPoint, 3, tempPoint );
+			Containers::ArrayUtils< DScalar< totalParamCount > >::Copy< 3 >( pPoint, tempPoint );
 	
 			auto pt1 = tempPoint;
 			auto pt2 = pRotatedPoint;
@@ -106,7 +105,7 @@ namespace Bundler { namespace CameraModels {
 	
 			if ( m_currentRotationCount % 2 == 0 )
 			{
-				ShallowCopy( tempPoint, 3, pRotatedPoint );
+				Containers::ArrayUtils< DScalar< totalParamCount > >::Copy< 3 >( tempPoint, pRotatedPoint );
 			}
 		}
 	

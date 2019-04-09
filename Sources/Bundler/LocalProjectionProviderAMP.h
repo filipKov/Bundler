@@ -81,21 +81,18 @@ namespace Bundler {
 
 			if ( getCameraBlock )
 			{
-				// _ASSERT_EXPR( pCameraBlock != NULL, "Camera block must not be null" );
 				ExtractCameraParameters( residuals + 0, pCameraBlock + 0 );
 				ExtractCameraParameters( residuals + 1, pCameraBlock + CameraModel::cameraParameterCount );
 			}
 
 			if ( getPointBlock )
 			{
-				// _ASSERT_EXPR( pPointBlock != NULL, "Point block must not be null" );
 				ExtractPointParameters( residuals + 0, pPointBlock + 0 );
 				ExtractPointParameters( residuals + 1, pPointBlock + POINT_PARAM_COUNT );
 			}
 
 			if ( getResiduals )
 			{
-				// _ASSERT_EXPR( pResiduals != NULL, "Residual block must not be null" );
 				ELEMENT( pResiduals, 0 ) = ELEMENT( residuals, 0 ).GetFx( );
 				ELEMENT( pResiduals, 1 ) = ELEMENT( residuals, 1 ).GetFx( );
 			}

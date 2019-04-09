@@ -29,9 +29,6 @@
     <ClInclude Include="CameraModel6DoF.h">
       <Filter>CameraModels</Filter>
     </ClInclude>
-    <ClInclude Include="PCGSolver.h">
-      <Filter>LinearSolver</Filter>
-    </ClInclude>
     <ClInclude Include="HessianBlockProvider.h">
       <Filter>JacobianAndHessian</Filter>
     </ClInclude>
@@ -49,13 +46,13 @@
     </ClInclude>
     <ClInclude Include="BundlerUtils.h" />
     <ClInclude Include="Preconditioner.h">
-      <Filter>LinearSolver\Preconditioning</Filter>
+      <Filter>LinearSolver\Sequential\Preconditioning</Filter>
     </ClInclude>
     <ClInclude Include="JacobiPreconditioner.h">
-      <Filter>LinearSolver\Preconditioning</Filter>
+      <Filter>LinearSolver\Sequential\Preconditioning</Filter>
     </ClInclude>
     <ClInclude Include="CachedJacobiPreconditioner.h">
-      <Filter>LinearSolver\Preconditioning</Filter>
+      <Filter>LinearSolver\Sequential\Preconditioning</Filter>
     </ClInclude>
     <ClInclude Include="TextStreamReader.h">
       <Filter>Import</Filter>
@@ -67,13 +64,94 @@
       <Filter>Import\Workers</Filter>
     </ClInclude>
     <ClInclude Include="BlockJacobiPreconditioner.h">
-      <Filter>LinearSolver\Preconditioning</Filter>
+      <Filter>LinearSolver\Sequential\Preconditioning</Filter>
     </ClInclude>
     <ClInclude Include="BundleOptimizer.h">
       <Filter>Optimization</Filter>
     </ClInclude>
     <ClInclude Include="SceneGenerator.h">
       <Filter>SceneGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="ITask.h">
+      <Filter>Async\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThread.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThreadDefs.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThreadGPU.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerPool.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="AMPUtils.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="IWorkerThreadCallback.h">
+      <Filter>Async\Workers</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianBlockProviderCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianMultiplicationEngineCPU.h">
+      <Filter>JacobianAndHessian\Local\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGSolver.h">
+      <Filter>LinearSolver\Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="PCGSolver.h">
+      <Filter>LinearSolver\Sequential</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianPointRowMultiplicationTask.h">
+      <Filter>LinearSolver\Parallel\Tasks\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="HessianCameraRowMultiplicationTask.h">
+      <Filter>LinearSolver\Parallel\Tasks\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPcgTaskFactory.h">
+      <Filter>LinearSolver\Parallel\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGDefs.h">
+      <Filter>LinearSolver\Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGLoopTasksCPU.h">
+      <Filter>LinearSolver\Parallel\Tasks\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalBlockJacobiPreconditioner.h">
+      <Filter>LinearSolver\Parallel\Preconditioning</Filter>
+    </ClInclude>
+    <ClInclude Include="InterlockedVariable.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="ITaskSizeEstimator.h">
+      <Filter>LinearSolver\Parallel\Tasks\SizeEstimators</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianBlockProviderAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHessianMultiplicationEngineAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModelAMP6DoF.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGInitTasksCPU.h">
+      <Filter>LinearSolver\Parallel\Tasks\CPU</Filter>
+    </ClInclude>
+    <ClInclude Include="IProjectionProviderData.h">
+      <Filter>JacobianAndHessian</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalProjectionProviderDataAMP.h">
+      <Filter>JacobianAndHessian\Local\AMP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +174,18 @@
     <ClCompile Include="SceneGenerator.cpp">
       <Filter>SceneGenerator</Filter>
     </ClCompile>
+    <ClCompile Include="WorkerPool.cpp">
+      <Filter>Async\Workers</Filter>
+    </ClCompile>
+    <ClCompile Include="AMPUtils.cpp">
+      <Filter>Async</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThread.cpp">
+      <Filter>Async\Workers</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThreadGPU.cpp">
+      <Filter>Async\Workers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Import">
@@ -116,9 +206,6 @@
     <Filter Include="LinearSolver">
       <UniqueIdentifier>{b41c4c52-00db-4ade-ab71-03dcf24253f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LinearSolver\Preconditioning">
-      <UniqueIdentifier>{7aae04f3-8a23-4ee9-b5dd-c58a1f6cbf96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Import\Workers">
       <UniqueIdentifier>{03b00418-b1d2-439a-99d9-631912a93353}</UniqueIdentifier>
     </Filter>
@@ -127,6 +214,48 @@
     </Filter>
     <Filter Include="SceneGenerator">
       <UniqueIdentifier>{e405f382-66af-404e-b100-4e0f76a81b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async">
+      <UniqueIdentifier>{4428c055-e0ce-4875-b22f-1aaa4aee19b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async\Tasks">
+      <UniqueIdentifier>{b8deb9d5-1086-4b98-a864-d327b29d002b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local">
+      <UniqueIdentifier>{e68b2a83-5508-4650-b3fb-45357d1d2cf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async\Workers">
+      <UniqueIdentifier>{e15da832-f775-4691-a995-aafa71d2a4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local\AMP">
+      <UniqueIdentifier>{747b23f9-2b3c-4961-a4e8-5ea1f39468e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JacobianAndHessian\Local\CPU">
+      <UniqueIdentifier>{cc117dcb-a63a-46e9-92bc-38b8bd3b8da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel">
+      <UniqueIdentifier>{2239dd45-bfd3-4776-828e-367ac78700e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Sequential">
+      <UniqueIdentifier>{912a944d-7317-44e8-a895-b5e13af941dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Sequential\Preconditioning">
+      <UniqueIdentifier>{7aae04f3-8a23-4ee9-b5dd-c58a1f6cbf96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Tasks">
+      <UniqueIdentifier>{139fe80f-3d14-4641-bd4a-98cdd5d78eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Tasks\CPU">
+      <UniqueIdentifier>{fdec0c6b-f11c-43f7-a241-795470487223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Tasks\AMP">
+      <UniqueIdentifier>{a6b3f49d-97ff-43ea-abed-9a11c44c25fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Preconditioning">
+      <UniqueIdentifier>{4751b948-b925-4637-8124-abdda94eaa46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\Parallel\Tasks\SizeEstimators">
+      <UniqueIdentifier>{eabf4c59-fb4b-45c6-93d8-3122184b4a29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

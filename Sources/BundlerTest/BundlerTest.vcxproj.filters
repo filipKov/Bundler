@@ -33,6 +33,9 @@
     <ClCompile Include="HessianTest.cpp">
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
+    <ClCompile Include="LocalHessianTest.cpp">
+      <Filter>JacobianAndHessian</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">

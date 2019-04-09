@@ -20,6 +20,13 @@ namespace Bundler { namespace CameraModels {
 			AddInitialRotation( pCamera->r.Elements() );
 		}
 
+		void MakeCopy( __out Camera* pCamera, __out CameraModel6DoF< maxRotations >* pModel ) const
+		{
+			*pCamera = *m_pCamera;
+			*pModel = *this;
+			pModel->m_pCamera = pCamera;
+		}
+
 		void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) override
 		{
 			AddRotation< false >( ELEMENT( pDeltaParams, rotationParamStartIx + 0 ), pDeltaParams + rotationParamStartIx + 1 );

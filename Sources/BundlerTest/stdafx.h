@@ -7,6 +7,8 @@
 
 #include <Windows.h>
 #include <ctime>
+#include <thread>
+#include <atomic>
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 

@@ -3,7 +3,7 @@
 namespace Bundler {
 
 	template < class CameraModel >
-	class ProjectionProvider
+	class ProjectionProvider : public Internal::IProjectionProviderData< CameraModel >
 	{
 	public:
 
@@ -106,6 +106,21 @@ namespace Bundler {
 			}
 		}
 
+		const CameraModel* GetCamera( __in const uint cameraIx ) const override
+		{
+			return m_pCameras + cameraIx;
+		}
+
+		const Vector3* GetPoint( __in const uint pointIx ) const override
+		{
+			return m_pPoints + pointIx;
+		}
+
+		const Projection* GetProjection( __in const uint projectionIx ) const override
+		{
+			return m_pProjections + projectionIx;
+		}
+
 	protected:
 
 		void GetProjection(
@@ -151,7 +166,6 @@ namespace Bundler {
 		const Projection* m_pProjections;
 
 		Structure::BundleStructureMapping m_mapping;
-
 	};
 
 }

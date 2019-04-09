@@ -48,7 +48,7 @@ namespace Bundler { namespace Structure {
 	protected:
 
 		Containers::Buffer< Containers::PagedVector< size_t, 13 > > m_cameraToProjectionMapping;
-		Containers::Buffer< Containers::PagedVector< size_t, 5 > > m_pointToProjectionMapping;
+		Containers::Buffer< Containers::PagedVector< size_t, 3 > > m_pointToProjectionMapping;
 
 	};
 

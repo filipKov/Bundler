@@ -28,6 +28,12 @@ namespace Utils { namespace Containers {
 			Clear();
 		};
 
+		Buffer& operator=( __in const Buffer< T >& source )
+		{
+			SetCopy( source );
+			return *this;
+		}
+
 		// Capacity
 
 		size_t Length() const {

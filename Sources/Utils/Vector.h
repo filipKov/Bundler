@@ -25,6 +25,12 @@ namespace Utils { namespace Containers {
 		~Vector() {
 			Clear();
 		}
+
+		Vector& operator= ( __in const Vector<T>& other )
+		{
+			SetCopy( other );
+			return *this;
+		}
 		
 		// Capacity
 

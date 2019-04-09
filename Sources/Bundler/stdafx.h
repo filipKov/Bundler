@@ -6,6 +6,10 @@
 #pragma once
 
 #include <Windows.h>
+#include <thread>
+#include <atomic>
+#include <amp.h>
+using namespace Concurrency;
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 

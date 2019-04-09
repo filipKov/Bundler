@@ -110,13 +110,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AMPUtils.h" />
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BundleImporter.h" />
@@ -137,12 +133,33 @@
     <ClInclude Include="CachedJacobiPreconditioner.h" />
     <ClInclude Include="CameraModel3DoF.h" />
     <ClInclude Include="CameraModel6DoF.h" />
+    <ClInclude Include="CameraModelAMP6DoF.h" />
+    <ClInclude Include="IProjectionProviderData.h" />
+    <ClInclude Include="ITaskSizeEstimator.h" />
+    <ClInclude Include="InterlockedVariable.h" />
     <ClInclude Include="HessianBlockProvider.h" />
+    <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
+    <ClInclude Include="HessianPointRowMultiplicationTask.h" />
     <ClInclude Include="IBundleImportWorker.h" />
+    <ClInclude Include="ITask.h" />
+    <ClInclude Include="IWorkerThreadCallback.h" />
     <ClInclude Include="JacobiPreconditioner.h" />
+    <ClInclude Include="LocalBlockJacobiPreconditioner.h" />
+    <ClInclude Include="LocalHessianBlockProviderAMP.h" />
+    <ClInclude Include="LocalHessianBlockProviderCPU.h" />
+    <ClInclude Include="LocalHessianMultiplicationEngineAMP.h" />
+    <ClInclude Include="LocalHessianMultiplicationEngineCPU.h" />
+    <ClInclude Include="LocalProjectionProviderAMP.h" />
+    <ClInclude Include="LocalProjectionProviderCPU.h" />
+    <ClInclude Include="LocalProjectionProviderDataAMP.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
+    <ClInclude Include="ParallelPCGDefs.h" />
+    <ClInclude Include="ParallelPCGInitTasksCPU.h" />
+    <ClInclude Include="ParallelPCGLoopTasksCPU.h" />
+    <ClInclude Include="ParallelPCGSolver.h" />
+    <ClInclude Include="ParallelPcgTaskFactory.h" />
     <ClInclude Include="PCGSolver.h" />
     <ClInclude Include="PCGStructs.h" />
     <ClInclude Include="Preconditioner.h" />
@@ -153,8 +170,13 @@
     <ClInclude Include="SnavelyBundleImportWorker.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextStreamReader.h" />
+    <ClInclude Include="WorkerPool.h" />
+    <ClInclude Include="WorkerThread.h" />
+    <ClInclude Include="WorkerThreadDefs.h" />
+    <ClInclude Include="WorkerThreadGPU.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AMPUtils.cpp" />
     <ClCompile Include="BundleImporter.cpp" />
     <ClCompile Include="Bundler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -173,6 +195,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WorkerPool.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
+    <ClCompile Include="WorkerThreadGPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LinearAlgebra\LinearAlgebra.vcxproj">

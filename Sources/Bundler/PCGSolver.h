@@ -52,10 +52,10 @@ namespace Bundler { namespace LinearSolver {
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const uint parameterVectorSize,
-			__inout_ecount( parameterVectorSize ) Scalar* pX,
+			__in_ecount( parameterVectorSize ) const Scalar* pX0,
 			__out PCGSolverTemp* pTemp ) const
 		{
-			GetInitialResidual( pJacobian, pHessian, parameterVectorSize, pX, pTemp->r.Elements() );
+			GetInitialResidual( pJacobian, pHessian, parameterVectorSize, pX0, pTemp->r.Elements() );
 			ApplyPreconditioner( pJacobian, parameterVectorSize, pTemp->r.Elements(), pTemp->d.Elements() );
 			pTemp->errSq = pTemp->r.Dot( pTemp->d );
 		}
@@ -134,10 +134,10 @@ namespace Bundler { namespace LinearSolver {
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const HessianMultiplicationEngine< CameraModel >* pHessian,
 			__in const uint parameterVectorSize,
-			__inout_ecount( parameterVectorSize ) Scalar* pX,
+			__in_ecount( parameterVectorSize ) const Scalar* pX0,
 			__out_ecount( totalParamCount ) Scalar* pResidual ) const
 		{
-			MultiplyByHessian( pHessian, parameterVectorSize, pX, pResidual );
+			MultiplyByHessian( pHessian, parameterVectorSize, pX0, pResidual );
 			JtfNegSubtractX( pJacobian, parameterVectorSize, pResidual );
 		}
 		

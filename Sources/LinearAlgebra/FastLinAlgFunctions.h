@@ -224,6 +224,12 @@ namespace LinearAlgebra {
 			{
 				return MatrixIterator< T, m, n, row, col - 1 >::FrobeniusNorm( A ) + ( ELEMENT( A, row * n + col ) * ELEMENT( A, row * n + col ) );
 			}
+
+			static __forceinline void Negate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B )
+			{
+				MatrixIterator< T, m, n, row, col - 1 >::Negate( A, B );
+				ELEMENT( B, row * n + col ) = -ELEMENT( A, row * n + col );
+			}
 		};
 
 		template < typename T, size_t m, size_t n, size_t row >
@@ -269,6 +275,12 @@ namespace LinearAlgebra {
 			{
 				return MatrixIterator< T, m, n, row - 1, n - 1 >::FrobeniusNorm( A ) + ( ELEMENT( A, row * n ) * ELEMENT( A, row * n ) );
 			}
+
+			static __forceinline void Negate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B )
+			{
+				MatrixIterator< T, m, n, row - 1, n - 1 >::Negate( A, B );
+				ELEMENT( B, row * n ) = -ELEMENT( A, row * n );
+			}
 		};
 
 		template < typename T, size_t m, size_t n >
@@ -307,6 +319,11 @@ namespace LinearAlgebra {
 			static __forceinline T FrobeniusNorm( __in_ecount( m * n ) const T* A )
 			{
 				return ELEMENT( A, 0 ) * ELEMENT( A, 0 );
+			}
+
+			static __forceinline void Negate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B )
+			{
+				ELEMENT( B, 0 ) = -ELEMENT( A, 0 );
 			}
 		};
 	}
@@ -470,6 +487,12 @@ namespace LinearAlgebra {
 	__forceinline T MatrixFrobeniusNorm( __in_ecount( m * n ) const T* A )
 	{
 		return sqrt( Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::FrobeniusNorm( A ) );
+	}
+
+	template < typename T, size_t m, size_t n >
+	__forceinline void MatrixNegate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B )
+	{
+		Internal::MatrixIterator< T, m, n, m - 1, n - 1 >::Negate( A, B );
 	}
 
 	template < typename T, uint n >

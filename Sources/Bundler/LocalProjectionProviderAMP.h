@@ -68,6 +68,22 @@ namespace Bundler {
 			return m_globalMappingPoints[localPointIx];
 		}
 
+		__forceinline uint GetMaxProjectionCount( ) const __GPU
+		{
+			Structure::LocalBundleStructureMapping* pMapping = m_projectionMapping.data( );
+
+			uint maxCount = pMapping->projectionCount;
+			for ( int i = 1; i < m_projectionMapping.get_extent( )[0]; i++ )
+			{
+				pMapping++;
+				if ( pMapping->projectionCount > maxCount )
+				{
+					maxCount = pMapping->projectionCount;
+				}
+			}
+
+			return maxCount;
+		}
 
 		template < bool getCameraBlock, bool getPointBlock, bool getResiduals >
 		__forceinline void GetProjectionBlock(

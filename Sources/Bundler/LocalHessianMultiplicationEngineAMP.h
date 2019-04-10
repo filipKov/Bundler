@@ -31,7 +31,7 @@ namespace Bundler {
 			MultiplyByCameraBlock( pJacobian, pHessian, localCameraIx, pCameraX, pY );
 	
 			Scalar pointBlockAccumulator[cameraParamCount];
-			MultiplyByCameraPointBlocksCam( pJacobian, pHessian localCameraIx, totalPointParameterCount, pPointX, pointBlockAccumulator );
+			MultiplyByCameraPointBlocksCam( pJacobian, pHessian, localCameraIx, totalPointParameterCount, pPointX, pointBlockAccumulator );
 	
 			MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( pY, pointBlockAccumulator, pY );
 		}
@@ -50,10 +50,10 @@ namespace Bundler {
 	
 			const uint globalPointIndex = pJacobian->GetGlobalPointIndex( localPointIx );
 			pPointX = pPointX + globalPointIndex * POINT_PARAM_COUNT;
-			MultiplyByPointBlock( localPointIx, pPointX, pY );
+			MultiplyByPointBlock( pJacobian, pHessian, localPointIx, pPointX, pY );
 	
 			Scalar cameraBlockAccumulator[POINT_PARAM_COUNT];
-			MultiplyByCameraPointBlocksPt( localPointIx, totalCameraParameterCount, pCameraX, cameraBlockAccumulator );
+			MultiplyByCameraPointBlocksPt( pJacobian, pHessian, localPointIx, totalCameraParameterCount, pCameraX, cameraBlockAccumulator );
 	
 			MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pY, cameraBlockAccumulator, pY );
 		}
@@ -87,7 +87,7 @@ namespace Bundler {
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetCameraProjectionCount( localCameraIx );
 	
-			ByteFill< Scalar >( 0, cameraParamCount, pAccumulator );
+			Containers::ArrayUtils< Scalar >::Fill< cameraParamCount >( Scalar( 0 ), pAccumulator );
 			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
 			Scalar tempAccumulator[cameraParamCount];
 	
@@ -129,7 +129,7 @@ namespace Bundler {
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetPointProjectionCount( localPointIx );
 	
-			ByteFill< Scalar >( 0, POINT_PARAM_COUNT, pAccumulator );
+			Containers::ArrayUtils< Scalar >::Fill< POINT_PARAM_COUNT >( Scalar( 0 ), pAccumulator );
 			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
 			Scalar tempAccumulator[POINT_PARAM_COUNT];
 	

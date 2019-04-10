@@ -7,8 +7,8 @@ namespace Bundler {
 	{
 	public:
 	
-		LocalHessianBlockProviderAMP( __in const int tempElementCount, __in const int tempElementSize ) __CPU_ONLY 
-			: m_temp( extent<2>( tempElementCount, tempElementSize ) )
+		LocalHessianBlockProviderAMP( __in const int tempElementCount, __in const int tempElementProjections, __in const int tempElementSize ) __CPU_ONLY 
+			: m_temp( extent<2>( tempElementCount, 2 * tempElementProjections * tempElementSize ) )
 		{
 			m_temp.discard_data( );
 		}

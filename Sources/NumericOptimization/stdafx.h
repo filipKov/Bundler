@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <memory>
 #include <amp.h>
+#include <amp_math.h>
 #include <cmath>
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers

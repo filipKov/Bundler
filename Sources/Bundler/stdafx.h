@@ -10,6 +10,7 @@
 #include <atomic>
 #include <cmath>
 #include <amp.h>
+#include <amp_math.h>
 using namespace Concurrency;
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers

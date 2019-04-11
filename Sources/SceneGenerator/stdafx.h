@@ -14,6 +14,9 @@
 
 #include <stdint.h>
 
+#include <amp.h>
+#include <amp_math.h>
+
 #include "../Utils/UtilsLib.h"
 using namespace Utils;
 

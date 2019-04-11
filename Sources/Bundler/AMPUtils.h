@@ -85,4 +85,15 @@ namespace Bundler { namespace Async {
 		}
 	}
 
+	template < typename T >
+	T AccumulateBuffer( __in const uint count, __in const array< T, 1 >& buffer )
+	{
+		Containers::Buffer< T > temp;
+		temp.Allocate( count );
+		
+		copy( buffer, temp.Data( ) );
+
+		return Containers::ArrayUtils< T >::Sum( count, temp.Data( ) );
+	}
+
 } }

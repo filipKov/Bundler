@@ -34,7 +34,7 @@ namespace LinearAlgebra {
 					const uint maxRow = Pivoting< diagIx, iter - 1 >::FindPivot( A );
 		
 					constexpr const uint rowIx = n - iter;
-					if ( concurrency::precise_math::abs( ELEMENT( A, rowIx * n + diagIx ) ) > concurrency::precise_math::abs( ELEMENT( A, maxRow * n + diagIx ) ) )
+					if ( concurrency::precise_math::fabs( ELEMENT( A, rowIx * n + diagIx ) ) > concurrency::precise_math::fabs( ELEMENT( A, maxRow * n + diagIx ) ) )
 					{
 						return rowIx;
 					}

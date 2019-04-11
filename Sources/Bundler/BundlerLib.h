@@ -81,6 +81,8 @@
 
 #include "ParallelPCGInitTasksCPU.h"
 #include "ParallelPCGLoopTasksCPU.h"
+#include "ParallelPCGInitTasksAMP.h"
+#include "ParallelPCGLoopTasksAMP.h"
 
 #include "ParallelPcgTaskFactory.h"
 

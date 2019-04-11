@@ -54,7 +54,7 @@ namespace LinearAlgebra {
 		__in const Vector<Scalar, dimension>& vLeft,
 		__in const Vector<Scalar, dimension>& vRight ) restrict( amp )
 	{
-		Vector<Scalar, dimension> res( vLeft );
+		Vector<Scalar, dimension> res( static_cast< const Matrix< Scalar, dimension, 1 >& >( vLeft ) );
 		res += vRight;
 		return res;
 	};

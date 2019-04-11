@@ -156,7 +156,9 @@
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ParallelPCGDefs.h" />
+    <ClInclude Include="ParallelPCGInitTasksAMP.h" />
     <ClInclude Include="ParallelPCGInitTasksCPU.h" />
+    <ClInclude Include="ParallelPCGLoopTasksAMP.h" />
     <ClInclude Include="ParallelPCGLoopTasksCPU.h" />
     <ClInclude Include="ParallelPCGSolver.h" />
     <ClInclude Include="ParallelPcgTaskFactory.h" />

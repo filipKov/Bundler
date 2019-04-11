@@ -57,6 +57,17 @@ namespace Utils { namespace Containers {
 				pDst++;
 			}
 		}
+
+		static __forceinline T Sum( __in const uint count, __in_ecount( count ) const T* pValues )
+		{
+			T sum = T( 0 );
+			for ( uint i = 0; i < count; i++ )
+			{
+				sum += *pValues;
+				pValues++;
+			}
+			return sum;
+		}
 	};
 
 } }

@@ -39,14 +39,36 @@ namespace Bundler { namespace Async {
 		
 		void operator+= ( __in const T value ) noexcept
 		{
-			fetch_add( value, std::memory_order_relaxed );
+			AtomicOperation<>( value, Add );
 		}
 
 		void operator-= ( __in const T value ) noexcept
 		{
-			fetch_sub( value, std::memory_order_relaxed );
+			AtomicOperation<>( value, Sub );
 		}
 
+	protected:
+
+		template < typename BinaryOp >
+		void AtomicOperation( const T value, BinaryOp op ) noexcept
+		{
+			T old = GetValue( );
+			T desired = op( old, value );
+			while ( !compare_exchange_weak( old, desired ) )
+			{
+				desired = op( old, value );
+			}
+		}
+
+		static T Add( __in const T v1, __in const T v2 ) noexcept
+		{
+			return v1 + v2;
+		}
+
+		static T Sub( __in const T v1, __in const T v2 ) noexcept
+		{
+			return v1 - v2;
+		}
 	};
 
 } }

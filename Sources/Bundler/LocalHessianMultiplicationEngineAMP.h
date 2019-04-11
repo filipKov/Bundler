@@ -14,7 +14,7 @@ namespace Bundler {
 	
 		void MultiplyCameraRow(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
@@ -38,7 +38,7 @@ namespace Bundler {
 	
 		void MultiplyPointRow(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localPointIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
@@ -62,7 +62,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in_ecount( CameraModel::cameraParameterCount ) const Scalar* pX,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY ) const __GPU
@@ -78,7 +78,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraPointBlocksCam(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in const uint totalPointParameterCount,
 			__in_ecount( totalPointParameterCount ) const Scalar* pPointX,
@@ -106,7 +106,7 @@ namespace Bundler {
 	
 		void MultiplyByPointBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint pointIx,
 			__in_ecount( POINT_PARAM_COUNT ) const Scalar* pX,
 			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY ) const __GPU
@@ -120,7 +120,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraPointBlocksPt(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localPointIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,

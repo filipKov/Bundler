@@ -59,7 +59,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			parallel_for_each( *m_pAccelerator, extent< 1 >( cameraCount ),
 				[ localJacobian, localHessianProvider, localHessian, totalCameraParams, totalPointParams, &r, &x, &errParts ]
-			( index< 1 > ix ) restrict( amp )
+				( index< 1 > ix ) restrict( amp )
 			{
 				constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
@@ -74,8 +74,21 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			} );
 
 			parallel_for_each( *m_pAccelerator, extent< 1 >( cameraCount ),
+				[ localJacobian, &r ]
+				( index< 1 > ix ) restrict( amp )
+			{
+				constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
+
+				const uint localCameraIx = ix[0];
+
+				Scalar* pR = r.data( ) + localCameraIx * cameraParamCount;
+
+				JtfNegSubtractX( localCameraIx, &localJacobian, pR );
+			} );
+
+			parallel_for_each( *m_pAccelerator, extent< 1 >( cameraCount ),
 				[ localJacobian, localHessianProvider, &r, &d, &errParts ]
-			( index< 1 > ix ) restrict( amp )
+				( index< 1 > ix ) restrict( amp )
 			{
 				constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
@@ -83,8 +96,6 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				Scalar* pR = r.data( ) + localCameraIx * cameraParamCount;
 				Scalar* pD = d.data( ) + localCameraIx * cameraParamCount;
-
-				JtfNegSubtractX( localCameraIx, &localJacobian, pR );
 
 				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToCamera( &localJacobian, &localHessianProvider, localCameraIx, pR, pD );
 
@@ -121,7 +132,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				
 				pJacobian->GetProjectionBlock< true, false, true >( projectionIx, camTemp, NULL, residualTemp );
 
-				MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp, residualTemp, camXTemp );
+				// MatrixMultiplyAtB< Scalar, 2, CameraModel::cameraParameterCount, 1 >( camTemp, residualTemp, camXTemp );
+				MatrixMultiplyAtB< Scalar >( 2, CameraModel::cameraParameterCount, 1, camTemp, residualTemp, camXTemp );
 				MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( camXTemp, pDst, pDst );
 			}
 
@@ -219,6 +231,20 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			} );
 
 			parallel_for_each( *m_pAccelerator, extent< 1 >( pointCount ),
+				[ localJacobian, &r ]
+				( index< 1 > ix ) restrict( amp )
+			{
+				constexpr const uint pointParamCount = POINT_PARAM_COUNT;
+
+				const uint localPointIx = ix[0];
+
+				Scalar* pR = r.data( ) + localPointIx * pointParamCount;
+
+				JtfNegSubtractX( localPointIx, &localJacobian, pR );
+			} );
+
+
+			parallel_for_each( *m_pAccelerator, extent< 1 >( pointCount ),
 				[ localJacobian, localHessianProvider, localHessian, &r, &d, &errParts ]
 			( index< 1 > ix ) restrict( amp )
 			{
@@ -228,8 +254,6 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				Scalar* pR = r.data( ) + localPointIx * pointParamCount;
 				Scalar* pD = d.data( ) + localPointIx * pointParamCount;
-
-				JtfNegSubtractX( localPointIx, &localJacobian, pR );
 
 				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToPoint( &localJacobian, &localHessianProvider, localPointIx, pR, pD );
 

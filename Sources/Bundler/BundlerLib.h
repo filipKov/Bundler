@@ -82,7 +82,7 @@
 // #include "ParallelPCGInitTasksAMP.h" // cannot get it to compile...
 #include "ParallelPCGLoopTasksAMP.h"
 
-#include "ParallelPcgTaskFactory.h"
+#include "ParallelPCGTaskFactory.h"
 
 #include "ParallelPCGSolver.h"
 

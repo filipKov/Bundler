@@ -108,9 +108,6 @@
     <ClInclude Include="PCGSolver.h">
       <Filter>LinearSolver\Sequential</Filter>
     </ClInclude>
-    <ClInclude Include="ParallelPcgTaskFactory.h">
-      <Filter>LinearSolver\Parallel\Tasks</Filter>
-    </ClInclude>
     <ClInclude Include="ParallelPCGDefs.h">
       <Filter>LinearSolver\Parallel</Filter>
     </ClInclude>
@@ -152,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="ParallelPCGLoopTasksAMP.h">
       <Filter>LinearSolver\Parallel\Tasks\AMP</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelPCGTaskFactory.h">
+      <Filter>LinearSolver\Parallel\Tasks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

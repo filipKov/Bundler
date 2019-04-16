@@ -138,9 +138,7 @@
     <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />
     <ClInclude Include="HessianBlockProvider.h" />
-    <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
-    <ClInclude Include="HessianPointRowMultiplicationTask.h" />
     <ClInclude Include="IBundleImportWorker.h" />
     <ClInclude Include="ITask.h" />
     <ClInclude Include="IWorkerThreadCallback.h" />

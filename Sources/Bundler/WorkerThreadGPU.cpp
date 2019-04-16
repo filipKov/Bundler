@@ -12,7 +12,7 @@ namespace Bundler { namespace Async {
 		m_info.type = WorkerThreadType::GPU;
 
 		m_attachedGpuInfo.accelerator = gpu;
-		m_attachedGpuInfo.memoryKB = gpu.get_dedicated_memory( );
+		m_attachedGpuInfo.memoryKB = int64( gpu.get_dedicated_memory( ) );
 	}
 
 	const GpuInfo* WorkerThreadGPU::GetGpuInfo( ) const

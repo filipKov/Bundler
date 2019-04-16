@@ -78,6 +78,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	
 			Scalar partialDot = Async::AccumulateBuffer( cameraCount, partialDots );
 			m_pDotOut->operator+=( partialDot );
+
+			delete pJacobianData;
 		}
 	
 	protected:
@@ -168,6 +170,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			
 			Scalar partialDot = Async::AccumulateBuffer( pointCount, partialDots );
 			m_pDotOut->operator+=( partialDot );
+
+			delete pJacobianData;
 		}
 
 	protected:
@@ -270,6 +274,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			const Scalar errSqNewPart = Async::AccumulateBuffer( cameraCount, newErrSqParts );
 			m_pErrSqNew->operator+=( errSqNewPart );
+
+			delete pJacobianData;
 		}
 
 	protected:
@@ -379,6 +385,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			const Scalar errSqNewPart = Async::AccumulateBuffer( pointCount, newErrSqParts );
 			m_pErrSqNew->operator+=( errSqNewPart );
+
+			delete pJacobianData;
 		}
 
 	protected:

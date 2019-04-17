@@ -12,12 +12,6 @@
     <ClCompile Include="RodriguesRotationTest.cpp">
       <Filter>CameraModels</Filter>
     </ClCompile>
-    <ClCompile Include="JacobiPreconditionerTest.cpp">
-      <Filter>Preconditioning</Filter>
-    </ClCompile>
-    <ClCompile Include="unittest1.cpp">
-      <Filter>Preconditioning</Filter>
-    </ClCompile>
     <ClCompile Include="MatrixBenchmark.cpp">
       <Filter>Benchmarks</Filter>
     </ClCompile>
@@ -34,6 +28,9 @@
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
     <ClCompile Include="LocalHessianTest.cpp">
+      <Filter>JacobianAndHessian</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalHessianAmpTest.cpp">
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
   </ItemGroup>

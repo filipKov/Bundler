@@ -138,9 +138,7 @@
     <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />
     <ClInclude Include="HessianBlockProvider.h" />
-    <ClInclude Include="HessianCameraRowMultiplicationTask.h" />
     <ClInclude Include="HessianMultiplicationEngine.h" />
-    <ClInclude Include="HessianPointRowMultiplicationTask.h" />
     <ClInclude Include="IBundleImportWorker.h" />
     <ClInclude Include="ITask.h" />
     <ClInclude Include="IWorkerThreadCallback.h" />
@@ -156,10 +154,12 @@
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ParallelPCGDefs.h" />
+    <ClInclude Include="ParallelPCGInitTasksAMP.h" />
     <ClInclude Include="ParallelPCGInitTasksCPU.h" />
+    <ClInclude Include="ParallelPCGLoopTasksAMP.h" />
     <ClInclude Include="ParallelPCGLoopTasksCPU.h" />
     <ClInclude Include="ParallelPCGSolver.h" />
-    <ClInclude Include="ParallelPcgTaskFactory.h" />
+    <ClInclude Include="ParallelPCGTaskFactory.h" />
     <ClInclude Include="PCGSolver.h" />
     <ClInclude Include="PCGStructs.h" />
     <ClInclude Include="Preconditioner.h" />

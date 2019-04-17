@@ -52,8 +52,6 @@
 #include "InterlockedVariable.h"
 
 #include "ITask.h"
-#include "HessianCameraRowMultiplicationTask.h"
-#include "HessianPointRowMultiplicationTask.h"
 
 #include "IWorkerThreadCallback.h"
 #include "WorkerThreadDefs.h"
@@ -81,8 +79,10 @@
 
 #include "ParallelPCGInitTasksCPU.h"
 #include "ParallelPCGLoopTasksCPU.h"
+// #include "ParallelPCGInitTasksAMP.h" // cannot get it to compile...
+#include "ParallelPCGLoopTasksAMP.h"
 
-#include "ParallelPcgTaskFactory.h"
+#include "ParallelPCGTaskFactory.h"
 
 #include "ParallelPCGSolver.h"
 

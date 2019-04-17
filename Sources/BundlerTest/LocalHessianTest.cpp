@@ -14,7 +14,8 @@ namespace BundlerTest {
 	{
 		void GetTestBundle( __out Bundle* pBundle, __out_opt BundleAdditionalPayload* pMetadata )
 		{
-			HRESULT hr = Import::BundleImporter::Import( "Resources/dragon.out", pBundle, pMetadata );
+			// HRESULT hr = Import::BundleImporter::Import( "Resources/gargoyle.out", pBundle, pMetadata );
+			HRESULT hr = E_FAIL;
 			if ( FAILED( hr ) )
 			{
 				std::istringstream bundleStream( cubesMaskedBundle );

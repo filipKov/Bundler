@@ -5,7 +5,7 @@ namespace Bundler { namespace Async {
 	struct GpuInfo
 	{
 		accelerator accelerator;
-		size_t memoryKB;
+		int64 memoryKB;
 	};
 
 	class WorkerThreadGPU : public WorkerThread

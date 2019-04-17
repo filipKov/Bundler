@@ -35,7 +35,7 @@ namespace Bundler { namespace LinearSolver {
 			__out_opt PCGSolverStatistics* pStatistics )
 		{
 			ParallelPCGSolverTemp temp( parameterVectorSize );
-	
+
 			InitSolve( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, &temp );
 			uint finalIter = SolveLoop( pJacobian, diagonalDampeningFactor, parameterVectorSize, pX, &temp );
 	
@@ -117,14 +117,21 @@ namespace Bundler { namespace LinearSolver {
 			__in_ecount( parameterVectorSize ) const Scalar* pX0,
 			__out ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGInitSolveInitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.diagonalDampeningFactor = diagonalDampeningFactor;
+			initData.parameterVectorSize = parameterVectorSize;
+			initData.pParameterVector = pX0;
+			initData.pTemp = pTemp;
+
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-
-				// TODO: createTask
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolveCamerasTask( pWorker, &initData, cameraStartIx, &pTask );
+				
 				pWorker->ExecuteTask( pTask );
 			}
 		}
@@ -142,14 +149,21 @@ namespace Bundler { namespace LinearSolver {
 			__in_ecount( parameterVectorSize ) const Scalar* pX0,
 			__out ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGInitSolveInitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.diagonalDampeningFactor = diagonalDampeningFactor;
+			initData.parameterVectorSize = parameterVectorSize;
+			initData.pParameterVector = pX0;
+			initData.pTemp = pTemp;
+
 			const uint pointCount = ( uint )pJacobian->GetPointCount( );
 			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolvePointsTask( pWorker, &initData, cameraStartIx, &pTask );
 
-				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
 		}
@@ -163,14 +177,19 @@ namespace Bundler { namespace LinearSolver {
 			__in const Scalar diagonalDampeningFactor,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGLoopPart0InitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.diagonalDampeningFactor = diagonalDampeningFactor;
+			initData.pTemp = pTemp;
+
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 				
 				Async::ITask* pTask = NULL;
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0CamerasTask( pWorker, &initData, cameraStartIx, &pTask );
 
-				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
 		}
@@ -184,14 +203,19 @@ namespace Bundler { namespace LinearSolver {
 			__in const Scalar diagonalDampeningFactor,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGLoopPart0InitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.diagonalDampeningFactor = diagonalDampeningFactor;
+			initData.pTemp = pTemp;
+
 			const uint pointCount = ( uint )pJacobian->GetPointCount( );
 			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0PointsTask( pWorker, &initData, pointStartIx, &pTask );
 
-				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
 		}
@@ -209,14 +233,21 @@ namespace Bundler { namespace LinearSolver {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGLoopPart1InitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.alpha = alpha;
+			initData.parameterVectorSize = parameterVectorSize;
+			initData.pParameterVector = pX;
+			initData.pTemp = pTemp;
+
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1CamerasTask( pWorker, &initData, cameraStartIx, &pTask );
 
-				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
 		}
@@ -234,14 +265,21 @@ namespace Bundler { namespace LinearSolver {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			Internal::ParallelPCGLoopPart1InitData< CameraModel > initData;
+			initData.pJacobian = pJacobian;
+			initData.alpha = alpha;
+			initData.parameterVectorSize = parameterVectorSize;
+			initData.pParameterVector = pX;
+			initData.pTemp = pTemp;
+
 			const uint pointCount = ( uint )pJacobian->GetPointCount( );
 			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 			{
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1PointsTask( pWorker, &initData, pointStartIx, &pTask );
 
-				// TODO: createTask
 				pWorker->ExecuteTask( pTask );
 			}
 		}

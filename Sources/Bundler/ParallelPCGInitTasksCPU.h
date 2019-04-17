@@ -37,6 +37,9 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			LocalProjectionProviderCPU< CameraModel > localJacobian;
 			localJacobian.InitializeForCameras( m_pJacobian, m_startIx, m_count );
 
+			LocalHessianBlockProviderCPU< CameraModel > localBlockHessian;
+			localBlockHessian.Initialize( &localJacobian );
+
 			LocalHessianMultiplicationEngineCPU< CameraModel > localHessian;
 			localHessian.Initialize( &localJacobian, m_diagonalDampeningFactor );
 
@@ -53,7 +56,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				JtfNegSubtractX( cameraIx, &localJacobian, m_r );
 
-				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToCamera( &localHessian, cameraIx, m_r, m_d );
+				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToCamera( &localBlockHessian, cameraIx, m_r, m_d );
 
 				errPart += VectorDot< Scalar, cameraParamCount >( m_r, m_d );
 			}
@@ -140,6 +143,9 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			LocalProjectionProviderCPU< CameraModel > localJacobian;
 			localJacobian.InitializeForPoints( m_pJacobian, m_startIx, m_count );
 
+			LocalHessianBlockProviderCPU< CameraModel > localBlockHessian;
+			localBlockHessian.Initialize( &localJacobian );
+
 			LocalHessianMultiplicationEngineCPU< CameraModel > localHessian;
 			localHessian.Initialize( &localJacobian, m_diagonalDampeningFactor );
 
@@ -156,7 +162,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				JtfNegSubtractX( pointIx, &localJacobian, m_r );
 
-				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToPoint( &localHessian, pointIx, m_r, m_d );
+				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToPoint( &localBlockHessian, pointIx, m_r, m_d );
 
 				errPart += VectorDot< Scalar, POINT_PARAM_COUNT >( m_r, m_d );
 			}

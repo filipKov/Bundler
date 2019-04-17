@@ -7,21 +7,21 @@ namespace LinearAlgebra {
 		template < typename T >
 		struct GaussJordanEliminationClassicCore
 		{
-			inline static void GetRowEschelonForm( __in const size_t n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
+			inline static void GetRowEschelonForm( __in const uint n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
-				for ( size_t rowI = 0; rowI < n - 1; rowI++ )
+				for ( uint rowI = 0; rowI < n - 1; rowI++ )
 				{
-					size_t pivotRowI = FindPivot( n, A, rowI );
+					uint pivotRowI = FindPivot( n, A, rowI );
 					SwapRows( n, A, pivotRowI, rowI );
 					SwapRows( n, InvertedA, pivotRowI, rowI );
 					EliminateColumn( n, A, InvertedA, rowI );
 				}
 			}
 
-			inline static size_t FindPivot( __in const size_t n, __in_ecount ( n * n ) const T* A, __in const size_t diagIx )
+			inline static uint FindPivot( __in const uint n, __in_ecount ( n * n ) const T* A, __in const uint diagIx )
 			{
-				size_t maxRow = diagIx;
-				for ( size_t rowIx = diagIx + 1; rowIx < n; rowIx++ )
+				uint maxRow = diagIx;
+				for ( uint rowIx = diagIx + 1; rowIx < n; rowIx++ )
 				{
 					if ( abs( ELEMENT( A, rowIx * n + diagIx ) ) > abs( ELEMENT( A, maxRow * n + diagIx ) ) )
 					{
@@ -32,7 +32,7 @@ namespace LinearAlgebra {
 				return maxRow;
 			}
 
-			inline static void SwapRows( __in const size_t n, __inout_ecount( n * n ) T* A, __in const size_t row1, __in const size_t row2 )
+			inline static void SwapRows( __in const uint n, __inout_ecount( n * n ) T* A, __in const uint row1, __in const uint row2 )
 			{
 				Containers::Buffer< T > temp;
 				temp.Allocate( n );
@@ -42,10 +42,10 @@ namespace LinearAlgebra {
 				ShallowCopy< T >( temp.Data(), n, A + row2 * n );
 			}
 
-			inline static void EliminateColumn( __in const size_t n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA, __in const size_t diagIx )
+			inline static void EliminateColumn( __in const uint n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA, __in const uint diagIx )
 			{
 				T diagInv = 1 / ELEMENT( A, diagIx * n + diagIx );
-				for ( size_t rowIx = diagIx + 1; rowIx < n; rowIx++ )
+				for ( uint rowIx = diagIx + 1; rowIx < n; rowIx++ )
 				{
 					T rowFactor = ELEMENT( A, rowIx * n + diagIx ) * diagInv;
 
@@ -54,13 +54,13 @@ namespace LinearAlgebra {
 				}
 			}
 
-			inline static void BackSubstitute( __in const size_t n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
+			inline static void BackSubstitute( __in const uint n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
-				for ( int64 diagIx = ( int64 )n - 1; diagIx >= 0; diagIx-- )
+				for ( int diagIx = ( int )n - 1; diagIx >= 0; diagIx-- )
 				{
 					T diagInverse = 1 / ELEMENT( A, diagIx * n + diagIx );
 
-					for ( int64 rowI = 0; rowI < diagIx; rowI++ )
+					for ( int rowI = 0; rowI < diagIx; rowI++ )
 					{
 						T rowFactor = ELEMENT( A, rowI * n + diagIx ) * diagInverse;
 
@@ -77,14 +77,14 @@ namespace LinearAlgebra {
 		template < bool isBig >
 		struct GaussJordanEliminationImpl
 		{
-			template < typename T, size_t n >
+			template < typename T, uint n >
 			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA );
 		};
 
 		template < >
 		struct GaussJordanEliminationImpl< true >
 		{
-			template < typename T, size_t n >
+			template < typename T, uint n >
 			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
 				MatrixIdentity< T >( n, InvertedA );
@@ -97,7 +97,7 @@ namespace LinearAlgebra {
 		template < >
 		struct GaussJordanEliminationImpl< false >
 		{
-			template < typename T, size_t n >
+			template < typename T, uint n >
 			static void GetInverse( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 			{
 				MatrixIdentity< T, n >( InvertedA );
@@ -108,14 +108,14 @@ namespace LinearAlgebra {
 		};
 	}
 
-	template < typename T, size_t n >
+	template < typename T, uint n >
 	void MatrixInvertGJ( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 	{
-		Internal::GaussJordanEliminationImpl< ( n > size_t(7) ) >::GetInverse< T, n >( A, InvertedA );
+		Internal::GaussJordanEliminationImpl< ( n > uint(7) ) >::GetInverse< T, n >( A, InvertedA );
 	}
 
 	template < typename T >
-	void MatrixInvertGJ( __in const size_t n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
+	void MatrixInvertGJ( __in const uint n, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA )
 	{
 		MatrixIdentity< T >( n, InvertedA );
 

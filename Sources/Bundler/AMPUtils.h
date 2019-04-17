@@ -86,29 +86,14 @@ namespace Bundler { namespace Async {
 	}
 
 	template < typename T >
-	struct AmpArrayUtils
+	T AccumulateBuffer( __in const uint count, __in const array< T, 1 >& buffer )
 	{
-		static __forceinline void Copy( __in const T* pSrc, __in const uint count, __out T* pDst ) __GPU
-		{
-			for ( uint i = 0; i < count; i++ )
-			{
-				*pDst = *pSrc;
-				pDst++;
-				pSrc++;
-			}
-		}
+		Containers::Buffer< T > temp;
+		temp.Allocate( count );
+		
+		copy( buffer, temp.Data( ) );
 
-		template < uint count >
-		static __forceinline void Copy( __in const T* pSrc, __out T* pDst ) __GPU
-		{
-			*pDst = *pSrc;
-			Copy< count - 1 >( pSrc + 1, pDst + 1 );
-		}
-
-		template <>
-		static __forceinline void Copy< 0 >( __in const T* pSrc, __out T* pDst ) __GPU
-		{
-		}
-	};
+		return Containers::ArrayUtils< T >::Sum( count, temp.Data( ) );
+	}
 
 } }

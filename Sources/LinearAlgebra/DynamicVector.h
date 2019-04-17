@@ -1,9 +1,5 @@
 #pragma once
 
-#include "stdafx.h"
-#include "StaticVector.h"
-#include "DynamicMatrix.h"
-
 namespace LinearAlgebra {
 
 	template < typename Scalar >

@@ -14,7 +14,7 @@ namespace Bundler {
 	
 		void MultiplyCameraRow(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
@@ -31,14 +31,14 @@ namespace Bundler {
 			MultiplyByCameraBlock( pJacobian, pHessian, localCameraIx, pCameraX, pY );
 	
 			Scalar pointBlockAccumulator[cameraParamCount];
-			MultiplyByCameraPointBlocksCam( pJacobian, pHessian localCameraIx, totalPointParameterCount, pPointX, pointBlockAccumulator );
+			MultiplyByCameraPointBlocksCam( pJacobian, pHessian, localCameraIx, totalPointParameterCount, pPointX, pointBlockAccumulator );
 	
 			MatrixAdd< Scalar, CameraModel::cameraParameterCount, 1 >( pY, pointBlockAccumulator, pY );
 		}
 	
 		void MultiplyPointRow(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localPointIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
@@ -50,10 +50,10 @@ namespace Bundler {
 	
 			const uint globalPointIndex = pJacobian->GetGlobalPointIndex( localPointIx );
 			pPointX = pPointX + globalPointIndex * POINT_PARAM_COUNT;
-			MultiplyByPointBlock( localPointIx, pPointX, pY );
+			MultiplyByPointBlock( pJacobian, pHessian, localPointIx, pPointX, pY );
 	
 			Scalar cameraBlockAccumulator[POINT_PARAM_COUNT];
-			MultiplyByCameraPointBlocksPt( localPointIx, totalCameraParameterCount, pCameraX, cameraBlockAccumulator );
+			MultiplyByCameraPointBlocksPt( pJacobian, pHessian, localPointIx, totalCameraParameterCount, pCameraX, cameraBlockAccumulator );
 	
 			MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pY, cameraBlockAccumulator, pY );
 		}
@@ -62,7 +62,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in_ecount( CameraModel::cameraParameterCount ) const Scalar* pX,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pY ) const __GPU
@@ -78,7 +78,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraPointBlocksCam(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localCameraIx,
 			__in const uint totalPointParameterCount,
 			__in_ecount( totalPointParameterCount ) const Scalar* pPointX,
@@ -87,7 +87,7 @@ namespace Bundler {
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetCameraProjectionCount( localCameraIx );
 	
-			ByteFill< Scalar >( 0, cameraParamCount, pAccumulator );
+			Containers::ArrayUtils< Scalar >::Fill< cameraParamCount >( Scalar( 0 ), pAccumulator );
 			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
 			Scalar tempAccumulator[cameraParamCount];
 	
@@ -106,7 +106,7 @@ namespace Bundler {
 	
 		void MultiplyByPointBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint pointIx,
 			__in_ecount( POINT_PARAM_COUNT ) const Scalar* pX,
 			__out_ecount( POINT_PARAM_COUNT ) Scalar* pY ) const __GPU
@@ -120,7 +120,7 @@ namespace Bundler {
 	
 		void MultiplyByCameraPointBlocksPt(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
-			__in LocalHessianBlockProviderAMP< CameraModel >* pHessian,
+			__in const LocalHessianBlockProviderAMP< CameraModel >* pHessian,
 			__in const uint localPointIx,
 			__in const uint totalCameraParameterCount,
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
@@ -129,7 +129,7 @@ namespace Bundler {
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetPointProjectionCount( localPointIx );
 	
-			ByteFill< Scalar >( 0, POINT_PARAM_COUNT, pAccumulator );
+			Containers::ArrayUtils< Scalar >::Fill< POINT_PARAM_COUNT >( Scalar( 0 ), pAccumulator );
 			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
 			Scalar tempAccumulator[POINT_PARAM_COUNT];
 	

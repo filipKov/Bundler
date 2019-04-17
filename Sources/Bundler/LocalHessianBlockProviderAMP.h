@@ -7,8 +7,8 @@ namespace Bundler {
 	{
 	public:
 	
-		LocalHessianBlockProviderAMP( __in const int tempElementCount, __in const int tempElementSize ) __CPU_ONLY 
-			: m_temp( extent<2>( tempElementCount, tempElementSize ) )
+		LocalHessianBlockProviderAMP( __in const int tempElementCount, __in const int tempElementProjections, __in const int tempElementSize ) __CPU_ONLY 
+			: m_temp( extent<2>( tempElementCount, 2 * tempElementProjections * tempElementSize ) )
 		{
 			m_temp.discard_data( );
 		}
@@ -16,7 +16,7 @@ namespace Bundler {
 		void GetCameraBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
 			__in const uint localCameraIx,
-			__out_ecount( CameraModel::cameraParameterCount * CameraModel::cameraParameterCount ) Scalar* pBlock ) __GPU
+			__out_ecount( CameraModel::cameraParameterCount * CameraModel::cameraParameterCount ) Scalar* pBlock ) const __GPU
 		{
 			const uint projectionCount = pJacobian->GetCameraProjectionCount( localCameraIx );
 			const uint rows = 2 * projectionCount;
@@ -45,7 +45,7 @@ namespace Bundler {
 			__in const uint localCameraIx,
 			__in const uint ix,
 			__out uint* pLocalPointIx,
-			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) __GPU
+			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) const __GPU
 		{
 			uint projectionIx = pJacobian->GetCameraProjectionIndex( localCameraIx, ix );
 	
@@ -58,7 +58,7 @@ namespace Bundler {
 			__in const uint localPointIx,
 			__in const uint ix,
 			__out uint* pLocalCameraIx,
-			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) __GPU
+			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) const __GPU
 		{
 			uint projectionIx = pJacobian->GetPointProjectionIndex( localPointIx, ix );
 	
@@ -69,7 +69,7 @@ namespace Bundler {
 		void GetPointBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
 			__in const uint localPointIx,
-			__out_ecount( POINT_PARAM_COUNT * POINT_PARAM_COUNT ) Scalar* pBlock )  __GPU
+			__out_ecount( POINT_PARAM_COUNT * POINT_PARAM_COUNT ) Scalar* pBlock ) const __GPU
 		{
 			const uint projectionCount = pJacobian->GetPointProjectionCount( localPointIx );
 	
@@ -98,7 +98,7 @@ namespace Bundler {
 		void GetCameraPointBlock(
 			__in const LocalProjectionProviderAMP< CameraModel >* pJacobian,
 			__in const uint projectionIx,
-			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) __GPU
+			__out_ecount( CameraModel::cameraParameterCount * POINT_PARAM_COUNT ) Scalar* pBlock ) const __GPU
 		{
 			Scalar cameraBlock[2 * CameraModel::cameraParameterCount];
 			Scalar pointBlock[2 * POINT_PARAM_COUNT];

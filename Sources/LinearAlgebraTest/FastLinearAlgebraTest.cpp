@@ -606,9 +606,46 @@ namespace LinearAlgebraTest {
 			Matrix< double, 3, 3 > expected = M1 + M2;
 			AssertAreEqual( 9, expected.Elements( ), res );
 		}
+
+		TEST_METHOD( MatrixAddCCorrectness0 )
+		{
+			double a = 0.21;
+			double b = 0.43;
+			double c = 2;
+
+			double res = 0;
+			MatrixAddC< double, 1, 1 >( &a, &b, c, &res );
+
+			Assert::AreEqual( 1.07, res );
+		}
+
+		TEST_METHOD( MatrixAddCCorrectness1 )
+		{
+			double M1[4] = { 0.5, 0.1, 0.22, 0.68 };
+			double M2[4] = { 0.3, 0.25, 0.2, 1.54 };
+			double c = 3;
+
+			double res[4];
+			MatrixAddC< double, 2, 2 >( M1, M2, c, res );
+
+			AssertAreEqual( { 1.4, 0.85, 0.82, 5.30 }, res, 10e-10 );
+		}
+
+		TEST_METHOD( MatrixAddCCorrectness2 )
+		{
+			Matrix< double, 3, 3 > M1( { 1, 2, 3, 4, 5, 6, 7, 8, 9 } );
+			Matrix< double, 3, 3 > M2( { 10, 20, 30, 40, 50, 60, 70, 80, 90 } );
+			double c = 4.54;
+
+			double res[9];
+			MatrixAddC< double, 3, 3 >( M1.Elements( ), M2.Elements( ), c, res );
+
+			Matrix< double, 3, 3 > expected = M1 + ( c * M2 );
+			AssertAreEqual( 9, expected.Elements( ), res );
+		}
 	};
 
-	TEST_CLASS( MatrixInversionTest )
+	TEST_CLASS( FastMatrixInversionTest )
 	{
 		template < typename T, size_t n >
 		void TestInverse( __in const T( &M )[n * n] )
@@ -769,7 +806,7 @@ namespace LinearAlgebraTest {
 
 	};
 
-	TEST_CLASS( MatrixFrobeniusNormTest )
+	TEST_CLASS( FastMatrixFrobeniusNormTest )
 	{
 		template < typename T, size_t m, size_t n >
 		void TestNorm( __in const T( &M )[m * n] )
@@ -847,6 +884,81 @@ namespace LinearAlgebraTest {
 				0.624084, 0.659628, 0.361984, 0.637069, 0.661946, 0.756888, 0.0115227, 0.457312, 0.819894, 0.194213, 0.688813, 0.928327, 0.0136789, 0.626151, 0.812698 };
 		
 			TestNorm< double, 15, 15 >( M );
+		}
+	};
+
+	TEST_CLASS( FastMatrixOtherTest )
+	{
+		TEST_METHOD( MatrixNegateCorrectness0 )
+		{
+			Matrix< double, 15, 2 > M;
+			Random< double >::Fill( 30, M.Elements( ) );
+
+			double M2[30];
+			MatrixNegate< double, 15, 2 >( M.Elements( ), M2 );
+
+			M *= -1;
+			AssertAreEqual( 30, M.Elements( ), M2 );
+		}
+
+		TEST_METHOD( MatrixNegateCorrectness1 )
+		{
+			Matrix< double, 6, 1 > M;
+			Random< double >::Fill( 6, M.Elements( ) );
+
+			double M2[6];
+			MatrixNegate< double, 6, 1 >( M.Elements( ), M2 );
+
+			M *= -1;
+			AssertAreEqual( 6, M.Elements( ), M2 );
+		}
+
+		TEST_METHOD( MatrixNegateCorrectness2 )
+		{
+			Matrix< double, 1, 13 > M;
+			Random< double >::Fill( 13, M.Elements( ) );
+
+			double M2[13];
+			MatrixNegate< double, 13, 1 >( M.Elements( ), M2 );
+
+			M *= -1;
+			AssertAreEqual( 13, M.Elements( ), M2 );
+		}
+
+		TEST_METHOD( MatrixNegateCorrectness3 )
+		{
+			Matrix< double, 1, 1 > M;
+			Random< double >::Fill( 1, M.Elements( ) );
+
+			double M2[1];
+			MatrixNegate< double, 1, 1 >( M.Elements( ), M2 );
+
+			M *= -1;
+			AssertAreEqual( 1, M.Elements( ), M2 );
+		}
+
+		TEST_METHOD( VectorDotCorrectness0 )
+		{
+			Vector< double, 1 > v1;
+			Vector< double, 1 > v2;
+
+			Random< double >::Fill( 1, v1.Elements( ) );
+			Random< double >::Fill( 1, v2.Elements( ) );
+
+			double dot = VectorDot< double, 1 >( v1.Elements( ), v2.Elements( ) );
+			Assert::AreEqual( v1 * v2, dot, 10e-10 );
+		}
+
+		TEST_METHOD( VectorDotCorrectness1 )
+		{
+			Vector< double, 28 > v1;
+			Vector< double, 28 > v2;
+
+			Random< double >::Fill( 28, v1.Elements( ) );
+			Random< double >::Fill( 28, v2.Elements( ) );
+
+			double dot = VectorDot< double, 28 >( v1.Elements( ), v2.Elements( ) );
+			Assert::AreEqual( v1 * v2, dot, 10e-10 );
 		}
 	};
 

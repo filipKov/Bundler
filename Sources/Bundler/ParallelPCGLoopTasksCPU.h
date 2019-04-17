@@ -20,7 +20,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	
 			m_diagonalDampeningFactor = diagonalDampeningFactor;
 	
-			m_Ad = Utils::GetCameraParamPtr( cameraStartIx, pTemp->Ad.Elements( ) );
+			m_Ad = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
 			m_pDotOut = &pTemp->dDotAd;
 		}
@@ -41,7 +41,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint totalPointParams = POINT_PARAM_COUNT * ( uint )m_pJacobian->GetPointCount( );
 			const Scalar* pPointD = m_d + totalCameraParams;
 	
-			Scalar* pD = Utils::GetCameraParamPtr( m_startIx, m_d );
+			Scalar* pD = Utils::GetCameraParamPtr< CameraModel >( m_startIx, m_d );
 	
 			Scalar partialDot = 0;
 			for ( uint cameraIx = 0; cameraIx < localHessian.GetCameraCount( ); cameraIx++ )
@@ -88,7 +88,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			m_diagonalDampeningFactor = diagonalDampeningFactor;
 
-			m_Ad = Utils::GetPointParamPtr( pointStartIx, pJacobian->GetCameraCount(), pTemp->Ad.Elements( ) );
+			m_Ad = Utils::GetPointParamPtr< CameraModel >( pointStartIx, pJacobian->GetCameraCount(), pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
 			m_pDotOut = &pTemp->dDotAd;
 		}
@@ -109,7 +109,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint totalPointParams = POINT_PARAM_COUNT * ( uint )m_pJacobian->GetPointCount( );
 			const Scalar* pPointD = m_d + totalCameraParams;
 
-			Scalar* pD = Utils::GetPointParamPtr( m_startIx, m_pJacobian->GetCameraCount(), m_d );
+			Scalar* pD = Utils::GetPointParamPtr< CameraModel >( m_startIx, m_pJacobian->GetCameraCount(), m_d );
 
 			Scalar partialDot = 0;
 			for ( uint pointIx = 0; pointIx < localHessian.GetPointCount( ); pointIx++ )
@@ -157,10 +157,12 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_count = count;
 
 			m_alpha = alpha;
-			m_x = Utils::GetCameraParamPtr( cameraStartIx, pX );
-
-			m_r = Utils::GetCameraParamPtr( cameraStartIx, pTemp->r.Elements( ) );
-			m_mr = Utils::GetCameraParamPtr( cameraStartIx, pTemp->MInvR.Elements( ) );
+			m_x = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pX );
+			
+			m_d = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->d.Elements( ) );
+			m_Ad = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->Ad.Elements( ) );
+			m_r = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->r.Elements( ) );
+			m_mr = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->MInvR.Elements( ) );
 			m_pErrSqNew = &pTemp->errSqNew;
 		}
 
@@ -175,7 +177,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			localHessian.Initialize( &localJacobian );
 
 			Scalar errSqNewPart = 0;
-			for ( uint cameraIx = 0; cameraIx < localJacobian->GetCameraCount(); cameraIx++ )
+			for ( uint cameraIx = 0; cameraIx < localJacobian.GetCameraCount(); cameraIx++ )
 			{
 				MatrixAddC< Scalar, cameraParamCount, 1 >( m_x, m_d, m_alpha, m_x );
 				MatrixSubC< Scalar, cameraParamCount, 1 >( m_r, m_Ad, m_alpha, m_r );
@@ -233,10 +235,12 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 
 			m_alpha = alpha;
-			m_x = Utils::GetPointParamPtr( pointStartIx, cameraCount, pX );
+			m_x = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pX );
 
-			m_r = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->r.Elements( ) );
-			m_mr = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->MInvR.Elements( ) );
+			m_d = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->d.Elements( ) );
+			m_Ad = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->Ad.Elements( ) );
+			m_r = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->r.Elements( ) );
+			m_mr = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->MInvR.Elements( ) );
 			m_pErrSqNew = &pTemp->errSqNew;
 		}
 
@@ -249,7 +253,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			localHessian.Initialize( &localJacobian );
 
 			Scalar errSqNewPart = 0;
-			for ( uint pointIx = 0; pointIx < localJacobian->GetPointCount( ); pointIx++ )
+			for ( uint pointIx = 0; pointIx < localJacobian.GetPointCount( ); pointIx++ )
 			{
 				MatrixAddC< Scalar, POINT_PARAM_COUNT, 1 >( m_x, m_d, m_alpha, m_x );
 				MatrixSubC< Scalar, POINT_PARAM_COUNT, 1 >( m_r, m_Ad, m_alpha, m_r );

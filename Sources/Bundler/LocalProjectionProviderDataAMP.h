@@ -66,7 +66,7 @@ namespace Bundler {
 			__out LocalProjectionProviderDataCountsAMP* pCounts ) __CPU_ONLY
 		{
 			const uint totalCameraCount = ( uint )pGlobalProvider->GetCameraCount( );
-			int64 memoryLeftBytes = int64( memoryLimitKB * 1000 );
+			int64 memoryLeftBytes = int64( memoryLimitKB * 1024 );
 			
 			Containers::Buffer< bool > pointMask;
 			pointMask.Allocate( pGlobalProvider->GetPointCount( ) );
@@ -156,14 +156,14 @@ namespace Bundler {
 			__in const uint cameraStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
 			__in accelerator_view dstAccelerator,
-			__deref_out LocalProjectionProviderDataAMP< CameraModel >** ppProvider ) __CPU_ONLY
+			__deref_out LocalProjectionProviderDataAMP< CameraModel >** ppData ) __CPU_ONLY
 		{
 			Internal::LocalProjectionProviderDataTemp< CameraModel > temp;
 			temp.Initialize< true >( pCounts );
 
 			FillTempForCameras( pGlobalProvider, cameraStartIx, pCounts, &temp );
 
-			*ppProvider = new LocalProjectionProviderDataAMP< CameraModel >( &temp, dstAccelerator );
+			*ppData = new LocalProjectionProviderDataAMP< CameraModel >( &temp, dstAccelerator );
 		}
 
 		static void CreateForPoints(
@@ -171,14 +171,14 @@ namespace Bundler {
 			__in const uint pointStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
 			__in accelerator_view dstAccelerator,
-			__deref_out LocalProjectionProviderDataAMP< CameraModel >** ppProvider ) __CPU_ONLY
+			__deref_out LocalProjectionProviderDataAMP< CameraModel >** ppData ) __CPU_ONLY
 		{
 			Internal::LocalProjectionProviderDataTemp< CameraModel > temp;
-			temp.Initialize< true >( pCounts );
+			temp.Initialize< false >( pCounts );
 
 			FillTempForPoints( pGlobalProvider, pointStartIx, pCounts, &temp );
 
-			*ppProvider = new LocalProjectionProviderDataAMP< CameraModel >( &temp, dstAccelerator );
+			*ppData = new LocalProjectionProviderDataAMP< CameraModel >( &temp, dstAccelerator );
 		}
 
 	protected:

@@ -1,8 +1,5 @@
 #pragma once
 
-#include "stdafx.h"
-#include "DynamicMatrix.h" 
-
 namespace LinearAlgebra {
 
 	// -------------------------------------------------------------------------------------------------------
@@ -172,10 +169,10 @@ namespace LinearAlgebra {
 	}
 
 	template < typename Scalar >
-	void MatrixIdentity( __in const size_t n, __out_ecount( n * n ) Scalar* A )
+	void MatrixIdentity( __in const uint n, __out_ecount( n * n ) Scalar* A )
 	{
 		ByteFill( 0, n * n, A );
-		for ( size_t i = 0; i < n; i++ )
+		for ( uint i = 0; i < n; i++ )
 		{
 			ELEMENT( A, i *n + i ) = Scalar( 1 );
 		}
@@ -183,16 +180,16 @@ namespace LinearAlgebra {
 
 	template < typename Scalar >
 	void MatrixSubC(
-		__in const size_t n,
-		__in const size_t m,
+		__in const uint n,
+		__in const uint m,
 		__in_ecount( m * n ) const Scalar* A,
 		__in_ecount( m * n ) const Scalar* B,
 		__in const Scalar cnst,
 		__out_ecount( m * n ) Scalar* C )
 	{
-		for ( size_t r = 0; r < m; r++ )
+		for ( uint r = 0; r < m; r++ )
 		{
-			for ( size_t c = 0; c < n; c++ )
+			for ( uint c = 0; c < n; c++ )
 			{
 				ELEMENT( C, r * n + c ) = ELEMENT( A, r * n + c ) - ( cnst * ELEMENT( B, r * n + c ) );
 			}
@@ -201,15 +198,15 @@ namespace LinearAlgebra {
 
 	template < typename Scalar >
 	void MatrixMultiplyC(
-		__in const size_t n,
-		__in const size_t m,
+		__in const uint n,
+		__in const uint m,
 		__in_ecount( m * n ) const Scalar* A,
 		__in const Scalar cnst,
 		__out_ecount( m * n ) Scalar* B )
 	{
-		for ( size_t r = 0; r < m; r++ )
+		for ( uint r = 0; r < m; r++ )
 		{
-			for ( size_t c = 0; c < n; c++ )
+			for ( uint c = 0; c < n; c++ )
 			{
 				ELEMENT( B, r * n + c ) = ELEMENT( A, r * n + c ) * cnst;
 			}
@@ -218,14 +215,14 @@ namespace LinearAlgebra {
 
 	template < typename Scalar >
 	Scalar FrobeniusNorm(
-		__in const size_t m,
-		__in const size_t n,
+		__in const uint m,
+		__in const uint n,
 		__in_ecount( m * n ) const Scalar* A )
 	{
 		Scalar norm = 0;
 
 		Scalar tmp = 0;
-		for ( size_t i = 0; r < m * n; r++ )
+		for ( uint i = 0; r < m * n; r++ )
 		{
 			tmp = abs( ELEMENT( A, i ) );
 			norm += tmp * tmp;
@@ -233,5 +230,111 @@ namespace LinearAlgebra {
 
 		return sqrt( norm );
 	}
+
+#ifdef IMPORT_AMP_LINEAR_ALGEBRA
+
+	template < typename Scalar >
+	void MatrixMultiplyAtB(
+		__in const uint m,
+		__in const uint n,
+		__in const uint p,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * p ) const Scalar* B,
+		__out_ecount( n * p ) Scalar* C ) restrict( amp )
+	{
+		for ( uint rowIx = 0; rowIx < n; rowIx++ )
+		{
+			for ( uint colIx = 0; colIx < p; colIx++ )
+			{
+				Scalar tmp = Scalar( 0 );
+				for ( uint i = 0; i < m; i++ )
+				{
+					tmp += ELEMENT( A, i * n + rowIx ) * ELEMENT( B, i * p + colIx );
+				}
+
+				ELEMENT( C, rowIx * p + colIx ) = tmp;
+			}
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixElementWiseMultiply(
+		__in const uint m,
+		__in const uint n,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * n ) const Scalar* B,
+		__out_ecount( m * n ) Scalar* C )  restrict( amp )
+	{
+		for ( uint rowIx = 0; rowIx < m; rowIx++ )
+		{
+			for ( uint colIx = 0; colIx < n; colIx++ )
+			{
+				ELEMENT( C, rowIx * n + colIx ) = ELEMENT( A, rowIx * n + colIx ) * ELEMENT( B, rowIx * n + colIx );
+			}
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixIdentity( __in const uint n, __out_ecount( n * n ) Scalar* A )  restrict( amp )
+	{
+		Containers::ArrayUtils< Scalar >::Fill( T( 0 ), n * n, A );
+		for ( uint i = 0; i < n; i++ )
+		{
+			ELEMENT( A, i *n + i ) = Scalar( 1 );
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixSubC(
+		__in const uint n,
+		__in const uint m,
+		__in_ecount( m * n ) const Scalar* A,
+		__in_ecount( m * n ) const Scalar* B,
+		__in const Scalar cnst,
+		__out_ecount( m * n ) Scalar* C )  restrict( amp )
+	{
+		for ( uint r = 0; r < m; r++ )
+		{
+			for ( uint c = 0; c < n; c++ )
+			{
+				ELEMENT( C, r * n + c ) = ELEMENT( A, r * n + c ) - ( cnst * ELEMENT( B, r * n + c ) );
+			}
+		}
+	}
+
+	template < typename Scalar >
+	void MatrixMultiplyC(
+		__in const uint n,
+		__in const uint m,
+		__in_ecount( m * n ) const Scalar* A,
+		__in const Scalar cnst,
+		__out_ecount( m * n ) Scalar* B )  restrict( amp )
+	{
+		for ( uint r = 0; r < m; r++ )
+		{
+			for ( uint c = 0; c < n; c++ )
+			{
+				ELEMENT( B, r * n + c ) = ELEMENT( A, r * n + c ) * cnst;
+			}
+		}
+	}
+
+	template < typename Scalar >
+	Scalar FrobeniusNorm(
+		__in const uint m,
+		__in const uint n,
+		__in_ecount( m * n ) const Scalar* A )  restrict( amp )
+	{
+		Scalar norm = 0;
+
+		for ( uint i = 0; r < m * n; r++ )
+		{
+			norm += ELEMENT( A, i ) * ELEMENT( A, i );
+		}
+
+		return concurrency::precise_math::sqrt( norm );
+	}
+
+#endif
 
 }

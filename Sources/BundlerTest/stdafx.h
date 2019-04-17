@@ -9,6 +9,8 @@
 #include <ctime>
 #include <thread>
 #include <atomic>
+#include <amp.h>
+#include <amp_math.h>
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
@@ -19,9 +21,12 @@
 #include "..\Utils\UtilsLib.h"
 using namespace Utils;
 
+#define IMPORT_AMP_LINEAR_ALGEBRA
 #include "..\LinearAlgebra\LinearAlgebraLib.h"
+using namespace LinearAlgebra;
 
-#include "..\NumericOptimization\NumericOptimizationLib.h"
+#define IMPORT_AMP_DIFFNUM
+#include "..\NumericOptimization\DiffNum.h"
 using namespace NumericOptimization::AutomaticDifferentiation;
 
 #include "..\TestingUtils\TestingUtilsLib.h"

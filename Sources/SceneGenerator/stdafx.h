@@ -16,6 +16,7 @@
 
 #include <amp.h>
 #include <amp_math.h>
+#include <omp.h>
 
 #include "../Utils/UtilsLib.h"
 using namespace Utils;

@@ -11,6 +11,7 @@
 #include <cmath>
 #include <amp.h>
 #include <amp_math.h>
+#include <omp.h>
 using namespace Concurrency;
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers

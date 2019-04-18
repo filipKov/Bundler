@@ -39,12 +39,17 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	template < class CameraModel >
 	class ParallelPCGTaskFactory
 	{
+	protected:
+
+		static const uint m_maxCpuCamTaskSize = 128;
+		static const uint m_maxCpuPtTaskSize = 8192;
+
 	public:
 
 		static void CreateInitSolveCamerasTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGInitSolveInitData< CameraModel >* pInitData,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -52,10 +57,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateInitSolveCamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, cameraStartIx, ppTask );
+				CreateInitSolveCamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateInitSolveCamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, cameraStartIx, ppTask ); // Fallback for non-compilable GPU init tasks
+				CreateInitSolveCamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask ); // Fallback for non-compilable GPU init tasks
 				break;
 			default:
 				*ppTask = NULL;
@@ -67,7 +72,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateInitSolvePointsTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGInitSolveInitData< CameraModel >* pInitData,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -75,10 +80,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateInitSolvePointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pointStartIx, ppTask );
+				CreateInitSolvePointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateInitSolvePointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pointStartIx, ppTask ); // Fallback for non-compilable GPU init tasks
+				CreateInitSolvePointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask ); // Fallback for non-compilable GPU init tasks
 				break;
 			default:
 				*ppTask = NULL;
@@ -89,7 +94,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0CamerasTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -97,10 +102,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateLoopPart0CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, cameraStartIx, ppTask );
+				CreateLoopPart0CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateLoopPart0CamerasTaskAMP( pInitData, ((Async::WorkerThreadGPU*)pWorker)->GetGpuInfo(), cameraStartIx, ppTask ); // TODO: temp
+				CreateLoopPart0CamerasTaskAMP( pInitData, ((Async::WorkerThreadGPU*)pWorker)->GetGpuInfo(), pCameraStartIx, ppTask ); // TODO: temp
 				break;
 			default:
 				*ppTask = NULL;
@@ -111,7 +116,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0PointsTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -119,10 +124,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateLoopPart0PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pointStartIx, ppTask );
+				CreateLoopPart0PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateLoopPart0PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pointStartIx, ppTask ); // TODO: temp
+				CreateLoopPart0PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pPointStartIx, ppTask ); // TODO: temp
 				break;
 			default:
 				*ppTask = NULL;
@@ -133,7 +138,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1CamerasTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -141,10 +146,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateLoopPart1CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, cameraStartIx, ppTask );
+				CreateLoopPart1CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateLoopPart1CamerasTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), cameraStartIx, ppTask ); // TODO: temp
+				CreateLoopPart1CamerasTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pCameraStartIx, ppTask ); // TODO: temp
 				break;
 			default:
 				*ppTask = NULL;
@@ -155,7 +160,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1PointsTask(
 			__in const Async::WorkerThread* pWorker,
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			Async::WorkerThreadType type = pWorker->GetInfo( )->type;
@@ -163,10 +168,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
-				CreateLoopPart1PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pointStartIx, ppTask );
+				CreateLoopPart1PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
-				CreateLoopPart1PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pointStartIx, ppTask ); // TODO: temp
+				CreateLoopPart1PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pPointStartIx, ppTask ); // TODO: temp
 				break;
 			default:
 				*ppTask = NULL;
@@ -181,7 +186,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const uint elementCount, 
 			__in const uint maxTaskSize )
 		{
-			constexpr const float sizeTolerance = 0.05;
+			constexpr const float sizeTolerance = 0.05f;
 
 			const uint remainingElements = elementCount - elementStartIx;
 
@@ -226,10 +231,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateInitSolveCamerasTaskCPU(
 			__in const ParallelPCGInitSolveInitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
+			const uint cameraStartIx = *pCameraStartIx;
 			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGInitCamerasTaskCPU< CameraModel >* pTask = new PCGInitCamerasTaskCPU< CameraModel >();
@@ -242,7 +248,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->pParameterVector, 
 				pInitData->pTemp );
 
-			cameraStartIx += taskSize;
+			( *pCameraStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -251,15 +257,16 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateInitSolvePointsTaskCPU(
 			__in const ParallelPCGInitSolveInitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
+			const uint pointStartIx = *pPointStartIx;
 			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGInitPointsTaskCPU< CameraModel >* pTask = new PCGInitPointsTaskCPU< CameraModel >( );
 			pTask->Initialize(
-				cameraStartIx,
+				pointStartIx,
 				taskSize,
 				pInitData->pJacobian,
 				pInitData->diagonalDampeningFactor,
@@ -267,7 +274,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->pParameterVector,
 				pInitData->pTemp );
 
-			pointStartIx += taskSize;
+			( *pPointStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -276,10 +283,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0CamerasTaskCPU(
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
+			const uint cameraStartIx = *pCameraStartIx;
 			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGLoopPart0CamerasTaskCPU< CameraModel >* pTask = new PCGLoopPart0CamerasTaskCPU< CameraModel >( );
@@ -290,7 +298,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->diagonalDampeningFactor,
 				pInitData->pTemp );
 
-			cameraStartIx += taskSize;
+			( *pCameraStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -299,24 +307,25 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0CamerasTaskAMP(
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
 			__in const Async::GpuInfo* pAcceleratorInfo,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
-			LocalProjectionProviderDataCountsAMP taskSize;
+			const uint cameraStartIx = *pCameraStartIx;
+
+			LocalProjectionProviderDataCountsAMP taskSize = { 0 };
 			GetGPUCameraTaskSize( cameraStartIx, pInitData->pJacobian, pAcceleratorInfo->memoryKB, &taskSize );
 
 			accelerator_view acceleratorView = pAcceleratorInfo->accelerator.get_default_view( );
 
-			PCGLoopPart0CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart0CamerasTaskAMP< CameraModel >( );
+			PCGLoopPart0CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart0CamerasTaskAMP< CameraModel >( acceleratorView );
 			pTask->Initialize(
 				cameraStartIx,
 				&taskSize,
 				pInitData->pJacobian,
 				pInitData->diagonalDampeningFactor,
-				&acceleratorView,
 				pInitData->pTemp );
 
-			cameraStartIx += taskSize.cameraCount;
+			( *pCameraStartIx ) += taskSize.cameraCount;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -325,10 +334,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0PointsTaskCPU(
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
+			const uint pointStartIx = *pPointStartIx;
 			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGLoopPart0PointsTaskCPU< CameraModel >* pTask = new PCGLoopPart0PointsTaskCPU< CameraModel >( );
@@ -339,7 +349,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->diagonalDampeningFactor,
 				pInitData->pTemp );
 
-			pointStartIx += taskSize;
+			( *pPointStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -348,24 +358,25 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart0PointsTaskAMP(
 			__in const ParallelPCGLoopPart0InitData< CameraModel >* pInitData,
 			__in const Async::GpuInfo* pAcceleratorInfo,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
-			LocalProjectionProviderDataCountsAMP taskSize;
+			const uint pointStartIx = *pPointStartIx;
+
+			LocalProjectionProviderDataCountsAMP taskSize = { 0 };
 			GetGPUPointTaskSize( pointStartIx, pInitData->pJacobian, pAcceleratorInfo->memoryKB, &taskSize );
 
 			accelerator_view acceleratorView = pAcceleratorInfo->accelerator.get_default_view( );
 
-			PCGLoopPart0CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart0CamerasTaskAMP< CameraModel >( );
+			PCGLoopPart0CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart0CamerasTaskAMP< CameraModel >( acceleratorView );
 			pTask->Initialize(
 				pointStartIx,
 				&taskSize,
 				pInitData->pJacobian,
 				pInitData->diagonalDampeningFactor,
-				&acceleratorView,
 				pInitData->pTemp );
 
-			pointStartIx += taskSize.pointCount;
+			( *pPointStartIx ) += taskSize.pointCount;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -374,10 +385,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1CamerasTaskCPU(
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
+			const uint cameraStartIx = *pCameraStartIx;
 			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGLoopPart1CamerasTaskCPU< CameraModel >* pTask = new PCGLoopPart1CamerasTaskCPU< CameraModel >( );
@@ -390,7 +402,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->pParameterVector,
 				pInitData->pTemp );
 
-			cameraStartIx += taskSize;
+			( *pCameraStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -399,15 +411,17 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1CamerasTaskAMP(
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
 			__in const Async::GpuInfo* pAcceleratorInfo,
-			__inout uint cameraStartIx,
+			__inout uint* pCameraStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
-			LocalProjectionProviderDataCountsAMP taskSize;
+			const uint cameraStartIx = *pCameraStartIx;
+
+			LocalProjectionProviderDataCountsAMP taskSize = { 0 };
 			GetGPUCameraTaskSize( cameraStartIx, pInitData->pJacobian, pAcceleratorInfo->memoryKB, &taskSize );
 
 			accelerator_view acceleratorView = pAcceleratorInfo->accelerator.get_default_view( );
 
-			PCGLoopPart1CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart1CamerasTaskAMP< CameraModel >( );
+			PCGLoopPart1CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart1CamerasTaskAMP< CameraModel >( acceleratorView );
 			pTask->Initialize(
 				cameraStartIx,
 				&taskSize,
@@ -415,10 +429,9 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->alpha,
 				pInitData->parameterVectorSize,
 				pInitData->pParameterVector,
-				&acceleratorView,
 				pInitData->pTemp );
 
-			cameraStartIx += taskSize.cameraCount;
+			( *pCameraStartIx ) += taskSize.cameraCount;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -427,10 +440,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1PointsTaskCPU(
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
 			__in const uint maxTaskSize,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
+			const uint pointStartIx = *pPointStartIx;
 			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGLoopPart1PointsTaskCPU< CameraModel >* pTask = new PCGLoopPart1PointsTaskCPU< CameraModel >( );
@@ -443,7 +457,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->pParameterVector,
 				pInitData->pTemp );
 
-			pointStartIx += taskSize;
+			( *pPointStartIx ) += taskSize;
 
 			*ppTask = pTask;
 			pTask = NULL;
@@ -452,15 +466,17 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		static void CreateLoopPart1PointsTaskAMP(
 			__in const ParallelPCGLoopPart1InitData< CameraModel >* pInitData,
 			__in const Async::GpuInfo* pAcceleratorInfo,
-			__inout uint pointStartIx,
+			__inout uint* pPointStartIx,
 			__deref_out Async::ITask** ppTask )
 		{
-			LocalProjectionProviderDataCountsAMP taskSize;
+			const uint pointStartIx = *pPointStartIx;
+
+			LocalProjectionProviderDataCountsAMP taskSize = { 0 };
 			GetGPUPointTaskSize( pointStartIx, pInitData->pJacobian, pAcceleratorInfo->memoryKB, &taskSize );
 
 			accelerator_view acceleratorView = pAcceleratorInfo->accelerator.get_default_view( );
 
-			PCGLoopPart1PointsTaskAMP< CameraModel >* pTask = new PCGLoopPart1PointsTaskAMP< CameraModel >( );
+			PCGLoopPart1PointsTaskAMP< CameraModel >* pTask = new PCGLoopPart1PointsTaskAMP< CameraModel >( acceleratorView );
 			pTask->Initialize(
 				pointStartIx,
 				&taskSize,
@@ -468,19 +484,13 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				pInitData->alpha,
 				pInitData->parameterVectorSize,
 				pInitData->pParameterVector,
-				&acceleratorView,
 				pInitData->pTemp );
 
-			pointStartIx += taskSize.pointCount;
+			( *pPointStartIx ) += taskSize.pointCount;
 
 			*ppTask = pTask;
 			pTask = NULL;
 		}
-
-	protected:
-
-		static uint m_maxCpuCamTaskSize;
-		static uint m_maxCpuPtTaskSize;
 		
 	};
 

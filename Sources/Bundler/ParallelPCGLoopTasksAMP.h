@@ -9,13 +9,16 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	class PCGLoopPart0CamerasTaskAMP : public Async::ITask
 	{
 	public:
+
+		PCGLoopPart0CamerasTaskAMP( __in accelerator_view dstAccelerator ) :
+			m_accelerator( dstAccelerator )
+		{}
 	
 		void Initialize(
 			__in const uint cameraStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const Scalar diagonalDampeningFactor,
-			__in accelerator_view* pDstAccelerator,
 			__inout ParallelPCGSolverTemp* pTemp ) __CPU_ONLY
 		{
 			m_pJacobian = pJacobian;
@@ -27,16 +30,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_Ad = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
 			m_pDotOut = &pTemp->dDotAd;
-
-			m_pAccelerator = pDstAccelerator;
 		}
 	
 		void Execute( ) override
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 	
-			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData;
-			LocalProjectionProviderDataAMP< CameraModel >::CreateForCameras( m_pJacobian, m_startIx, &m_counts, *m_pAccelerator, &pJacobianData );
+			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData = NULL;
+			LocalProjectionProviderDataAMP< CameraModel >::CreateForCameras( m_pJacobian, m_startIx, &m_counts, m_accelerator, &pJacobianData );
 
 			LocalProjectionProviderAMP< CameraModel > localJacobian( pJacobianData );
 	
@@ -51,13 +52,13 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint totalPointParams = POINT_PARAM_COUNT * ( uint )m_pJacobian->GetPointCount( );
 			const uint startIx = m_startIx;
 
-			array< Scalar, 1 > d( totalCameraParams + totalPointParams, m_d, *m_pAccelerator );
-			array< Scalar, 1 > Ad( cameraCount * cameraParamCount, m_Ad, *m_pAccelerator );
-			array< Scalar, 1 > partialDots( cameraCount, *m_pAccelerator );
+			array< Scalar, 1 > d( totalCameraParams + totalPointParams, m_d, m_accelerator );
+			array< Scalar, 1 > Ad( cameraCount * cameraParamCount, m_Ad, m_accelerator );
+			array< Scalar, 1 > partialDots( cameraCount, m_accelerator );
 
-			parallel_for_each( *m_pAccelerator, extent< 1 >( cameraCount ), 
+			parallel_for_each( m_accelerator, extent< 1 >( cameraCount ),
 				[ localJacobian, localHessianProvider, localHessian, totalCameraParams, totalPointParams, startIx, &d, &Ad, &partialDots ]
-				( index< 1 > localCameraIx ) restrict( amp )
+			( index< 1 > localCameraIx ) restrict( amp )
 			{
 				constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
@@ -69,11 +70,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				localHessian.MultiplyCameraRow( &localJacobian, &localHessianProvider, localCameraIx[0], totalCameraParams, pCameraD, totalPointParams, pPointD, pAd );
 
-				partialDots[ localCameraIx ] = VectorDot< Scalar, cameraParamCount >( pD, pAd );
+				partialDots[localCameraIx] = VectorDot< Scalar, cameraParamCount >( pD, pAd );
 			} );
 
-			m_pAccelerator->wait( );
-
+			m_accelerator.wait( );
+			
 			copy( Ad, m_Ad );
 	
 			Scalar partialDot = Async::AccumulateBuffer( cameraCount, partialDots );
@@ -84,7 +85,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	
 	protected:
 	
-		accelerator_view* m_pAccelerator;
+		accelerator_view m_accelerator;
 
 		const ProjectionProvider< CameraModel >* m_pJacobian;
 		uint m_startIx;
@@ -102,12 +103,15 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	{
 	public:
 
+		PCGLoopPart0PointsTaskAMP( __in accelerator_view dstAccelerator ) :
+			m_accelerator( dstAccelerator )
+		{}
+
 		void Initialize(
 			__in const uint pointStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
 			__in const ProjectionProvider< CameraModel >* pJacobian,
 			__in const Scalar diagonalDampeningFactor,
-			__in accelerator_view* pDstAccelerator,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
 			m_pJacobian = pJacobian;
@@ -119,16 +123,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_Ad = Utils::GetPointParamPtr< CameraModel >( pointStartIx, pJacobian->GetCameraCount(), pTemp->Ad.Elements( ) );
 			m_d = pTemp->d.Elements( );
 			m_pDotOut = &pTemp->dDotAd;
-
-			m_pAccelerator = pDstAccelerator;
 		}
 
 		void Execute( ) override
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
-			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData;
-			LocalProjectionProviderDataAMP< CameraModel >::CreateForPoints( m_pJacobian, m_startIx, &m_counts, *m_pAccelerator, &pJacobianData );
+			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData = NULL;
+			LocalProjectionProviderDataAMP< CameraModel >::CreateForPoints( m_pJacobian, m_startIx, &m_counts, m_accelerator, &pJacobianData );
 
 			LocalProjectionProviderAMP< CameraModel > localJacobian( pJacobianData );
 
@@ -143,11 +145,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint totalPointParams = POINT_PARAM_COUNT * ( uint )m_pJacobian->GetPointCount( );
 			const uint startIx = m_startIx;
 
-			array< Scalar, 1 > d( totalCameraParams + totalPointParams, m_d, *m_pAccelerator );
-			array< Scalar, 1 > Ad( pointCount * POINT_PARAM_COUNT, m_Ad, *m_pAccelerator );
-			array< Scalar, 1 > partialDots( pointCount, *m_pAccelerator );
+			array< Scalar, 1 > d( totalCameraParams + totalPointParams, m_d, m_accelerator );
+			array< Scalar, 1 > Ad( pointCount * POINT_PARAM_COUNT, m_Ad, m_accelerator );
+			array< Scalar, 1 > partialDots( pointCount, m_accelerator );
 
-			parallel_for_each( *m_pAccelerator, extent< 1 >( pointCount ),
+			parallel_for_each( m_accelerator, extent< 1 >( pointCount ),
 				[ localJacobian, localHessianProvider, localHessian, totalCameraParams, totalPointParams, startIx, &d, &Ad, &partialDots ]
 			( index< 1 > localPointIx ) restrict( amp )
 			{
@@ -164,7 +166,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				partialDots[localPointIx] = VectorDot< Scalar, pointParamCount >( pD, pAd );
 			} );
 
-			m_pAccelerator->wait( );
+			m_accelerator.wait( );
 
 			copy( Ad, m_Ad );
 			
@@ -176,7 +178,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 	protected:
 
-		accelerator_view* m_pAccelerator;
+		accelerator_view m_accelerator;
 
 		const ProjectionProvider< CameraModel >* m_pJacobian;
 		uint m_startIx;
@@ -194,6 +196,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	{
 	public:
 
+		PCGLoopPart1CamerasTaskAMP( __in accelerator_view dstAccelerator ) :
+			m_accelerator( dstAccelerator )
+		{}
+
 		void Initialize(
 			__in const uint cameraStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
@@ -201,7 +207,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const Scalar alpha,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__in accelerator_view* pDstAccelerator,
+			
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
 			m_pJacobian = pJacobian;
@@ -216,16 +222,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_r = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->r.Elements( ) );
 			m_mr = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->MInvR.Elements( ) );
 			m_pErrSqNew = &pTemp->errSqNew;
-
-			m_pAccelerator = pDstAccelerator;
 		}
 
 		void Execute( ) override
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
-			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData;
-			LocalProjectionProviderDataAMP< CameraModel >::CreateForCameras( m_pJacobian, m_startIx, &m_counts, *m_pAccelerator, &pJacobianData );
+			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData = NULL;
+			LocalProjectionProviderDataAMP< CameraModel >::CreateForCameras( m_pJacobian, m_startIx, &m_counts, m_accelerator, &pJacobianData );
 
 			LocalProjectionProviderAMP< CameraModel > localJacobian( pJacobianData );
 
@@ -236,14 +240,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint blockParamCount = cameraCount * cameraParamCount;
 			const Scalar alpha = m_alpha;
 
-			array< Scalar, 1 > x( blockParamCount, m_x, *m_pAccelerator );
-			array< Scalar, 1 > d( blockParamCount, m_d, *m_pAccelerator );
-			array< Scalar, 1 > r( blockParamCount, m_r, *m_pAccelerator );
-			array< Scalar, 1 > Ad( blockParamCount, m_Ad, *m_pAccelerator );
-			array< Scalar, 1 > mr( blockParamCount, m_mr, *m_pAccelerator );
-			array< Scalar, 1 > newErrSqParts( cameraCount, *m_pAccelerator );
+			array< Scalar, 1 > x( blockParamCount, m_x, m_accelerator );
+			array< Scalar, 1 > d( blockParamCount, m_d, m_accelerator );
+			array< Scalar, 1 > r( blockParamCount, m_r, m_accelerator );
+			array< Scalar, 1 > Ad( blockParamCount, m_Ad, m_accelerator );
+			array< Scalar, 1 > mr( blockParamCount, m_mr, m_accelerator );
+			array< Scalar, 1 > newErrSqParts( cameraCount, m_accelerator );
 
-			parallel_for_each( *m_pAccelerator, extent< 1 >( cameraCount ),
+			parallel_for_each( m_accelerator, extent< 1 >( cameraCount ),
 				[ localJacobian, localHessian, alpha, &x, &d, &r, &Ad, &mr, &newErrSqParts ]
 				( index< 1 > ix ) restrict( amp )
 			{
@@ -266,7 +270,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				newErrSqParts[ ix ] = VectorDot< Scalar, cameraParamCount >( pR, pMr );
 			} );
 
-			m_pAccelerator->wait( );
+			m_accelerator.wait( );
 
 			copy( x, m_x );
 			copy( r, m_r );
@@ -280,7 +284,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 	protected:
 
-		accelerator_view* m_pAccelerator;
+		accelerator_view m_accelerator;
 
 		const ProjectionProvider< CameraModel >* m_pJacobian;
 		uint m_startIx;
@@ -303,6 +307,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	{
 	public:
 
+		PCGLoopPart1PointsTaskAMP( __in accelerator_view dstAccelerator ) :
+			m_accelerator( dstAccelerator )
+		{}
+
 		void Initialize(
 			__in const uint pointStartIx,
 			__in const LocalProjectionProviderDataCountsAMP* pCounts,
@@ -310,7 +318,6 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const Scalar alpha,
 			__in const uint parameterVectorSize,
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
-			__in accelerator_view* pDstAccelerator,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
 			m_pJacobian = pJacobian;
@@ -327,16 +334,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_r = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->r.Elements( ) );
 			m_mr = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->MInvR.Elements( ) );
 			m_pErrSqNew = &pTemp->errSqNew;
-
-			m_pAccelerator = pDstAccelerator;
 		}
 
 		void Execute( ) override
 		{
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 
-			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData;
-			LocalProjectionProviderDataAMP< CameraModel >::CreateForPoints( m_pJacobian, m_startIx, &m_counts, *m_pAccelerator, &pJacobianData );
+			LocalProjectionProviderDataAMP< CameraModel >* pJacobianData = NULL;
+			LocalProjectionProviderDataAMP< CameraModel >::CreateForPoints( m_pJacobian, m_startIx, &m_counts, m_accelerator, &pJacobianData );
 
 			LocalProjectionProviderAMP< CameraModel > localJacobian( pJacobianData );
 
@@ -347,14 +352,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			const uint blockParamCount = pointCount * POINT_PARAM_COUNT;
 			const Scalar alpha = m_alpha;
 
-			array< Scalar, 1 > x( blockParamCount, m_x, *m_pAccelerator );
-			array< Scalar, 1 > d( blockParamCount, m_d, *m_pAccelerator );
-			array< Scalar, 1 > r( blockParamCount, m_r, *m_pAccelerator );
-			array< Scalar, 1 > Ad( blockParamCount, m_Ad, *m_pAccelerator );
-			array< Scalar, 1 > mr( blockParamCount, m_mr, *m_pAccelerator );
-			array< Scalar, 1 > newErrSqParts( pointCount, *m_pAccelerator );
+			array< Scalar, 1 > x( blockParamCount, m_x, m_accelerator );
+			array< Scalar, 1 > d( blockParamCount, m_d, m_accelerator );
+			array< Scalar, 1 > r( blockParamCount, m_r, m_accelerator );
+			array< Scalar, 1 > Ad( blockParamCount, m_Ad, m_accelerator );
+			array< Scalar, 1 > mr( blockParamCount, m_mr, m_accelerator );
+			array< Scalar, 1 > newErrSqParts( pointCount, m_accelerator );
 
-			parallel_for_each( *m_pAccelerator, extent< 1 >( pointCount ),
+			parallel_for_each( m_accelerator, extent< 1 >( pointCount ),
 				[ localJacobian, localHessian, alpha, &x, &d, &r, &Ad, &mr, &newErrSqParts ]
 			( index< 1 > ix ) restrict( amp )
 			{
@@ -377,7 +382,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				newErrSqParts[ix] = VectorDot< Scalar, pointParamCount >( pR, pMr );
 			} );
 
-			m_pAccelerator->wait( );
+			m_accelerator.wait( );
 
 			copy( x, m_x );
 			copy( r, m_r );
@@ -391,7 +396,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 	protected:
 
-		accelerator_view* m_pAccelerator;
+		accelerator_view m_accelerator;
 
 		const ProjectionProvider< CameraModel >* m_pJacobian;
 		uint m_startIx;

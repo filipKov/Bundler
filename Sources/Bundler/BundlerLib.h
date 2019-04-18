@@ -88,7 +88,9 @@
 
 
 // Optimizer 
+#include "BundleOptimizerDefs.h"
 #include "BundleOptimizer.h"
+#include "ParallelBundleOptimizer.h"
 
 
 // Scene generator

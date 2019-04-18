@@ -153,6 +153,12 @@
     <ClInclude Include="ParallelPCGTaskFactory.h">
       <Filter>LinearSolver\Parallel\Tasks</Filter>
     </ClInclude>
+    <ClInclude Include="BundleOptimizerDefs.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelBundleOptimizer.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

@@ -125,6 +125,7 @@
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="BundleOptimizer.h" />
+    <ClInclude Include="BundleOptimizerDefs.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
     <ClInclude Include="BundlerLib.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="LocalProjectionProviderDataAMP.h" />
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="ICameraModel.h" />
+    <ClInclude Include="ParallelBundleOptimizer.h" />
     <ClInclude Include="ParallelPCGDefs.h" />
     <ClInclude Include="ParallelPCGInitTasksAMP.h" />
     <ClInclude Include="ParallelPCGInitTasksCPU.h" />

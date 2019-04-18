@@ -25,8 +25,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			UNREFERENCED_PARAMETER( parameterVectorSize );
 			m_x0 = pX0;
 
-			m_r = Utils::GetCameraParamPtr( cameraStartIx, pTemp->r.Elements( ) );
-			m_d = Utils::GetCameraParamPtr( cameraStartIx, pTemp->d.Elements( ) );
+			m_r = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->r.Elements( ) );
+			m_d = Utils::GetCameraParamPtr< CameraModel >( cameraStartIx, pTemp->d.Elements( ) );
 			m_pErrSq = &pTemp->errSqNew;
 		}
 
@@ -131,8 +131,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			m_x0 = pX0;
 
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
-			m_r = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->r.Elements( ) );
-			m_d = Utils::GetPointParamPtr( pointStartIx, cameraCount, pTemp->d.Elements( ) );
+			m_r = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->r.Elements( ) );
+			m_d = Utils::GetPointParamPtr< CameraModel >( pointStartIx, cameraCount, pTemp->d.Elements( ) );
 			m_pErrSq = &pTemp->errSqNew;
 		}
 
@@ -189,7 +189,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			{
 				const uint projectionIx = pJacobian->GetPointProjectionIndex( localPointIx, projI );
 
-				pJacobian->GetProjectionBlock< false, true, true >( projectionIx, pointTemp, NULL, residualTemp );
+				pJacobian->GetProjectionBlock< false, true, true >( projectionIx, NULL, pointTemp, residualTemp );
 
 				MatrixMultiplyAtB< Scalar, 2, POINT_PARAM_COUNT, 1 >( pointTemp, residualTemp, pointXTemp );
 				MatrixAdd< Scalar, POINT_PARAM_COUNT, 1 >( pointXTemp, pDst, pDst );

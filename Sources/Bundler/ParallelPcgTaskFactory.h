@@ -368,7 +368,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 			accelerator_view acceleratorView = pAcceleratorInfo->accelerator.get_default_view( );
 
-			PCGLoopPart0CamerasTaskAMP< CameraModel >* pTask = new PCGLoopPart0CamerasTaskAMP< CameraModel >( acceleratorView );
+			PCGLoopPart0PointsTaskAMP< CameraModel >* pTask = new PCGLoopPart0PointsTaskAMP< CameraModel >( acceleratorView );
 			pTask->Initialize(
 				pointStartIx,
 				&taskSize,

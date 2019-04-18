@@ -81,7 +81,7 @@ namespace Bundler { namespace LinearSolver {
 
 				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
 
-				Scalar alpha = pTemp->errSq / dDotAd;
+				Scalar alpha = pTemp->errSq / pTemp->dDotAd;
 
 				pTemp->errSqNew = 0;
 				LoopPart1Cameras( pJacobian, alpha, parameterVectorSize, pX, pTemp );
@@ -89,8 +89,8 @@ namespace Bundler { namespace LinearSolver {
 
 				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
 
-				Scalar beta = pTemp->newErrSq / pTemp->errSq;
-				pTemp->errSq = pTemp->newErrSq;
+				Scalar beta = pTemp->errSqNew / pTemp->errSq;
+				pTemp->errSq = pTemp->errSqNew;
 
 				// Not really a point in doing this in parallel ( probably ), maybe on CPU
 				pTemp->d *= beta;
@@ -130,7 +130,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolveCamerasTask( pWorker, &initData, cameraStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolveCamerasTask( pWorker, &initData, &cameraStartIx, &pTask );
 				
 				pWorker->ExecuteTask( pTask );
 			}
@@ -162,7 +162,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolvePointsTask( pWorker, &initData, cameraStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateInitSolvePointsTask( pWorker, &initData, &pointStartIx, &pTask );
 
 				pWorker->ExecuteTask( pTask );
 			}
@@ -188,7 +188,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 				
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0CamerasTask( pWorker, &initData, cameraStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0CamerasTask( pWorker, &initData, &cameraStartIx, &pTask );
 
 				pWorker->ExecuteTask( pTask );
 			}
@@ -214,7 +214,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0PointsTask( pWorker, &initData, pointStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0PointsTask( pWorker, &initData, &pointStartIx, &pTask );
 
 				pWorker->ExecuteTask( pTask );
 			}
@@ -246,7 +246,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1CamerasTask( pWorker, &initData, cameraStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1CamerasTask( pWorker, &initData, &cameraStartIx, &pTask );
 
 				pWorker->ExecuteTask( pTask );
 			}
@@ -278,7 +278,7 @@ namespace Bundler { namespace LinearSolver {
 				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
 
 				Async::ITask* pTask = NULL;
-				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1PointsTask( pWorker, &initData, pointStartIx, &pTask );
+				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1PointsTask( pWorker, &initData, &pointStartIx, &pTask );
 
 				pWorker->ExecuteTask( pTask );
 			}

@@ -13,7 +13,8 @@ namespace Bundler {
 			m_projections( pData->m_projections ),
 			m_globalMappingCameras( pData->m_globalMappingCameras ),
 			m_globalMappingPoints( pData->m_globalMappingPoints ),
-			m_projectionMapping( pData->m_projectionMapping )
+			m_projectionMapping( pData->m_projectionMapping ),
+			m_maxProjectionCount( pData->m_maxProjectionCount )
 		{
 		}
 
@@ -70,19 +71,7 @@ namespace Bundler {
 
 		__forceinline uint GetMaxProjectionCount( ) const __GPU
 		{
-			Structure::LocalBundleStructureMapping* pMapping = m_projectionMapping.data( );
-
-			uint maxCount = pMapping->projectionCount;
-			for ( int i = 1; i < m_projectionMapping.get_extent( )[0]; i++ )
-			{
-				pMapping++;
-				if ( pMapping->projectionCount > maxCount )
-				{
-					maxCount = pMapping->projectionCount;
-				}
-			}
-
-			return maxCount;
+			return m_maxProjectionCount;
 		}
 
 		template < bool getCameraBlock, bool getPointBlock, bool getResiduals >
@@ -158,6 +147,7 @@ namespace Bundler {
 		array< uint, 1 >& m_globalMappingPoints;
 
 		array< Structure::LocalBundleStructureMapping, 1 >& m_projectionMapping;
+		uint m_maxProjectionCount;
 	};
 
 }

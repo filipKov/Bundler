@@ -29,6 +29,7 @@ namespace Bundler {
 			Containers::Buffer< uint > camerasGlobalMapping;
 			Containers::Buffer< uint > pointGlobalMapping;
 			Containers::Buffer< Structure::LocalBundleStructureMapping > projectionMapping;
+			uint maxProjectionCount;
 
 			template < bool forCameras >
 			void Initialize( __in const LocalProjectionProviderDataCountsAMP* pCounts )
@@ -47,6 +48,8 @@ namespace Bundler {
 				{
 					projectionMapping.Allocate( pCounts->pointCount );
 				}
+
+				maxProjectionCount = 0;
 			}
 		};
 	}
@@ -192,7 +195,8 @@ namespace Bundler {
 			m_projections( (int)pTemp->projections.Length(), dstAccelerator ),
 			m_globalMappingCameras( (int)pTemp->camerasGlobalMapping.Length(), dstAccelerator ),
 			m_globalMappingPoints( (int)pTemp->pointGlobalMapping.Length(), dstAccelerator ),
-			m_projectionMapping( (int)pTemp->projectionMapping.Length(), dstAccelerator )
+			m_projectionMapping( (int)pTemp->projectionMapping.Length(), dstAccelerator ),
+			m_maxProjectionCount( pTemp->maxProjectionCount )
 		{
 			copy( pTemp->cameras.Data( ), m_cameras );
 			copy( pTemp->points.Data( ), m_points );
@@ -229,6 +233,8 @@ namespace Bundler {
 			{
 				const uint globalCameraIx = localCameraIx + cameraStartIx;
 				const uint projectionCount = ( uint )pProvider->GetCameraProjectionCount( globalCameraIx );
+
+				pTemp->maxProjectionCount = max( pTemp->maxProjectionCount, projectionCount );
 
 				pCamerasDst->SetCopy( pProvider->GetCamera( globalCameraIx ) );
 				pCamerasDst++;
@@ -299,6 +305,8 @@ namespace Bundler {
 				const uint globalPointIx = localPointIx + pointStartIx;
 				const uint projectionCount = ( uint )pProvider->GetPointProjectionCount( globalPointIx );
 
+				pTemp->maxProjectionCount = max( pTemp->maxProjectionCount, projectionCount );
+
 				*pPointDst = *pProvider->GetPoint( globalPointIx );
 				pPointDst++;
 
@@ -351,6 +359,7 @@ namespace Bundler {
 		array< uint, 1 > m_globalMappingPoints;
 
 		array< Structure::LocalBundleStructureMapping, 1 > m_projectionMapping;
+		uint m_maxProjectionCount;
 
 		friend class LocalProjectionProviderAMP< CameraModel >;
 	};

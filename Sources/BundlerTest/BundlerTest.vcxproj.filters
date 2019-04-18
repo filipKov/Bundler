@@ -33,6 +33,9 @@
     <ClCompile Include="LocalHessianAmpTest.cpp">
       <Filter>JacobianAndHessian</Filter>
     </ClCompile>
+    <ClCompile Include="JtfSubXTest.cpp">
+      <Filter>PCG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">
@@ -49,6 +52,9 @@
     </Filter>
     <Filter Include="Import">
       <UniqueIdentifier>{d464f3a7-00d0-40e7-b756-6a221417918e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCG">
+      <UniqueIdentifier>{86ebcb9a-78d5-42f4-9568-98cb71c3177c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

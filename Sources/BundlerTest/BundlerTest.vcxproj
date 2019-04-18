@@ -77,7 +77,6 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\..\Builds\$(Platform)\Debug\</OutDir>
     <IntDir>$(OutDir)Intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
@@ -140,12 +139,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,7 @@
     <ClCompile Include="CameraModel3DoFTest.cpp" />
     <ClCompile Include="CameraModel6DoFTest.cpp" />
     <ClCompile Include="HessianTest.cpp" />
+    <ClCompile Include="JtfSubXTest.cpp" />
     <ClCompile Include="LocalHessianAmpTest.cpp" />
     <ClCompile Include="LocalHessianTest.cpp" />
     <ClCompile Include="MatrixBenchmark.cpp" />

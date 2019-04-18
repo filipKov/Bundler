@@ -59,6 +59,9 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToCamera( &localBlockHessian, cameraIx, m_r, m_d );
 
 				errPart += VectorDot< Scalar, cameraParamCount >( m_r, m_d );
+
+				m_r += cameraParamCount;
+				m_d += cameraParamCount;
 			}
 
 			m_pErrSq->operator+=( errPart );
@@ -165,6 +168,9 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToPoint( &localBlockHessian, pointIx, m_r, m_d );
 
 				errPart += VectorDot< Scalar, POINT_PARAM_COUNT >( m_r, m_d );
+
+				m_r += POINT_PARAM_COUNT;
+				m_d += POINT_PARAM_COUNT;
 			}
 
 			m_pErrSq->operator+=( errPart );

@@ -60,17 +60,17 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				[ localJacobian, localHessianProvider, localHessian, totalCameraParams, totalPointParams, startIx, &d, &Ad, &partialDots ]
 			( index< 1 > localCameraIx ) restrict( amp )
 			{
-				constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
+				const uint cameraParamCountKernel = CameraModel::cameraParameterCount;
 
 				const Scalar* pCameraD = d.data( );
 				const Scalar* pPointD = pCameraD + totalCameraParams;
 				const Scalar* pD = Utils::GetCameraParamPtr< CameraModel >( startIx + localCameraIx[0], pCameraD );
 
-				Scalar* pAd = Ad.data( ) + localCameraIx[0] * cameraParamCount;
+				Scalar* pAd = Ad.data( ) + localCameraIx[0] * cameraParamCountKernel;
 
 				localHessian.MultiplyCameraRow( &localJacobian, &localHessianProvider, localCameraIx[0], totalCameraParams, pCameraD, totalPointParams, pPointD, pAd );
-
-				partialDots[localCameraIx] = VectorDot< Scalar, cameraParamCount >( pD, pAd );
+				
+				partialDots[localCameraIx] = VectorDot< Scalar, cameraParamCountKernel >( pD, pAd );
 			} );
 
 			m_accelerator.wait( );
@@ -210,6 +210,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			UNREFERENCED_PARAMETER( parameterVectorSize );
+
 			m_pJacobian = pJacobian;
 			m_startIx = cameraStartIx;
 			m_counts = *pCounts;
@@ -251,23 +253,23 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 				[ localJacobian, localHessian, alpha, &x, &d, &r, &Ad, &mr, &newErrSqParts ]
 				( index< 1 > ix ) restrict( amp )
 			{
-				constexpr uint cameraParamCount = CameraModel::cameraParameterCount;
+				constexpr uint cameraParamCountKernel = CameraModel::cameraParameterCount;
 
 				const uint localCameraIx = ix[0];
 
-				const Scalar* pD = d.data( ) + localCameraIx * cameraParamCount;
-				const Scalar* pAd = Ad.data( ) + localCameraIx * cameraParamCount;
+				const Scalar* pD = d.data( ) + localCameraIx * cameraParamCountKernel;
+				const Scalar* pAd = Ad.data( ) + localCameraIx * cameraParamCountKernel;
 
-				Scalar* pX = x.data( ) + localCameraIx * cameraParamCount;
-				Scalar* pR = r.data( ) + localCameraIx * cameraParamCount;
-				Scalar* pMr = mr.data( ) + localCameraIx * cameraParamCount;
+				Scalar* pX = x.data( ) + localCameraIx * cameraParamCountKernel;
+				Scalar* pR = r.data( ) + localCameraIx * cameraParamCountKernel;
+				Scalar* pMr = mr.data( ) + localCameraIx * cameraParamCountKernel;
 
-				MatrixAddC< Scalar, cameraParamCount, 1 >( pX, pD, alpha, pX );
-				MatrixSubC< Scalar, cameraParamCount, 1 >( pR, pAd, alpha, pR );
+				MatrixAddC< Scalar, cameraParamCountKernel, 1 >( pX, pD, alpha, pX );
+				MatrixSubC< Scalar, cameraParamCountKernel, 1 >( pR, pAd, alpha, pR );
 
 				LocalBlockJacobiPreconditioner< CameraModel >::ApplyToCamera( &localJacobian, &localHessian, localCameraIx, pR, pMr );
 
-				newErrSqParts[ ix ] = VectorDot< Scalar, cameraParamCount >( pR, pMr );
+				newErrSqParts[ ix ] = VectorDot< Scalar, cameraParamCountKernel >( pR, pMr );
 			} );
 
 			m_accelerator.wait( );
@@ -320,6 +322,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			UNREFERENCED_PARAMETER( parameterVectorSize );
+
 			m_pJacobian = pJacobian;
 			m_startIx = pointStartIx;
 			m_counts = *pCounts;

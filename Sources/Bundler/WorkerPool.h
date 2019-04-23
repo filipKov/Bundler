@@ -10,6 +10,8 @@ namespace Bundler { namespace Async {
 
 		WorkerThread* GetWorker( );
 
+		WorkerThread* GetWorker( WorkerThreadType preferredType );
+
 		void ReturnWorker( __in WorkerThread* pWorker );
 
 		void OnFinishTask( __in WorkerThread* pWorker ) override;
@@ -42,6 +44,8 @@ namespace Bundler { namespace Async {
 		~WorkerPool( );
 
 		WorkerThread* GetWorker( );
+
+		WorkerThread* GetWorker( WorkerThreadType preferredType );
 
 		void WaitForIdleWorkers( );
 

@@ -21,6 +21,12 @@ namespace Bundler { namespace Async {
 
 	bool IsGPU( __in const accelerator acc );
 
+	template < size_t minMemoryKB >
+	bool IsGPUWithEnoughMemory( __in const accelerator acc )
+	{
+		return IsGPU( acc ) && ( acc.get_dedicated_memory( ) >= minMemoryKB );
+	}
+
 	void GetAccelerators( __in const uint count, __out accelerator* pAccelerators );
 
 	template < typename Predicate >

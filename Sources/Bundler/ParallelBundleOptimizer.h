@@ -32,8 +32,6 @@ namespace Bundler {
 				m_dampeningFactor *= Scalar( 0.0000001 );
 			}
 
-			Scalar geometricError = 0;
-			uint finalIteration = 0;
 			OptimizeLoop( &jacobian, pBundle, pStats );
 		}
 	
@@ -163,6 +161,8 @@ namespace Bundler {
 			__in_ecount( paramCount ) const Scalar* pUpdateVector,
 			__out Bundle* pBundle )
 		{
+			UNREFERENCED_PARAMETER( paramCount );
+
 			const int64 cameraCount = (int64)m_cameraModels.Length( );
 			const int64 pointCount = (int64)pBundle->points.Length( );
 
@@ -171,16 +171,18 @@ namespace Bundler {
 				#pragma omp for nowait
 				for ( int64 cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 				{
-					m_cameraModels[cameraIx].UpdateCamera( pUpdateVector );
-					pUpdateVector += CameraModel::cameraParameterCount;
+					const Scalar* pParamSrc = Utils::GetCameraParamPtr< CameraModel >( ( uint )cameraIx, pUpdateVector );
+
+					m_cameraModels[cameraIx].UpdateCamera( pParamSrc );
 				}
 
 				#pragma omp for
 				for ( int64 pointIx = 0; pointIx < pointCount; pointIx++ )
 				{
+					const Scalar* pParamSrc = Utils::GetPointParamPtr< CameraModel >( ( size_t )pointIx, ( size_t )cameraCount, pUpdateVector );
 					Scalar* pPoint = pBundle->points[pointIx].Elements( );
-					MatrixAdd< Scalar, 1, POINT_PARAM_COUNT >( pPoint, pUpdateVector, pPoint );
-					pUpdateVector += POINT_PARAM_COUNT;
+
+					MatrixAdd< Scalar, 1, POINT_PARAM_COUNT >( pPoint, pParamSrc, pPoint );
 				}
 			}
 		}
@@ -190,6 +192,8 @@ namespace Bundler {
 			__in_ecount( paramCount ) const Scalar* pUpdateVector,
 			__out Bundle* pBundle )
 		{
+			UNREFERENCED_PARAMETER( paramCount );
+
 			const int64 cameraCount = ( int64 )m_cameraModels.Length( );
 			const int64 pointCount = ( int64 )pBundle->points.Length( );
 
@@ -198,16 +202,18 @@ namespace Bundler {
 				#pragma omp for nowait
 				for ( int64 cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 				{
-					m_cameraModels[cameraIx].ResetLastUpdate( pUpdateVector );
-					pUpdateVector += CameraModel::cameraParameterCount;
+					const Scalar* pParamSrc = Utils::GetCameraParamPtr< CameraModel >( ( uint )cameraIx, pUpdateVector );
+					
+					m_cameraModels[cameraIx].ResetLastUpdate( pParamSrc );
 				}
 
 				#pragma omp for
 				for ( int64 pointIx = 0; pointIx < pointCount; pointIx++ )
 				{
+					const Scalar* pParamSrc = Utils::GetPointParamPtr< CameraModel >( ( size_t )pointIx, ( size_t )cameraCount, pUpdateVector );
 					Scalar* pPoint = pBundle->points[pointIx].Elements( );
-					MatrixSub< Scalar, 1, POINT_PARAM_COUNT >( pPoint, pUpdateVector, pPoint );
-					pUpdateVector += POINT_PARAM_COUNT;
+
+					MatrixSub< Scalar, 1, POINT_PARAM_COUNT >( pPoint, pParamSrc, pPoint );
 				}
 			}
 		}

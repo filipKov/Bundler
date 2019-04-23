@@ -152,6 +152,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			UNREFERENCED_PARAMETER( parameterVectorSize );
+
 			m_pJacobian = pJacobian;
 			m_startIx = cameraStartIx;
 			m_count = count;
@@ -228,6 +230,8 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__inout_ecount( parameterVectorSize ) Scalar* pX,
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
+			UNREFERENCED_PARAMETER( parameterVectorSize );
+
 			m_pJacobian = pJacobian;
 			m_startIx = pointStartIx;
 			m_count = count;

@@ -23,6 +23,22 @@ namespace Bundler { namespace Async {
 		return m_stack.RemoveLast( );
 	}
 
+	WorkerThread* WorkerStack::GetWorker( WorkerThreadType preferredType )
+	{
+		std::unique_lock< std::mutex > autoLock( m_stackLock );
+		m_stackPoll.wait( autoLock, std::bind( &WorkerStack::HasAvailableWorker, this ) );
+
+		for ( size_t desiredWorkerIx = 0; desiredWorkerIx < m_stack.Length( ); desiredWorkerIx++ )
+		{
+			if ( m_stack[desiredWorkerIx]->GetInfo( )->type == preferredType )
+			{
+				return m_stack.RemoveAt( desiredWorkerIx );
+			}
+		}
+
+		return m_stack.RemoveLast( );
+	}
+
 	void WorkerStack::ReturnWorker( __in WorkerThread* pWorker )
 	{
 		std::lock_guard< std::mutex > autoLock( m_stackLock );
@@ -70,7 +86,7 @@ namespace Bundler { namespace Async {
 	{
 		Containers::Buffer< accelerator > accelerators;
 		accelerators.Allocate( count );
-		GetAccelerators( count, accelerators.Data(), IsGPU );
+		GetAccelerators( count, accelerators.Data( ), IsGPU );
 
 		for ( uint i = 0; i < count; i++ )
 		{
@@ -119,6 +135,11 @@ namespace Bundler { namespace Async {
 	WorkerThread* WorkerPool::GetWorker( )
 	{
 		return m_workerStack.GetWorker( );
+	}
+
+	WorkerThread* WorkerPool::GetWorker( WorkerThreadType preferredType )
+	{
+		return m_workerStack.GetWorker( preferredType );
 	}
 
 	void WorkerPool::WaitForIdleWorkers( )

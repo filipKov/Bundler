@@ -37,11 +37,7 @@ namespace Bundler { namespace CameraModels {
 			AddInitialRotation( r.Elements( ) );
 		}
 
-		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY
-		{
-			ShallowCopy( &src, 1, this );
-			return *this;
-		}
+		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY = default;
 
 		void SetCopy( __in const CameraModelAMP6DoF< maxRotations >* pSource ) __CPU_ONLY
 		{
@@ -78,8 +74,9 @@ namespace Bundler { namespace CameraModels {
 			TranslatePoint( pt2 );
 			MultiplyByCalibration( pt2, pt1 );
 	
-			ELEMENT( pResiduals, 0 ) = ( ELEMENT( pt1, 0 ) / ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 0 );
-			ELEMENT( pResiduals, 1 ) = ( ELEMENT( pt1, 1 ) / ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 1 );
+			ELEMENT( pt1, 2 ) = Scalar( 1.0 ) / ELEMENT( pt1, 2 );
+			ELEMENT( pResiduals, 0 ) = ( ELEMENT( pt1, 0 ) * ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 0 );
+			ELEMENT( pResiduals, 1 ) = ( ELEMENT( pt1, 1 ) * ELEMENT( pt1, 2 ) ) - ELEMENT( pFeatureCoords, 1 );
 		}
 	
 	protected:
@@ -97,7 +94,7 @@ namespace Bundler { namespace CameraModels {
 			for ( uint i = 0; i < m_currentRotationCount; i++ )
 			{
 				M33MulV3( m_incrementalRotations[i].Elements( ), pt1, pt2 );
-	
+				
 				auto tmp = pt1;
 				pt1 = pt2;
 				pt2 = tmp;

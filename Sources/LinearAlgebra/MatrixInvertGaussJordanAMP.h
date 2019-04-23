@@ -24,6 +24,8 @@ namespace LinearAlgebra {
 			template <>
 			inline static void GetRowEschelonForm< 0 >( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp )
 			{
+				UNREFERENCED_PARAMETER( A );
+				UNREFERENCED_PARAMETER( InvertedA );
 			}
 		
 			template < uint diagIx, uint iter >
@@ -47,6 +49,7 @@ namespace LinearAlgebra {
 			{
 				inline static uint FindPivot( __in_ecount ( n * n ) const T* A ) restrict( amp )
 				{
+					UNREFERENCED_PARAMETER( A );
 					return diagIx;
 				}
 			};
@@ -79,6 +82,8 @@ namespace LinearAlgebra {
 			{
 				inline static void EliminateColumn( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp )
 				{
+					UNREFERENCED_PARAMETER( A );
+					UNREFERENCED_PARAMETER( InvertedA );
 				}
 			};
 		
@@ -99,6 +104,8 @@ namespace LinearAlgebra {
 			template <>
 			inline static void BackSubstitute< 0 >( __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp )
 			{
+				UNREFERENCED_PARAMETER( A );
+				UNREFERENCED_PARAMETER( InvertedA );
 			}
 		
 			template < uint diagIx, uint iter >
@@ -120,6 +127,9 @@ namespace LinearAlgebra {
 			{
 				inline static void BackSubstituteRow( __in const T diagInverse, __inout_ecount( n * n ) T* A, __out_ecount( n * n ) T* InvertedA ) restrict( amp )
 				{
+					UNREFERENCED_PARAMETER( diagInverse );
+					UNREFERENCED_PARAMETER( A );
+					UNREFERENCED_PARAMETER( InvertedA );
 				}
 			};
 		};

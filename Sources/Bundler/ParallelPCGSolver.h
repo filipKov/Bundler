@@ -71,10 +71,14 @@ namespace Bundler { namespace LinearSolver {
 		{
 			Vector< Scalar > x( parameterVectorSize, pX );
 	
+			HighResolutionClock stopwatch;
+
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) &&
 				( pTemp->errSq > m_errorToleranceSq ) )
 			{
+				stopwatch.Start( );
+
 				pTemp->dDotAd = 0;
 				LoopPart0Cameras( pJacobian, diagonalDampeningFactor, pTemp );
 				LoopPart0Points( pJacobian, diagonalDampeningFactor, pTemp );
@@ -90,6 +94,12 @@ namespace Bundler { namespace LinearSolver {
 				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
 
 				Scalar beta = pTemp->errSqNew / pTemp->errSq;
+				// if ( pTemp->errSqNew > pTemp->errSq )
+				// {
+				// 	printf_s( "PCG end during iteration %u\n", iteration );
+				// 	break;
+				// }
+
 				pTemp->errSq = pTemp->errSqNew;
 
 				// Not really a point in doing this in parallel ( probably ), maybe on CPU
@@ -97,6 +107,10 @@ namespace Bundler { namespace LinearSolver {
 				pTemp->d += pTemp->MInvR;
 
 				iteration++;
+
+				stopwatch.Stop( );
+				printf_s( "(Parallel) PCG loop time: %fms\n", stopwatch.GetTotalTime( ) );
+				stopwatch.Clear( );
 			}
 	
 			return iteration;
@@ -185,7 +199,7 @@ namespace Bundler { namespace LinearSolver {
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
 			{
-				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( Async::WorkerThreadType::CPU );
 				
 				Async::ITask* pTask = NULL;
 				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0CamerasTask( pWorker, &initData, &cameraStartIx, &pTask );
@@ -211,7 +225,7 @@ namespace Bundler { namespace LinearSolver {
 			const uint pointCount = ( uint )pJacobian->GetPointCount( );
 			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 			{
-				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( Async::WorkerThreadType::GPU );
 
 				Async::ITask* pTask = NULL;
 				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart0PointsTask( pWorker, &initData, &pointStartIx, &pTask );
@@ -243,7 +257,7 @@ namespace Bundler { namespace LinearSolver {
 			const uint cameraCount = ( uint )pJacobian->GetCameraCount( );
 			for ( uint cameraStartIx = 0; cameraStartIx < cameraCount; )
 			{
-				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( Async::WorkerThreadType::CPU );
 
 				Async::ITask* pTask = NULL;
 				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1CamerasTask( pWorker, &initData, &cameraStartIx, &pTask );
@@ -275,7 +289,7 @@ namespace Bundler { namespace LinearSolver {
 			const uint pointCount = ( uint )pJacobian->GetPointCount( );
 			for ( uint pointStartIx = 0; pointStartIx < pointCount; )
 			{
-				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( );
+				Async::WorkerThread* pWorker = m_pWorkerPool->GetWorker( Async::WorkerThreadType::GPU );
 
 				Async::ITask* pTask = NULL;
 				Internal::ParallelPCGTaskFactory< CameraModel >::CreateLoopPart1PointsTask( pWorker, &initData, &pointStartIx, &pTask );

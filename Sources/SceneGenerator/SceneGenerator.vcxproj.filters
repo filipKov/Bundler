@@ -234,6 +234,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ViewerMath.h" />
+    <ClInclude Include="Optim.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Application">

@@ -44,11 +44,7 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 			: m_real( value ), m_infinitesimal( diffs ) 
 		{};
 
-		DiffNum( __in const DiffNum<BaseType, N>& src ) 
-		{
-			m_real = src.m_real;
-			m_infinitesimal = src.m_infinitesimal;
-		};
+		DiffNum( __in const DiffNum<BaseType, N>& src ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors
@@ -148,12 +144,7 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 		// -------------------------------------------------------------------------------------------------------
 		//    Basic operators
 		// -------------------------------------------------------------------------------------------------------
-		inline DiffNum<BaseType, N>& operator= ( __in const DiffNum<BaseType, N>& other ) 
-		{
-			m_real = other.m_real;
-			m_infinitesimal = other.m_infinitesimal;
-			return *this;
-		};
+		inline DiffNum<BaseType, N>& operator= ( __in const DiffNum<BaseType, N>& other ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Scalar operators
@@ -254,11 +245,11 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 		{
 		};
 
-		DiffNum( __in const DiffNum<BaseType, N>& src ) restrict( amp )
-		{
-			m_real = src.m_real;
-			m_infinitesimal = src.m_infinitesimal;
-		};
+		// DiffNum( __in const DiffNum<BaseType, N>& src ) restrict( amp )
+		// {
+		// 	m_real = src.m_real;
+		// 	m_infinitesimal = src.m_infinitesimal;
+		// };
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors
@@ -351,12 +342,12 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 		// -------------------------------------------------------------------------------------------------------
 		//    Basic operators
 		// -------------------------------------------------------------------------------------------------------
-		inline DiffNum<BaseType, N>& operator= ( __in const DiffNum<BaseType, N>& other ) restrict( amp )
-		{
-			m_real = other.m_real;
-			m_infinitesimal = other.m_infinitesimal;
-			return *this;
-		};
+		// inline DiffNum<BaseType, N>& operator= ( __in const DiffNum<BaseType, N>& other ) restrict( amp )
+		// {
+		// 	m_real = other.m_real;
+		// 	m_infinitesimal = other.m_infinitesimal;
+		// 	return *this;
+		// };
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Scalar operators

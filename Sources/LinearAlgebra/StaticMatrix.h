@@ -43,10 +43,7 @@ namespace LinearAlgebra {
 			ShallowCopy< Scalar >( values, rows * columns, m_pData );
 		}
 
-		Matrix( __in const Matrix<Scalar, rows, columns>& src )
-		{
-			ShallowCopy<Scalar>( src.m_pData, rows*columns, m_pData );
-		}
+		Matrix( __in const Matrix<Scalar, rows, columns>& src ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors
@@ -101,11 +98,7 @@ namespace LinearAlgebra {
 		// -------------------------------------------------------------------------------------------------------
 		//    Operators
 		// -------------------------------------------------------------------------------------------------------
-		inline Matrix<Scalar, rows, columns>& operator= ( __in const Matrix<Scalar, rows, columns>& src ) 
-		{
-			ShallowCopy<Scalar>( src.m_pData, rows*columns, m_pData );
-			return *this;
-		}
+		inline Matrix<Scalar, rows, columns>& operator= ( __in const Matrix<Scalar, rows, columns>& src ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Scalar Operators
@@ -172,10 +165,7 @@ namespace LinearAlgebra {
 			Containers::ArrayUtils< Scalar >::Copy< rows * columns >( values, m_pData );
 		}
 
-		Matrix( __in const Matrix<Scalar, rows, columns>& src ) restrict( amp )
-		{
-			Containers::ArrayUtils< Scalar >::Copy< rows * columns >( src.m_pData, m_pData );
-		}
+		// Matrix( __in const Matrix<Scalar, rows, columns>& src ) restrict( amp ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Accessors
@@ -220,11 +210,7 @@ namespace LinearAlgebra {
 		// -------------------------------------------------------------------------------------------------------
 		//    Operators
 		// -------------------------------------------------------------------------------------------------------
-		inline Matrix<Scalar, rows, columns>& operator= ( __in const Matrix<Scalar, rows, columns>& src ) restrict( amp )
-		{
-			Containers::ArrayUtils< Scalar >::Copy< rows * columns >( src.m_pData, m_pData );
-			return *this;
-		}
+		// inline Matrix<Scalar, rows, columns>& operator= ( __in const Matrix<Scalar, rows, columns>& src ) restrict( amp ) = default;
 
 		// -------------------------------------------------------------------------------------------------------
 		//    Scalar Operators

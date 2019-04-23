@@ -37,11 +37,7 @@ namespace Bundler { namespace CameraModels {
 			AddInitialRotation( r.Elements( ) );
 		}
 
-		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY
-		{
-			ShallowCopy( &src, 1, this );
-			return *this;
-		}
+		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY = default;
 
 		void SetCopy( __in const CameraModelAMP6DoF< maxRotations >* pSource ) __CPU_ONLY
 		{

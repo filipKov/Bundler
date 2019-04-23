@@ -84,6 +84,8 @@ namespace Bundler {
 			__in_ecount( totalPointParameterCount ) const Scalar* pPointX,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pAccumulator ) const __GPU
 		{
+			UNREFERENCED_PARAMETER( totalPointParameterCount );
+
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetCameraProjectionCount( localCameraIx );
 	
@@ -126,6 +128,8 @@ namespace Bundler {
 			__in_ecount( totalCameraParameterCount ) const Scalar* pCameraX,
 			__out_ecount( POINT_PARAM_COUNT ) Scalar* pAccumulator ) const __GPU
 		{
+			UNREFERENCED_PARAMETER( totalCameraParameterCount );
+
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const uint projectionCount = pJacobian->GetPointProjectionCount( localPointIx );
 	

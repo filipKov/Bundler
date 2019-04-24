@@ -138,16 +138,16 @@ namespace Bundler {
 	protected:
 
 		// Bundle
-		array< CameraModel, 1 >& m_cameras;
-		array< Vector3, 1 >& m_points;
-		array< Projection, 1 >& m_projections;
+		const array< CameraModel, 1 >& m_cameras;
+		const array< Vector3, 1 >& m_points;
+		const array< Projection, 1 >& m_projections;
 
 		// Mapping
-		array< uint, 1 >& m_globalMappingCameras;
-		array< uint, 1 >& m_globalMappingPoints;
+		const array< uint, 1 >& m_globalMappingCameras;
+		const array< uint, 1 >& m_globalMappingPoints;
 
-		array< Structure::LocalBundleStructureMapping, 1 >& m_projectionMapping;
-		uint m_maxProjectionCount;
+		const array< Structure::LocalBundleStructureMapping, 1 >& m_projectionMapping;
+		const uint m_maxProjectionCount;
 	};
 
 }

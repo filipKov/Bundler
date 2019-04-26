@@ -74,7 +74,7 @@ namespace LinearAlgebra {
 	// ----------------------------------------------------
 
 	template < typename T1, typename T2 >
-	__forceinline auto V3Dot( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
+	__forceinline decltype( auto ) V3Dot( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 )
 	{
 		return (
 			( ELEMENT( v1, 0 ) * ELEMENT( v2, 0 ) ) +
@@ -136,6 +136,23 @@ namespace LinearAlgebra {
 		ELEMENT( projected, 0 ) = dot * ELEMENT( dstV, 0 );
 		ELEMENT( projected, 1 ) = dot * ELEMENT( dstV, 1 );
 		ELEMENT( projected, 2 ) = dot * ELEMENT( dstV, 2 );
+	}
+
+	template < typename T1, typename T2 >
+	__forceinline void V3Cast( __in_ecount( 3 ) const T1* v1, __out_ecount( 3 ) T2* v2 )
+	{
+		ELEMENT( v2, 0 ) = T2( ELEMENT( v1, 0 ) );
+		ELEMENT( v2, 1 ) = T2( ELEMENT( v1, 1 ) );
+		ELEMENT( v2, 2 ) = T2( ELEMENT( v1, 2 ) );
+	}
+
+	template < typename T1, typename T2 >
+	__forceinline decltype( auto ) V3DistanceSq( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 ) 
+	{
+		return (
+			ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) * ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) +
+			ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) * ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) +
+			ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) * ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) );
 	}
 
 }

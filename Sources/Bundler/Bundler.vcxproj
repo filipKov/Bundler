@@ -124,6 +124,7 @@
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BundleImporter.h" />
+    <ClInclude Include="BundleNormalization.h" />
     <ClInclude Include="BundleOptimizer.h" />
     <ClInclude Include="BundleOptimizerDefs.h" />
     <ClInclude Include="Bundler.h" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="AMPUtils.cpp" />
     <ClCompile Include="BundleImporter.cpp" />
+    <ClCompile Include="BundleNormalization.cpp" />
     <ClCompile Include="Bundler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

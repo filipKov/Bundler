@@ -23,9 +23,13 @@ int main( int argc, char **argv )
 	Bundle bundle;
 	BundleAdditionalPayload metadata;
 
-	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "kocky-masked.out" ), &bundle, &metadata );
+	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "schwimmy.out" ), &bundle, &metadata );
 	if ( SUCCEEDED( hr ) )
 	{
+		Scalar mean[3];
+		Scalar stdev = 0;
+		Preprocess::Normalize( &bundle, mean, &stdev );
+
 		constexpr uint noiseMask = SceneGenAutoNoiseMask::POINTS;
 
 		SceneGenNoiseSettings noise = { 0 };
@@ -40,7 +44,7 @@ int main( int argc, char **argv )
 		// std::thread optimizerThread( OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 10 >, 10 >, &bundle2, &optimizerStats );
 		//optimizerThread.join( );
 
-		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 4 >, 3 >( &bundle2, &optimizerStats );
+		OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &bundle2, &optimizerStats );
 		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &bundle2, &optimizerStats );
 
 		//viewerThread.join( );

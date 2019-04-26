@@ -1,0 +1,151 @@
+#include "stdafx.h"
+#include "BundleNormalization.h"
+
+namespace Bundler { namespace Preprocess {
+
+	template < typename CameraFnc, typename PointFnc >
+	void IterateThroughBundle( __inout Bundle* pBundle, __in CameraFnc camFnc, __in PointFnc ptFnc )
+	{
+		const size_t pointCount = pBundle->points.Length( );
+		Vector3* pPoint = pBundle->points.Data( );
+		for ( size_t pointIx = 0; pointIx < pointCount; pointIx++ )
+		{
+			ptFnc( pPoint );
+			pPoint++;
+		}
+
+		const size_t cameraCount = pBundle->cameras.Length( );
+		Camera* pCamera = pBundle->cameras.Data( );
+		for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
+		{
+			camFnc( pCamera );
+			pCamera++;
+		}
+	}
+
+	template < typename CameraFnc, typename PointFnc >
+	void IterateThroughBundle( __in const Bundle* pBundle, __in CameraFnc camFnc, __in PointFnc ptFnc )
+	{
+		const size_t pointCount = pBundle->points.Length( );
+		const Vector3* pPoint = pBundle->points.Data( );
+		for ( size_t pointIx = 0; pointIx < pointCount; pointIx++ )
+		{
+			ptFnc( pPoint );
+			pPoint++;
+		}
+
+		const size_t cameraCount = pBundle->cameras.Length( );
+		const Camera* pCamera = pBundle->cameras.Data( );
+		for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
+		{
+			camFnc( pCamera );
+			pCamera++;
+		}
+	}
+
+	void GetMean( __in const Bundle* pBundle, __out_ecount( 3 ) double* pMean )
+	{
+		V3Zero( pMean );
+
+		IterateThroughBundle(
+			pBundle,
+			[ &pMean ] ( __in const Camera* pCamera ) { V3AddV3( pMean, pCamera->t.Elements( ), pMean ); },
+			[ &pMean ] ( __in const Vector3* pPoint ) { V3AddV3( pMean, pPoint->Elements( ), pMean ); } 
+		);
+
+		size_t elementCount = pBundle->points.Length( ) + pBundle->cameras.Length( );
+
+		V3MulC( pMean, 1.0 / elementCount, pMean );
+	}
+
+	namespace Internal {
+		
+		// Assuming that mean = 0
+		void GetStdev( __in const Bundle* pBundle, __out double* pStdev )
+		{
+			double variance = 0;
+
+			IterateThroughBundle(
+				pBundle,
+				[ &variance ] ( __in const Camera* pCamera ) { variance += V3Dot( pCamera->t.Elements( ), pCamera->t.Elements( ) ); },
+				[ &variance] ( __in const Vector3* pPoint ) { variance += V3Dot( pPoint->Elements( ), pPoint->Elements( ) ); } 
+			);
+
+			size_t elementCount = pBundle->points.Length( ) + pBundle->cameras.Length( );
+
+			*pStdev = sqrt( variance / elementCount );
+		}
+
+		void GetStdev( __in const Bundle* pBundle, __in_ecount_opt( 3 ) double* pMean, __out double* pStdev )
+		{
+			double variance = 0;
+
+			IterateThroughBundle(
+				pBundle,
+				[ &variance, &pMean ] ( __in const Camera* pCamera ) { variance += V3DistanceSq( pCamera->t.Elements( ), pMean ); },
+				[ &variance, &pMean ] ( __in const Vector3* pPoint ) { variance += V3DistanceSq( pPoint->Elements( ), pMean ); }
+			);
+
+			size_t elementCount = pBundle->points.Length( ) + pBundle->cameras.Length( );
+
+			*pStdev = sqrt( variance / elementCount );
+		}
+	}
+
+	void GetStdev( __in const Bundle* pBundle, __in_ecount_opt( 3 ) double* pMean, __out double* pStdev )
+	{
+		if ( !pMean )
+		{
+			Internal::GetStdev( pBundle, pStdev );
+		}
+		else
+		{
+			Internal::GetStdev( pBundle, pMean, pStdev );
+		}
+	}
+
+	void ShiftBundle( __in_ecount( 3 ) const double* pMean, __inout Bundle* pBundle )
+	{
+		Scalar shiftFactor[3];
+		V3Cast( pMean, shiftFactor );
+
+		IterateThroughBundle(
+			pBundle,
+			[ &shiftFactor ] ( __inout Camera* pCamera ) { V3SubV3( pCamera->t.Elements( ), shiftFactor, pCamera->t.Elements( ) ); },
+			[ &shiftFactor ] ( __inout Vector3* pPoint ) { V3SubV3( pPoint->Elements( ), shiftFactor, pPoint->Elements( ) ); }
+		);
+	}
+
+	void ScaleBundle( __in const double stdev, __inout Bundle* pBundle )
+	{
+		Scalar scaleFactor = Scalar( 1.0 / stdev );
+
+		IterateThroughBundle(
+			pBundle,
+			[ scaleFactor ] ( __inout Camera* pCamera ) { V3MulC( pCamera->t.Elements( ), scaleFactor, pCamera->t.Elements( ) ); },
+			[ scaleFactor ] ( __inout Vector3* pPoint ) { V3MulC( pPoint->Elements( ), scaleFactor, pPoint->Elements( ) ); }
+		);
+	}
+
+	void Normalize( __inout Bundle* pBundle, __out_ecount_opt( 3 ) Scalar* pMean, __out_opt Scalar* pStdev )
+	{
+		double mean[3];
+		GetMean( pBundle, mean );
+		ShiftBundle( mean, pBundle );
+
+		double stdev = 0;
+		GetStdev( pBundle, NULL, &stdev );
+		ScaleBundle( stdev, pBundle );
+
+		if ( pMean != NULL )
+		{
+			V3Cast< double, Scalar >( mean, pMean );
+		}
+
+		if ( pStdev != NULL )
+		{
+			*pStdev = Scalar( stdev );
+		}
+	}
+
+} }

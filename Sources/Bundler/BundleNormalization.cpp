@@ -43,13 +43,26 @@ namespace Bundler { namespace Preprocess {
 		}
 	}
 
+	void GetCameraCenter( __in const Camera* pCamera, __out_ecount( 3 ) Scalar* pCenter )
+	{
+		Scalar ri[9];
+		M33Transpose( pCamera->r.Elements( ), ri );
+		M33MulC( ri, -1, ri );
+
+		M33MulV3( ri, pCamera->t.Elements( ), pCenter );
+	}
+
 	void GetMean( __in const Bundle* pBundle, __out_ecount( 3 ) double* pMean )
 	{
 		V3Zero( pMean );
 
 		IterateThroughBundle(
 			pBundle,
-			[ &pMean ] ( __in const Camera* pCamera ) { V3AddV3( pMean, pCamera->t.Elements( ), pMean ); },
+			[ &pMean ] ( __in const Camera* pCamera ) { 
+				Scalar camCenter[3];
+				GetCameraCenter( pCamera, camCenter );
+				V3AddV3( pMean, camCenter, pMean ); 
+			},
 			[ &pMean ] ( __in const Vector3* pPoint ) { V3AddV3( pMean, pPoint->Elements( ), pMean ); } 
 		);
 
@@ -111,7 +124,14 @@ namespace Bundler { namespace Preprocess {
 
 		IterateThroughBundle(
 			pBundle,
-			[ &shiftFactor ] ( __inout Camera* pCamera ) { V3SubV3( pCamera->t.Elements( ), shiftFactor, pCamera->t.Elements( ) ); },
+			[ &shiftFactor ] ( __inout Camera* pCamera ) { 
+				Scalar camCenter[3];
+				GetCameraCenter( pCamera, camCenter );
+				V3SubV3( camCenter, shiftFactor, camCenter );
+
+				M33MulV3( pCamera->r.Elements( ), camCenter, pCamera->t.Elements( ) );
+				V3MulC( pCamera->t.Elements( ), -1, pCamera->t.Elements( ) );
+			},
 			[ &shiftFactor ] ( __inout Vector3* pPoint ) { V3SubV3( pPoint->Elements( ), shiftFactor, pPoint->Elements( ) ); }
 		);
 	}

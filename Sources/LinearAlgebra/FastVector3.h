@@ -150,9 +150,9 @@ namespace LinearAlgebra {
 	__forceinline decltype( auto ) V3DistanceSq( __in_ecount( 3 ) const T1* v1, __in_ecount( 3 ) const T2* v2 ) 
 	{
 		return (
-			ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) * ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) +
-			ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) * ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) +
-			ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) * ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) );
+			( ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) ) * ( ELEMENT( v1, 0 ) - ELEMENT( v2, 0 ) ) +
+			( ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) ) * ( ELEMENT( v1, 1 ) - ELEMENT( v2, 1 ) ) +
+			( ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) ) * ( ELEMENT( v1, 2 ) - ELEMENT( v2, 2 ) ) );
 	}
 
 }

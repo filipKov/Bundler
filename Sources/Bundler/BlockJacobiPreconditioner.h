@@ -13,6 +13,8 @@ namespace Bundler { namespace LinearSolver {
 			__in_ecount( vectorSize ) const Scalar* pX,
 			__out_ecount( vectorSize ) Scalar* pPreconditionedX ) const override
 		{
+			UNREFERENCED_PARAMETER( vectorSize );
+
 			const size_t cameraCount = pHessian->GetCameraCount( );
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 

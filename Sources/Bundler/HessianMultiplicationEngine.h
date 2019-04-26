@@ -76,6 +76,8 @@ namespace Bundler {
 			__in_ecount( totalParameterCount ) const Scalar* pX,
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pAccumulator ) const
 		{
+			UNREFERENCED_PARAMETER( totalParameterCount );
+
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const size_t projectionCount = m_hessian.GetCameraProjectionCount( cameraIx );
 
@@ -113,6 +115,8 @@ namespace Bundler {
 			__in_ecount( totalParameterCount ) const Scalar* pX,
 			__out_ecount( POINT_PARAM_COUNT ) Scalar* pAccumulator ) const
 		{
+			UNREFERENCED_PARAMETER( totalParameterCount );
+
 			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
 			const size_t projectionCount = m_hessian.GetPointProjectionCount( pointIx );
 

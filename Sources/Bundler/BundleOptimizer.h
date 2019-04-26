@@ -30,8 +30,6 @@ namespace Bundler {
 				m_dampeningFactor *= Scalar( 0.0000001 );
 			}
 
-			Scalar geometricError = 0;
-			uint finalIteration = 0;
 			OptimizeLoop( &jacobian, pBundle, pStats );
 		}
 
@@ -150,6 +148,8 @@ namespace Bundler {
 			__in_ecount( paramCount ) const Scalar* pUpdateVector,
 			__out Bundle* pBundle )
 		{
+			UNREFERENCED_PARAMETER( paramCount );
+
 			const size_t cameraCount = m_cameraModels.Length( );
 			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 			{
@@ -171,6 +171,8 @@ namespace Bundler {
 			__in_ecount( paramCount ) const Scalar* pUpdateVector,
 			__out Bundle* pBundle )
 		{
+			UNREFERENCED_PARAMETER( paramCount );
+
 			const size_t cameraCount = m_cameraModels.Length( );
 			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
 			{

@@ -5,7 +5,7 @@ namespace Bundler {
 	struct OptimizerSettings
 	{
 		uint maxIterations;
-		Scalar errorTolerance;
+		double errorTolerance;
 	
 		Scalar initialDampeningFactor;
 		Scalar dampeningUp;
@@ -16,8 +16,8 @@ namespace Bundler {
 	
 	struct OptimizerStatistics
 	{
-		Scalar initialGeometricError;
-		Scalar finalGeometricError;
+		double initialGeometricError;
+		double finalGeometricError;
 		uint iterationCount;
 		uint acceptedIterations;
 		uint rejectedIterations;

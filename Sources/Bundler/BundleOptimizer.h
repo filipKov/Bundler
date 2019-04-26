@@ -67,7 +67,7 @@ namespace Bundler {
 			
 			InitializeUpdateVector( parameterCount, pUpdateVector );
 
-			Scalar geometricError = GetGeometricError( pJacobian );
+			double geometricError = GetGeometricError( pJacobian );
 			if ( pStats )
 			{
 				pStats->initialGeometricError = geometricError;
@@ -84,7 +84,7 @@ namespace Bundler {
 				
 				UpdateBundleParams( parameterCount, pUpdateVector, pBundle );
 
-				Scalar newGeometricError = GetGeometricError( pJacobian );
+				double newGeometricError = GetGeometricError( pJacobian );
 				if ( newGeometricError < geometricError )
 				{
 					geometricError = newGeometricError;
@@ -119,9 +119,9 @@ namespace Bundler {
 			return pJacobian->GetCameraCount( ) * CameraModel::cameraParameterCount + pJacobian->GetPointCount( ) * POINT_PARAM_COUNT;
 		}
 
-		Scalar GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian ) const
+		double GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian ) const
 		{
-			Scalar error = 0;
+			double error = 0;
 
 			Scalar residuals[2];
 			const size_t projectionCount = pJacobian->GetProjectionCount();
@@ -231,7 +231,7 @@ namespace Bundler {
 	protected:
 
 		uint m_maxIterations;
-		Scalar m_errorTolerance;
+		double m_errorTolerance;
 
 		Scalar m_dampeningFactor;
 		Scalar m_dampeningUp;

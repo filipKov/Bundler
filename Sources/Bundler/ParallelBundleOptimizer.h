@@ -71,7 +71,7 @@ namespace Bundler {
 			Scalar* pUpdateVector = updateVector.Elements( );
 			InitializeUpdateVector( parameterCount, pUpdateVector );
 	
-			Scalar geometricError = GetGeometricError( pJacobian );
+			double geometricError = GetGeometricError( pJacobian );
 			if ( pStats )
 			{
 				pStats->initialGeometricError = geometricError;
@@ -88,7 +88,7 @@ namespace Bundler {
 	
 				UpdateBundleParams( parameterCount, pUpdateVector, pBundle );
 	
-				Scalar newGeometricError = GetGeometricError( pJacobian );
+				double newGeometricError = GetGeometricError( pJacobian );
 				if ( newGeometricError < geometricError )
 				{
 					geometricError = newGeometricError;
@@ -123,16 +123,16 @@ namespace Bundler {
 			return pJacobian->GetCameraCount( ) * CameraModel::cameraParameterCount + pJacobian->GetPointCount( ) * POINT_PARAM_COUNT;
 		}
 	
-		Scalar GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian ) const
+		double GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian ) const
 		{
-			Async::InterlockedVariable< Scalar > error = 0;
+			Async::InterlockedVariable< double > error = 0;
 	
 			const int64 projectionCount = (int64)pJacobian->GetProjectionCount( );
 
 			#pragma omp parallel
 			{
 				Scalar residuals[2];
-				Scalar localError = 0;
+				double localError = 0;
 
 				#pragma omp for
 				for ( int64 projIx = 0; projIx < projectionCount; projIx++ )

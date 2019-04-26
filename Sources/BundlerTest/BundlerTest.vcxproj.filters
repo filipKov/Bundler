@@ -36,6 +36,9 @@
     <ClCompile Include="JtfSubXTest.cpp">
       <Filter>PCG</Filter>
     </ClCompile>
+    <ClCompile Include="NormalizationTest.cpp">
+      <Filter>Normalization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CameraModels">
@@ -55,6 +58,9 @@
     </Filter>
     <Filter Include="PCG">
       <UniqueIdentifier>{86ebcb9a-78d5-42f4-9568-98cb71c3177c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Normalization">
+      <UniqueIdentifier>{4ce0e518-7b34-4909-b9c4-b3c409e1c7b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -127,16 +127,35 @@ namespace Bundler { namespace Preprocess {
 		);
 	}
 
-	void Normalize( __inout Bundle* pBundle, __out_ecount_opt( 3 ) Scalar* pMean, __out_opt Scalar* pStdev )
+	void CopyToNewBundle(
+		__in const Bundle* pBundle,
+		__out Bundle* pBundleOut )
+	{
+		pBundleOut->cameras.SetCopy( pBundle->cameras );
+		pBundleOut->points.SetCopy( pBundle->points );
+		pBundleOut->projections.SetCopy( pBundle->projections );
+	}
+
+	void Normalize(
+		__in const Bundle* pBundle,
+		__out Bundle* pBundleOut,
+		__out_ecount_opt( 3 ) Scalar* pMean,
+		__out_opt Scalar* pStdev )
 	{
 		double mean[3];
 		GetMean( pBundle, mean );
-		ShiftBundle( mean, pBundle );
-
+		
 		double stdev = 0;
-		GetStdev( pBundle, NULL, &stdev );
-		ScaleBundle( stdev, pBundle );
+		GetStdev( pBundle, mean, &stdev );
 
+		if ( pBundleOut != pBundle )
+		{
+			CopyToNewBundle( pBundle, pBundleOut );
+		}
+
+		ShiftBundle( mean, pBundleOut );
+		ScaleBundle( stdev, pBundleOut );
+		
 		if ( pMean != NULL )
 		{
 			V3Cast< double, Scalar >( mean, pMean );

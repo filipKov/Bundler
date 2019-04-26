@@ -169,6 +169,7 @@
     <ClCompile Include="LocalHessianAmpTest.cpp" />
     <ClCompile Include="LocalHessianTest.cpp" />
     <ClCompile Include="MatrixBenchmark.cpp" />
+    <ClCompile Include="NormalizationTest.cpp" />
     <ClCompile Include="ProjectionProviderTest.cpp" />
     <ClCompile Include="RodriguesRotationTest.cpp" />
     <ClCompile Include="stdafx.cpp">

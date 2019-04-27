@@ -123,6 +123,7 @@
     <ClInclude Include="AMPUtils.h" />
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
+    <ClInclude Include="BundleFiltering.h" />
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="BundleNormalization.h" />
     <ClInclude Include="BundleOptimizer.h" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AMPUtils.cpp" />
+    <ClCompile Include="BundleFiltering.cpp" />
     <ClCompile Include="BundleImporter.cpp" />
     <ClCompile Include="BundleNormalization.cpp" />
     <ClCompile Include="Bundler.cpp">

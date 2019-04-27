@@ -4,6 +4,7 @@
 
 #include "BundlerDefs.h"
 
+#include "BundleStructureMapping.h"
 
 // Bundle import
 #include "IBundleImportWorker.h"
@@ -13,6 +14,7 @@
 
 // Pre-process
 #include "BundleNormalization.h"
+#include "BundleFiltering.h"
 
 
 // Rotation models
@@ -30,8 +32,6 @@
 
 
 // Hessian 
-#include "BundleStructureMapping.h"
-
 #include "IProjectionProviderData.h"
 #include "ProjectionProvider.h"
 #include "HessianBlockProvider.h"

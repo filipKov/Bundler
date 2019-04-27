@@ -160,7 +160,10 @@
       <Filter>Optimization</Filter>
     </ClInclude>
     <ClInclude Include="BundleNormalization.h">
-      <Filter>Preprocessing\Normalization</Filter>
+      <Filter>Preprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="BundleFiltering.h">
+      <Filter>Preprocessing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +199,10 @@
       <Filter>Async\Workers</Filter>
     </ClCompile>
     <ClCompile Include="BundleNormalization.cpp">
-      <Filter>Preprocessing\Normalization</Filter>
+      <Filter>Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="BundleFiltering.cpp">
+      <Filter>Preprocessing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,9 +277,6 @@
     </Filter>
     <Filter Include="Preprocessing">
       <UniqueIdentifier>{2c4311b0-d4b5-4f2a-9d8d-5cc2cdc9f616}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Preprocessing\Normalization">
-      <UniqueIdentifier>{d5d252ea-207f-4b26-9262-3b78b1f7a7d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ namespace LinearAlgebra {
 	template < typename Scalar >
 	class Matrix< Scalar, MatrixBase::Dynamic > {
 
-		using Allocator = Utils::MemoryAllocator<Scalar>;
+		using Allocator = ::Utils::MemoryAllocator<Scalar>;
 
 	public:
 

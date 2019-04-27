@@ -10,6 +10,11 @@
 #include "SnavelyBundleImportWorker.h"
 #include "BundleImporter.h"
 
+
+// Pre-process
+#include "BundleNormalization.h"
+
+
 // Rotation models
 #include "RodriguesRotation.h"
 

@@ -57,8 +57,8 @@ namespace BundlerTest {
 
 			camModel.ProjectPoint( pt, feature, residuals );
 
-			Assert::AreEqual( 0.0f, residuals[ 0 ].GetFx() );
-			Assert::AreEqual( 0.0f, residuals[ 1 ].GetFx() );
+			Assert::AreEqual( Scalar( 0.0 ), residuals[ 0 ].GetFx() );
+			Assert::AreEqual( Scalar( 0.0 ), residuals[ 1 ].GetFx() );
 
 		}
 

@@ -63,7 +63,7 @@ namespace BundlerTest {
 
 			auto rot = camModel.GetRotation( 0 );
 			for ( uint i = 0; i < 9; i++ ) {
-				Assert::AreEqual( camera.r.Elements()[ i ], rot.Elements()[ i ].GetFx(), 10e-5f );
+				Assert::AreEqual( camera.r.Elements()[ i ], rot.Elements()[ i ].GetFx(), Scalar( 10e-5f ) );
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace BundlerTest {
 			Scalar updateParams[ 7 ] = { 0.436f, 0.0f, 1.0f, 0.0f, 4.3f, 2.1f, 5.8f };
 			camModel.UpdateCamera( updateParams );
 
-			AssertAreEqual( { 5.3f, 4.1f, 8.8f }, camera.t.Elements(), 10e-5f );
+			AssertAreEqual( { Scalar( 5.3 ), Scalar( 4.1 ), Scalar( 8.8 ) }, camera.t.Elements(), Scalar( 10e-5f ) );
 
 			Assert::AreEqual( 2u, camModel.GetCurrentRotationCount() );
 		}
@@ -97,8 +97,8 @@ namespace BundlerTest {
 			DScalar< 10 > residual[ 2 ];
 			camModel.ProjectPoint( point, feature, residual );
 
-			Assert::AreEqual( -3.78f, residual[ 0 ].GetFx(), 10e-5f );
-			Assert::AreEqual( 0.5f, residual[ 1 ].GetFx(), 10e-5f );
+			Assert::AreEqual( Scalar( -3.78f ), residual[ 0 ].GetFx(), Scalar( 10e-5f ) );
+			Assert::AreEqual( Scalar( 0.5f ), residual[ 1 ].GetFx(), Scalar( 10e-5f ) );
 
 		}
 

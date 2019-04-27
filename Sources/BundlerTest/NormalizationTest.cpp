@@ -86,7 +86,7 @@ namespace BundlerTest {
 			GetResiduals( &globalJacobian, projCount, expectedProjections.Data( ) );
 			GetResiduals( &normalizedJacobian, projCount, actualProjections.Data( ) );
 
-			AssertAreEqual( projCount * 2, expectedProjections.Data( ), actualProjections.Data( ), Scalar( 10e-4 ) );
+			AssertAreEqual( projCount * 2, expectedProjections.Data( ), actualProjections.Data( ), Scalar( 10e-14 ) );
 		}
 	
 	};

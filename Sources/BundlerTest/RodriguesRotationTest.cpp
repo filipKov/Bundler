@@ -20,8 +20,8 @@ namespace BundlerTest {
 			Scalar axis[ 3 ];
 			RodriguesRotation::GetFromRotationMatrix( M1, &angle, axis );
 
-			AssertAreEqual( { 0.0f, 0.0f, 1.0f }, axis, 10e-5f );
-			Assert::AreEqual( 1.5708f, angle, 10e-4f );
+			AssertAreEqual( { Scalar( 0.0 ), Scalar( 0.0 ), Scalar( 1.0 ) }, axis, Scalar( 10e-5 ) );
+			Assert::AreEqual( Scalar( 1.5708 ), angle, Scalar( 10e-4 ) );
 		}
 
 		TEST_METHOD( GetAxis1 ) {
@@ -37,7 +37,7 @@ namespace BundlerTest {
 
 			V3MulC( axis, angle, axis );
 
-			AssertAreEqual( { 0.23f, 0.54f, 0.85f }, axis, 10e-3f );
+			AssertAreEqual( { Scalar( 0.23 ), Scalar( 0.54 ), Scalar( 0.85 ) }, axis, Scalar( 10e-3 ) );
 		}
 
 		TEST_METHOD( GetRotation0 ) {
@@ -54,7 +54,7 @@ namespace BundlerTest {
 			};
 
 			for ( uint i = 0; i < 9; i++ ) {
-				Assert::AreEqual( expected[ i ].GetFx(), M[ i ].GetFx(), 10e-5f );
+				Assert::AreEqual( expected[ i ].GetFx(), M[ i ].GetFx(), Scalar( 10e-5 ) );
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace BundlerTest {
 				-0.0276f, 0.5497f, 0.8349f
 			};
 
-			AssertAreEqual( expected, M, 10e-4f );
+			AssertAreEqual( expected, M, Scalar( 10e-4 ) );
 		}
 
 		TEST_METHOD( InverseTransform0 ) {
@@ -88,7 +88,7 @@ namespace BundlerTest {
 			Scalar M2[ 9 ];
 			RodriguesRotation::GetRotation( angle, axis, M2 );
 
-			AssertAreEqual( M1, M2, 10e-4f );
+			AssertAreEqual( M1, M2, Scalar( 10e-4 ) );
 		}
 
 		template < typename T >

@@ -138,7 +138,7 @@ namespace Bundler { namespace Preprocess {
 
 	void ScaleBundle( __in const double stdev, __inout Bundle* pBundle )
 	{
-		Scalar scaleFactor = Scalar( 1.0 / stdev );
+		Scalar scaleFactor = Scalar( 0.5 / stdev );
 
 		IterateThroughBundle(
 			pBundle,
@@ -175,7 +175,7 @@ namespace Bundler { namespace Preprocess {
 
 		ShiftBundle( mean, pBundleOut );
 		ScaleBundle( stdev, pBundleOut );
-		
+
 		if ( pMean != NULL )
 		{
 			V3Cast< double, Scalar >( mean, pMean );

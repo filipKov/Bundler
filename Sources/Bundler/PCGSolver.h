@@ -13,7 +13,7 @@ namespace Bundler { namespace LinearSolver {
 			__in const Preconditioner< CameraModel >* pPreconditioner ) 
 		{
 			m_maxIterations = maxIterations;
-			m_errorToleranceSq = errorTolerance * errorTolerance;
+			m_errorTolerance = errorTolerance;
 			m_pPreconditioner = pPreconditioner;
 		}
 
@@ -69,10 +69,16 @@ namespace Bundler { namespace LinearSolver {
 		{
 			Vector< Scalar > x( parameterVectorSize, pX );
 
+			HighResolutionClock stopwatch;
+
+			Scalar minError = m_errorTolerance * pTemp->errSq;
+
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) && 
-					( pTemp->errSq > m_errorToleranceSq ) )
+					( pTemp->errSq > minError ) )
 			{
+				stopwatch.Start( );
+
 				MultiplyByHessian( pHessian, parameterVectorSize, pTemp->d.Elements(), pTemp->Ad.Elements() );
 
 				Scalar alpha = pTemp->errSq / ( pTemp->d.Dot( pTemp->Ad ) );
@@ -88,6 +94,10 @@ namespace Bundler { namespace LinearSolver {
 				pTemp->d += pTemp->MInvR;
 
 				iteration++;
+
+				stopwatch.Stop( );
+				printf_s( "PCG loop time: %fms\n", stopwatch.GetTotalTime( ) );
+				stopwatch.Clear( );
 			}
 
 			return iteration;
@@ -185,7 +195,7 @@ namespace Bundler { namespace LinearSolver {
 	protected:
 		
 		uint m_maxIterations;
-		Scalar m_errorToleranceSq;
+		Scalar m_errorTolerance;
 
 		const Preconditioner< CameraModel >* m_pPreconditioner;
 

@@ -13,7 +13,7 @@ namespace Bundler { namespace LinearSolver {
 			__in Async::WorkerPool* pWorkerPool )
 		{
 			m_maxIterations = maxIterations;
-			m_errorToleranceSq = errorTolerance * errorTolerance;
+			m_errorTolerance = errorTolerance;
 			m_pWorkerPool = pWorkerPool;
 		}
 	
@@ -73,9 +73,11 @@ namespace Bundler { namespace LinearSolver {
 	
 			HighResolutionClock stopwatch;
 
+			Scalar minError = m_errorTolerance * pTemp->errSq;
+
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) &&
-				( pTemp->errSq > m_errorToleranceSq ) )
+				( pTemp->errSq > minError ) )
 			{
 				stopwatch.Start( );
 
@@ -94,12 +96,6 @@ namespace Bundler { namespace LinearSolver {
 				m_pWorkerPool->WaitForIdleWorkers( ); // synchronize
 
 				Scalar beta = pTemp->errSqNew / pTemp->errSq;
-				// if ( pTemp->errSqNew > pTemp->errSq )
-				// {
-				// 	printf_s( "PCG end during iteration %u\n", iteration );
-				// 	break;
-				// }
-
 				pTemp->errSq = pTemp->errSqNew;
 
 				// Not really a point in doing this in parallel ( probably ), maybe on CPU
@@ -301,7 +297,7 @@ namespace Bundler { namespace LinearSolver {
 	protected:
 	
 		uint m_maxIterations;
-		Scalar m_errorToleranceSq;
+		Scalar m_errorTolerance;
 	
 		Async::WorkerPool* m_pWorkerPool;
 	

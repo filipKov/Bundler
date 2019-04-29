@@ -230,6 +230,13 @@ namespace LinearAlgebra {
 				MatrixIterator< T, m, n, row, col - 1 >::Negate( A, B );
 				ELEMENT( B, row * n + col ) = -ELEMENT( A, row * n + col );
 			}
+
+			template < typename TDestination >
+			static __forceinline void CastTo( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) TDestination* B )
+			{
+				MatrixIterator< T, m, n, row, col - 1 >::CastTo< TDestination >( A, B );
+				ELEMENT( B, row * n + col ) = TDestination( ELEMENT( A, row * n + col ) );
+			}
 		};
 
 		template < typename T, uint m, uint n, uint row >
@@ -281,6 +288,13 @@ namespace LinearAlgebra {
 				MatrixIterator< T, m, n, row - 1, n - 1 >::Negate( A, B );
 				ELEMENT( B, row * n ) = -ELEMENT( A, row * n );
 			}
+
+			template < typename TDestination >
+			static __forceinline void CastTo( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) TDestination* B )
+			{
+				MatrixIterator< T, m, n, row - 1, n - 1 >::CastTo< TDestination >( A, B );
+				ELEMENT( B, row * n ) = TDestination( ELEMENT( A, row * n ) );
+			}
 		};
 
 		template < typename T, uint m, uint n >
@@ -324,6 +338,12 @@ namespace LinearAlgebra {
 			static __forceinline void Negate( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) T* B ) 
 			{
 				ELEMENT( B, 0 ) = -ELEMENT( A, 0 );
+			}
+
+			template < typename TDestination >
+			static __forceinline void CastTo( __in_ecount( m * n ) const T* A, __out_ecount( m * n ) TDestination* B )
+			{
+				ELEMENT( B, 0 ) = TDestination( ELEMENT( A, 0 ) );
 			}
 		};
 	}
@@ -500,4 +520,11 @@ namespace LinearAlgebra {
 	{
 		return Internal::VectorIterator< T, n >::Dot( v1, v2 );
 	}
+
+	template < typename T1, typename T2, uint m, uint n >
+	__forceinline void MatrixCast( __in_ecount( m * n ) const T1* A, __out_ecount( m * n ) T2* B )
+	{
+		Internal::MatrixIterator< T1, m, n, m - 1, n - 1 >::CastTo< T2 >( A, B );
+	}
+
 }

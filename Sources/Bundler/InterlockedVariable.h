@@ -47,6 +47,11 @@ namespace Bundler { namespace Async {
 			AtomicOperation<>( value, Sub );
 		}
 
+		void SetMin( __in const T value )
+		{
+			AtomicOperation<>( value, Min );
+		}
+
 	protected:
 
 		template < typename BinaryOp >
@@ -68,6 +73,11 @@ namespace Bundler { namespace Async {
 		static T Sub( __in const T v1, __in const T v2 ) noexcept
 		{
 			return v1 - v2;
+		}
+
+		static T Min( __in const T v1, __in const T v2 ) noexcept
+		{
+			return min( v1, v2 );
 		}
 	};
 

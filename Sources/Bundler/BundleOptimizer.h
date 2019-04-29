@@ -26,8 +26,7 @@ namespace Bundler {
 
 			if ( m_dampeningFactor <= 0 )
 			{
-				m_dampeningFactor = GetFrobeniusNorm( &jacobian );
-				m_dampeningFactor *= Scalar( 0.0000001 );
+				m_dampeningFactor = EstimateDampeningFactor( &jacobian );
 			}
 
 			OptimizeLoop( &jacobian, pBundle, pStats );
@@ -133,6 +132,7 @@ namespace Bundler {
 				error += residuals[1] * residuals[1];
 			}
 			
+			// printf_s( "GeometricError: Total: %f | Average: %f\n", error, error / projectionCount );
 			return error;
 		}
 
@@ -189,32 +189,12 @@ namespace Bundler {
 			}
 		}
 
-		Scalar GetFrobeniusNorm( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
+		Scalar EstimateDampeningFactor( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
 		{
 			HessianBlockProvider< CameraModel > hessian;
 			hessian.Initialize( pProjectionProvider );
 
-			Scalar totalNorm = 0;
-
-			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
-			Scalar cameraBlock[cameraParamCount * cameraParamCount];
-			Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
-
-			const size_t cameraCount = hessian.GetCameraCount( );
-			for ( size_t cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
-			{
-				hessian.GetCameraBlock( cameraIx, cameraBlock );
-				totalNorm += MatrixFrobeniusNorm< Scalar, cameraParamCount, cameraParamCount >( cameraBlock );
-
-				const size_t projectionCount = hessian.GetCameraProjectionCount( cameraIx );
-				for ( size_t projI = 0; projI < projectionCount; projI++ )
-				{
-					size_t ptIxDummy = 0;
-					hessian.GetCameraPointBlockCam( cameraIx, projI, &ptIxDummy, cameraPointBlock );
-
-					totalNorm += 2 * MatrixFrobeniusNorm< Scalar, cameraParamCount, POINT_PARAM_COUNT >( cameraPointBlock );
-				}
-			}
+			Scalar totalNorm = FLT_MAX;
 
 			Scalar pointBlock[POINT_PARAM_COUNT * POINT_PARAM_COUNT];
 
@@ -222,10 +202,11 @@ namespace Bundler {
 			for ( size_t pointIx = 0; pointIx < pointCount; pointIx++ )
 			{
 				hessian.GetPointBlock( pointIx, pointBlock );
-				totalNorm += MatrixFrobeniusNorm< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT >( pointBlock );
+				Scalar ptNorm = MatrixFrobeniusNorm< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT >( pointBlock );
+				totalNorm = min( totalNorm, ptNorm );
 			}
 
-			return totalNorm;
+			return totalNorm * Scalar( 0.0000001 );
 		}
 
 	protected:

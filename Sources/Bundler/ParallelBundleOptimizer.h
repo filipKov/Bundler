@@ -28,8 +28,7 @@ namespace Bundler {
 
 			if ( m_dampeningFactor <= 0 )
 			{
-				m_dampeningFactor = GetFrobeniusNorm( &jacobian );
-				m_dampeningFactor *= Scalar( 0.0000001 );
+				m_dampeningFactor = EstimateDampeningFactor( &jacobian );
 			}
 
 			OptimizeLoop( &jacobian, pBundle, pStats );
@@ -218,54 +217,32 @@ namespace Bundler {
 			}
 		}
 
-		Scalar GetFrobeniusNorm( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
+		Scalar EstimateDampeningFactor( __in const ProjectionProvider< CameraModel >* pProjectionProvider )
 		{
 			HessianBlockProvider< CameraModel > hessian;
 			hessian.Initialize( pProjectionProvider );
 
-			Async::InterlockedVariable< Scalar > totalNorm = 0;
+			Async::InterlockedVariable< Scalar > totalNorm = FLT_MAX;
 
-			constexpr const uint cameraParamCount = CameraModel::cameraParameterCount;
-
-			const int64 cameraCount = (int64)hessian.GetCameraCount( );
 			const int64 pointCount = (int64)hessian.GetPointCount( );
 
 			#pragma omp parallel
 			{
-				Scalar cameraBlock[cameraParamCount * cameraParamCount];
-				Scalar cameraPointBlock[cameraParamCount * POINT_PARAM_COUNT];
-
-				Scalar tempNorm = 0;
-
-				#pragma omp for nowait
-				for ( int64 cameraIx = 0; cameraIx < cameraCount; cameraIx++ )
-				{
-					hessian.GetCameraBlock( cameraIx, cameraBlock );
-					totalNorm += MatrixFrobeniusNorm< Scalar, cameraParamCount, cameraParamCount >( cameraBlock );
-
-					const size_t projectionCount = hessian.GetCameraProjectionCount( cameraIx );
-					for ( size_t projI = 0; projI < projectionCount; projI++ )
-					{
-						size_t ptIxDummy = 0;
-						hessian.GetCameraPointBlockCam( cameraIx, projI, &ptIxDummy, cameraPointBlock );
-
-						tempNorm += 2 * MatrixFrobeniusNorm< Scalar, cameraParamCount, POINT_PARAM_COUNT >( cameraPointBlock );
-					}
-				}
-
+				Scalar tempNorm = FLT_MAX;
 				Scalar pointBlock[POINT_PARAM_COUNT * POINT_PARAM_COUNT];
 
-				#pragma omp for
+				#pragma omp for nowait
 				for ( int64 pointIx = 0; pointIx < pointCount; pointIx++ )
 				{
 					hessian.GetPointBlock( pointIx, pointBlock );
-					tempNorm += MatrixFrobeniusNorm< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT >( pointBlock );
+					Scalar pointNorm = MatrixFrobeniusNorm< Scalar, POINT_PARAM_COUNT, POINT_PARAM_COUNT >( pointBlock );
+					tempNorm = min( tempNorm, pointNorm );
 				}
 
-				totalNorm += tempNorm;
+				totalNorm.SetMin( tempNorm );
 			}
 
-			return totalNorm.GetValue();
+			return totalNorm.GetValue() * Scalar( 0.0000001 );
 		}
 	
 	protected:

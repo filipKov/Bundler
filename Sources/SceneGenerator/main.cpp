@@ -56,44 +56,41 @@ int main( int argc, char **argv )
 		Bundle normalizedBundle;
 		Preprocess::Normalize( &bundle, &normalizedBundle, mean, &stdev );
 
-		Scalar center[3];
-		Scalar filterRadius;
+		double center[3];
+		double normalizedStdev;
 		Preprocess::GetMean( &normalizedBundle, center );
-		Preprocess::GetStdev( &normalizedBundle, center, &filterRadius );
+		Preprocess::GetStdev( &normalizedBundle, center, &normalizedStdev );
+
+		Scalar filterCenter[3];
+		Scalar filterRadius = Scalar( 2 * normalizedStdev );
+		MatrixCast< double, Scalar, 3, 1 >( center, filterCenter );
 
 		Bundle filteredBundle;
-		Preprocess::FilterAroundCenter( &normalizedBundle, center, 2 * filterRadius, &filteredBundle, NULL );
+		Preprocess::FilterAroundCenter( &normalizedBundle, filterCenter, filterRadius, &filteredBundle, NULL );
 
 
-		// constexpr uint noiseMask = SceneGenAutoNoiseMask::POINTS;
-		// 
-		// SceneGenNoiseSettings noise = { 0 };
+		constexpr uint noiseMask = SceneGenAutoNoiseMask::POINTS;
+		
+		const Scalar noiseStrength = filterRadius * Scalar( 0.035 );
+		SceneGenNoiseSettings noise = { 0 };
+		noise.pointSettings.minDelta = -noiseStrength;
+		noise.pointSettings.maxDelta = noiseStrength;
+
 		// SceneGen::GetAutoNoise( &normalizedBundle, noiseMask, &noise );		
-		// 
-		// Bundle noisyBundle;
-		// SceneGen::AddNoise( &noise, &bundle, &noisyBundle );
-		// 
+		
+		Bundle noisyBundle;
+		SceneGen::AddNoise( &noise, &filteredBundle, &noisyBundle );
+		
 		// //std::thread viewerThread( LaunchViewer, ( uint )bundle2.points.Length( ), bundle2.points.Data( ), metadata.pointColors.Data( ) );
-		// 
-		// OptimizerStatistics optimizerStats;
+		 
+		OptimizerStatistics optimizerStats;
 		// // std::thread optimizerThread( OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 10 >, 10 >, &bundle2, &optimizerStats );
 		// //optimizerThread.join( );
-		// 
-		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
-		// // OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &bundle2, &optimizerStats );
-		// 
+		
+		OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
+		// OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &bundle2, &optimizerStats );
+		
 		// //viewerThread.join( );
-
-
-		std::ofstream outStream = OpenStreamOnFile< std::ofstream >( GET_RESOURCE_PATH( "bundlePoints.txt" ) );
-		PrintBundle( &filteredBundle, &outStream );
-		outStream.flush( );
-		outStream.close( );
-		std::ofstream outStreamN = OpenStreamOnFile< std::ofstream >( GET_RESOURCE_PATH( "bundlePointsNorm.txt" ) );
-		PrintBundle( &normalizedBundle, &outStreamN );
-		outStreamN.flush( );
-		outStreamN.close( );
-
 	}
 
 	// if ( SUCCEEDED( hr ) )

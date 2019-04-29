@@ -128,7 +128,7 @@ namespace Bundler {
 
 		inline void ExtractPointParameters(
 			__in const DScalar< CameraModel::totalParamCount >* pResidual,
-			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pDestination ) const __GPU
+			__out_ecount( POINT_PARAM_COUNT ) Scalar* pDestination ) const __GPU
 		{
 			Containers::ArrayUtils< Scalar >::Copy< POINT_PARAM_COUNT >(
 				pResidual->GetDiff( ).Elements( ) + CameraModel::pointParamStartIx,

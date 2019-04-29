@@ -140,17 +140,17 @@ namespace Bundler {
 			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pDestination ) const
 		{
 			ShallowCopy< Scalar >(
-				pResidual->GetDiff().Elements(),
+				pResidual->GetDiff( ).Elements( ),
 				CameraModel::cameraParameterCount,
 				pDestination );
 		}
 
 		inline void ExtractPointParameters(
 			__in const DScalar< CameraModel::totalParamCount >* pResidual,
-			__out_ecount( CameraModel::cameraParameterCount ) Scalar* pDestination ) const
+			__out_ecount( POINT_PARAM_COUNT ) Scalar* pDestination ) const
 		{
 			ShallowCopy< Scalar >(
-				pResidual->GetDiff().Elements() + CameraModel::pointParamStartIx,
+				pResidual->GetDiff( ).Elements( ) + CameraModel::pointParamStartIx,
 				POINT_PARAM_COUNT,
 				pDestination );
 		}

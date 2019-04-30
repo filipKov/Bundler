@@ -42,10 +42,10 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	protected:
 
 		static const uint m_maxCpuCamTaskSize = 32;
-		static const uint m_maxCpuPtTaskSize = 8192 << 2;
+		static const uint m_maxCpuPtTaskSize = 8192;
 
-		static const uint m_maxGpuCamTaskSize = 512;
-		static const uint m_maxGpuPtTaskSize = 8192 << 3;
+		static const uint m_maxGpuCamTaskSize = 128;
+		static const uint m_maxGpuPtTaskSize = 8192 << 5;
 
 	public:
 

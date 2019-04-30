@@ -48,7 +48,7 @@ int main( int argc, char **argv )
 	Bundle bundle;
 	BundleAdditionalPayload metadata;
 
-	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "gargoyle.out" ), &bundle, &metadata );
+	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "schwimmy.out" ), &bundle, &metadata );
 	if ( SUCCEEDED( hr ) )
 	{
 		Scalar mean[3];
@@ -71,7 +71,7 @@ int main( int argc, char **argv )
 
 		constexpr uint noiseMask = SceneGenAutoNoiseMask::POINTS;
 		
-		const Scalar noiseStrength = filterRadius * Scalar( 0.035 );
+		const Scalar noiseStrength = filterRadius * Scalar( 0.0035 );
 		SceneGenNoiseSettings noise = { 0 };
 		noise.pointSettings.minDelta = -noiseStrength;
 		noise.pointSettings.maxDelta = noiseStrength;
@@ -87,8 +87,8 @@ int main( int argc, char **argv )
 		// // std::thread optimizerThread( OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 10 >, 10 >, &bundle2, &optimizerStats );
 		// //optimizerThread.join( );
 		
-		OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
-		// OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &bundle2, &optimizerStats );
+		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
+		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
 		
 		// //viewerThread.join( );
 	}

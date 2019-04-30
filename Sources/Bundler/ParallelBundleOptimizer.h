@@ -248,7 +248,7 @@ namespace Bundler {
 	protected:
 	
 		uint m_maxIterations;
-		Scalar m_errorTolerance;
+		double m_errorTolerance;
 	
 		Scalar m_dampeningFactor;
 		Scalar m_dampeningUp;

@@ -41,8 +41,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 	{
 	protected:
 
-		static const uint m_maxCpuCamTaskSize = 128;
-		static const uint m_maxCpuPtTaskSize = 8192;
+		static const uint m_maxCpuCamTaskSize = 32;
+		static const uint m_maxCpuPtTaskSize = 8192 << 2;
+
+		static const uint m_maxGpuCamTaskSize = 512;
+		static const uint m_maxGpuPtTaskSize = 8192 << 3;
 
 	public:
 
@@ -102,9 +105,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
+				// printf_s( "Creating CPU Loop 0 Camera Task\n" );
 				CreateLoopPart0CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
+				// printf_s( "Creating GPU Loop 0 Camera Task\n" );
 				CreateLoopPart0CamerasTaskAMP( pInitData, ((Async::WorkerThreadGPU*)pWorker)->GetGpuInfo(), pCameraStartIx, ppTask ); // TODO: temp
 				break;
 			default:
@@ -124,9 +129,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
+				// printf_s( "Creating CPU Loop 0 Points Task\n" );
 				CreateLoopPart0PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
+				// printf_s( "Creating GPU Loop 0 Points Task\n" );
 				CreateLoopPart0PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pPointStartIx, ppTask ); // TODO: temp
 				break;
 			default:
@@ -146,9 +153,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
+				// printf_s( "Creating CPU Loop 1 Camera Task\n" );
 				CreateLoopPart1CamerasTaskCPU( pInitData, m_maxCpuCamTaskSize, pCameraStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
+				// printf_s( "Creating GPU Loop 1 Camera Task\n" );
 				CreateLoopPart1CamerasTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pCameraStartIx, ppTask ); // TODO: temp
 				break;
 			default:
@@ -168,9 +177,11 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			switch ( type )
 			{
 			case Bundler::Async::WorkerThreadType::CPU:
+				// printf_s( "Creating CPU Loop 1 Point Task\n" );
 				CreateLoopPart1PointsTaskCPU( pInitData, m_maxCpuPtTaskSize, pPointStartIx, ppTask );
 				break;
 			case Bundler::Async::WorkerThreadType::GPU:
+				// printf_s( "Creating GPU Loop 1 Point Task\n" );
 				CreateLoopPart1PointsTaskAMP( pInitData, ( ( Async::WorkerThreadGPU* )pWorker )->GetGpuInfo( ), pPointStartIx, ppTask ); // TODO: temp
 				break;
 			default:
@@ -181,7 +192,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 	protected:
 
-		static uint GetCPUTaskSize( 
+		static uint GetTaskSize( 
 			__in const uint elementStartIx, 
 			__in const uint elementCount, 
 			__in const uint maxTaskSize )
@@ -208,11 +219,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const int64 memoryKB,
 			__out LocalProjectionProviderDataCountsAMP* pTaskSize )
 		{
-			constexpr const float memoryFactor = 0.5f;
-
-			const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );
-
-			LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameras( pJacobian, cameraStartIx, jacobianMemoryLimit, pTaskSize );
+			//constexpr const float memoryFactor = 0.5f;
+			//
+			//const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );
+			//
+			//LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameras( pJacobian, cameraStartIx, jacobianMemoryLimit, pTaskSize );
+			//
+			 uint taskSize = GetTaskSize( cameraStartIx, ( uint )pJacobian->GetCameraCount( ), m_maxGpuCamTaskSize );
+			 LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameras1( pJacobian, cameraStartIx, taskSize, pTaskSize );
 		}
 
 		static void GetGPUPointTaskSize(
@@ -221,11 +235,14 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const int64 memoryKB,
 			__out LocalProjectionProviderDataCountsAMP* pTaskSize )
 		{
-			constexpr const float memoryFactor = 0.5f;
-
-			const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );
-
-			LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPoints( pJacobian, pointStartIx, jacobianMemoryLimit, pTaskSize );
+			// constexpr const float memoryFactor = 0.5f;
+			// 
+			// const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );
+			// 
+			// LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPoints( pJacobian, pointStartIx, jacobianMemoryLimit, pTaskSize );
+			
+			uint taskSize = GetTaskSize( pointStartIx, ( uint )pJacobian->GetPointCount( ), m_maxGpuPtTaskSize );
+			LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPoints1( pJacobian, pointStartIx, taskSize, pTaskSize );
 		}
 
 		static void CreateInitSolveCamerasTaskCPU(
@@ -236,7 +253,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
 			const uint cameraStartIx = *pCameraStartIx;
-			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGInitCamerasTaskCPU< CameraModel >* pTask = new PCGInitCamerasTaskCPU< CameraModel >();
 			pTask->Initialize( 
@@ -262,7 +279,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
 			const uint pointStartIx = *pPointStartIx;
-			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGInitPointsTaskCPU< CameraModel >* pTask = new PCGInitPointsTaskCPU< CameraModel >( );
 			pTask->Initialize(
@@ -288,7 +305,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
 			const uint cameraStartIx = *pCameraStartIx;
-			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGLoopPart0CamerasTaskCPU< CameraModel >* pTask = new PCGLoopPart0CamerasTaskCPU< CameraModel >( );
 			pTask->Initialize(
@@ -339,7 +356,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
 			const uint pointStartIx = *pPointStartIx;
-			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGLoopPart0PointsTaskCPU< CameraModel >* pTask = new PCGLoopPart0PointsTaskCPU< CameraModel >( );
 			pTask->Initialize(
@@ -390,7 +407,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint cameraCount = ( uint )pInitData->pJacobian->GetCameraCount( );
 			const uint cameraStartIx = *pCameraStartIx;
-			const uint taskSize = GetCPUTaskSize( cameraStartIx, cameraCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( cameraStartIx, cameraCount, maxTaskSize );
 
 			PCGLoopPart1CamerasTaskCPU< CameraModel >* pTask = new PCGLoopPart1CamerasTaskCPU< CameraModel >( );
 			pTask->Initialize(
@@ -445,7 +462,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 		{
 			const uint pointCount = ( uint )pInitData->pJacobian->GetPointCount( );
 			const uint pointStartIx = *pPointStartIx;
-			const uint taskSize = GetCPUTaskSize( pointStartIx, pointCount, maxTaskSize );
+			const uint taskSize = GetTaskSize( pointStartIx, pointCount, maxTaskSize );
 
 			PCGLoopPart1PointsTaskCPU< CameraModel >* pTask = new PCGLoopPart1PointsTaskCPU< CameraModel >( );
 			pTask->Initialize(

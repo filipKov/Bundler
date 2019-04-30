@@ -37,6 +37,8 @@
 #include "HessianBlockProvider.h"
 #include "HessianMultiplicationEngine.h"
 
+#include "CachingHessianBlockProvider.h"
+
 
 // Local Hessian - CPU
 #include "LocalProjectionProviderCPU.h"

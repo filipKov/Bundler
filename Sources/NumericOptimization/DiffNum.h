@@ -505,7 +505,17 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 	template < typename BaseType, uint N >
 	inline DiffNum<BaseType, N> operator+ ( __in const DiffNum<BaseType, N>& x, __in const DiffNum<BaseType, N>& y ) 
 	{
-		return DiffNum<BaseType, N>( x.GetFx() + y.GetFx(), x.GetDiff() + y.GetDiff() );
+		const BaseType xFx = x.GetFx( );
+		const BaseType yFx = y.GetFx( );
+		
+		const BaseType* xDiff = x.GetDiff( ).Elements( );
+		const BaseType* yDiff = y.GetDiff( ).Elements( );
+		
+		DiffNum< BaseType, N > res( xFx + yFx );
+		MatrixAdd< BaseType, N, 1 >( xDiff, yDiff, res.GetDiff( ).Elements( ) );
+		
+		return res;
+		// return DiffNum<BaseType, N>( x.GetFx() + y.GetFx(), x.GetDiff() + y.GetDiff() );
 	};
 
 	// Diffnum x - y
@@ -519,7 +529,20 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 	template < typename BaseType, uint N >
 	inline DiffNum<BaseType, N> operator* ( __in const DiffNum<BaseType, N>& x, __in const DiffNum<BaseType, N>& y )
 	{
-		return DiffNum<BaseType, N>( x.GetFx() * y.GetFx(), ( x.GetDiff() * y.GetFx() ) + ( x.GetFx() * y.GetDiff() ) );
+		const BaseType xFx = x.GetFx( );
+		const BaseType yFx = y.GetFx( );
+		
+		const BaseType* xDiff = x.GetDiff( ).Elements( );
+		const BaseType* yDiff = y.GetDiff( ).Elements( );
+		
+		DiffNum< BaseType, N > res( xFx * yFx );
+		BaseType tmp[N];
+		
+		MatrixMultiplyC< BaseType, N, 1 >( xDiff, yFx, tmp );
+		MatrixAddC< BaseType, N, 1 >( tmp, yDiff, xFx, res.GetDiff( ).Elements( ) );
+		
+		return res;
+		// return DiffNum<BaseType, N>( x.GetFx() * y.GetFx(), ( x.GetDiff() * y.GetFx() ) + ( x.GetFx() * y.GetDiff() ) );
 	};
 
 	// Diffnum x / y
@@ -725,7 +748,18 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 	template < typename BaseType, uint N >
 	inline DiffNum<BaseType, N> operator+ ( __in const DiffNum<BaseType, N>& x, __in const DiffNum<BaseType, N>& y ) restrict( amp )
 	{
-		return DiffNum<BaseType, N>( x.GetFx( ) + y.GetFx( ), x.GetDiff( ) + y.GetDiff( ) );
+		const BaseType xFx = x.GetFx( );
+		const BaseType yFx = y.GetFx( );
+		
+		const BaseType* xDiff = x.GetDiff( ).Elements( );
+		const BaseType* yDiff = y.GetDiff( ).Elements( );
+		
+		DiffNum< BaseType, N > res( xFx + yFx );
+		MatrixAdd< BaseType, N, 1 >( xDiff, yDiff, res.GetDiff( ).Elements( ) );
+		
+		return res;
+		
+		// return DiffNum<BaseType, N>( x.GetFx( ) + y.GetFx( ), x.GetDiff( ) + y.GetDiff( ) );
 	};
 
 	// Diffnum x - y
@@ -739,7 +773,21 @@ namespace NumericOptimization { namespace AutomaticDifferentiation {
 	template < typename BaseType, uint N >
 	inline DiffNum<BaseType, N> operator* ( __in const DiffNum<BaseType, N>& x, __in const DiffNum<BaseType, N>& y ) restrict( amp )
 	{
-		return DiffNum<BaseType, N>( x.GetFx( ) * y.GetFx( ), ( x.GetDiff( ) * y.GetFx( ) ) + ( x.GetFx( ) * y.GetDiff( ) ) );
+		const BaseType xFx = x.GetFx( );
+		const BaseType yFx = y.GetFx( );
+		
+		const BaseType* xDiff = x.GetDiff( ).Elements( );
+		const BaseType* yDiff = y.GetDiff( ).Elements( );
+		
+		DiffNum< BaseType, N > res( xFx * yFx );
+		BaseType tmp[N];
+		
+		MatrixMultiplyC< BaseType, N, 1 >( xDiff, yFx, tmp );
+		MatrixAddC< BaseType, N, 1 >( tmp, yDiff, xFx, res.GetDiff( ).Elements( ) );
+		
+		return res;
+
+		// return DiffNum<BaseType, N>( x.GetFx( ) * y.GetFx( ), ( x.GetDiff( ) * y.GetFx( ) ) + ( x.GetFx( ) * y.GetDiff( ) ) );
 	};
 
 	// Diffnum x / y

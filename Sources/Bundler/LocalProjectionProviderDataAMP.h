@@ -108,6 +108,40 @@ namespace Bundler {
 			}
 		}
 
+		static void GetCountsForCameraBatch(
+			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
+			__in const uint cameraStartIx,
+			__in const uint cameraCount,
+			__out LocalProjectionProviderDataCountsAMP* pCounts ) __CPU_ONLY
+		{
+			const uint cameraEnd = cameraStartIx + cameraCount;
+
+			Containers::Buffer< bool > pointMask;
+			pointMask.Allocate( pGlobalProvider->GetPointCount( ) );
+			ByteFill( 0, pGlobalProvider->GetPointCount( ), pointMask.Data( ) );
+
+			for ( uint cameraIx = cameraStartIx; cameraIx < cameraEnd; cameraIx++ )
+			{
+				const uint projectionCount = ( uint )pGlobalProvider->GetCameraProjectionCount( cameraIx );
+
+				uint camPoints = 0;
+				for ( uint projI = 0; projI < projectionCount; projI++ )
+				{
+					uint pointIx = ( uint )pGlobalProvider->GetPointIndex( pGlobalProvider->GetCameraProjectionIndex( cameraIx, projI ) );
+					if ( !pointMask[pointIx] )
+					{
+						pointMask[pointIx] = true;
+						camPoints++;
+					}
+				}
+
+				pCounts->pointCount += camPoints;
+				pCounts->projectionCount += projectionCount;
+			}
+
+			pCounts->cameraCount = cameraCount;
+		}
+
 		static void GetCountsForPoints(
 			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
 			__in const uint pointStartIx,
@@ -152,6 +186,40 @@ namespace Bundler {
 				pCounts->pointCount++;
 				pCounts->projectionCount += projectionCount;
 			}
+		}
+
+		static void GetCountsForPointBatch(
+			__in const ProjectionProvider< CameraModel >* pGlobalProvider,
+			__in const uint pointStartIx,
+			__in const uint pointCount,
+			__out LocalProjectionProviderDataCountsAMP* pCounts ) __CPU_ONLY
+		{
+			const uint pointEnd = pointStartIx + pointCount;
+
+			Containers::Buffer< bool > cameraMask;
+			cameraMask.Allocate( pGlobalProvider->GetCameraCount( ) );
+			ByteFill( 0, pGlobalProvider->GetCameraCount( ), cameraMask.Data( ) );
+
+			for ( uint pointIx = pointStartIx; pointIx < pointEnd; pointIx++ )
+			{
+				const uint projectionCount = ( uint )pGlobalProvider->GetPointProjectionCount( pointIx );
+
+				uint pointCameras = 0;
+				for ( uint projI = 0; projI < projectionCount; projI++ )
+				{
+					uint cameraIx = ( uint )pGlobalProvider->GetCameraIndex( pGlobalProvider->GetPointProjectionIndex( pointIx, projI ) );
+					if ( !cameraMask[cameraIx] )
+					{
+						cameraMask[cameraIx] = true;
+						pointCameras++;
+					}
+				}
+
+				pCounts->cameraCount += pointCameras;
+				pCounts->projectionCount += projectionCount;
+			}
+
+			pCounts->pointCount = pointCount;
 		}
 
 		static void CreateForCameras(

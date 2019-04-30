@@ -226,7 +226,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			//LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameras( pJacobian, cameraStartIx, jacobianMemoryLimit, pTaskSize );
 			//
 			 uint taskSize = GetTaskSize( cameraStartIx, ( uint )pJacobian->GetCameraCount( ), m_maxGpuCamTaskSize );
-			 LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameras1( pJacobian, cameraStartIx, taskSize, pTaskSize );
+			 LocalProjectionProviderDataAMP< CameraModel >::GetCountsForCameraBatch( pJacobian, cameraStartIx, taskSize, pTaskSize );
 		}
 
 		static void GetGPUPointTaskSize(
@@ -242,7 +242,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			// LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPoints( pJacobian, pointStartIx, jacobianMemoryLimit, pTaskSize );
 			
 			uint taskSize = GetTaskSize( pointStartIx, ( uint )pJacobian->GetPointCount( ), m_maxGpuPtTaskSize );
-			LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPoints1( pJacobian, pointStartIx, taskSize, pTaskSize );
+			LocalProjectionProviderDataAMP< CameraModel >::GetCountsForPointBatch( pJacobian, pointStartIx, taskSize, pTaskSize );
 		}
 
 		static void CreateInitSolveCamerasTaskCPU(

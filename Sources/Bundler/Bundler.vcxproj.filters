@@ -165,6 +165,15 @@
     <ClInclude Include="BundleFiltering.h">
       <Filter>Preprocessing</Filter>
     </ClInclude>
+    <ClInclude Include="PCGSolverOpenMP.h">
+      <Filter>LinearSolver\OpenMP</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockJacobiPreconditionerOpenMP.h">
+      <Filter>LinearSolver\OpenMP\Preconditioning</Filter>
+    </ClInclude>
+    <ClInclude Include="BundleOptimizerOpenMP.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -277,6 +286,12 @@
     </Filter>
     <Filter Include="Preprocessing">
       <UniqueIdentifier>{2c4311b0-d4b5-4f2a-9d8d-5cc2cdc9f616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\OpenMP">
+      <UniqueIdentifier>{023b4fcf-1ea3-4a8a-bb15-4871569c86b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LinearSolver\OpenMP\Preconditioning">
+      <UniqueIdentifier>{d526fade-b0d5-4054-b341-9a47cb5ee102}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -123,11 +123,13 @@
     <ClInclude Include="AMPUtils.h" />
     <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
+    <ClInclude Include="BlockJacobiPreconditionerOpenMP.h" />
     <ClInclude Include="BundleFiltering.h" />
     <ClInclude Include="BundleImporter.h" />
     <ClInclude Include="BundleNormalization.h" />
     <ClInclude Include="BundleOptimizer.h" />
     <ClInclude Include="BundleOptimizerDefs.h" />
+    <ClInclude Include="BundleOptimizerOpenMP.h" />
     <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
     <ClInclude Include="BundlerLib.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="ParallelPCGSolver.h" />
     <ClInclude Include="ParallelPCGTaskFactory.h" />
     <ClInclude Include="PCGSolver.h" />
+    <ClInclude Include="PCGSolverOpenMP.h" />
     <ClInclude Include="PCGStructs.h" />
     <ClInclude Include="Preconditioner.h" />
     <ClInclude Include="ProjectionProvider.h" />

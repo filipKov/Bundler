@@ -92,10 +92,17 @@
 #include "ParallelPCGSolver.h"
 
 
+// OpenMP Parallel PCG
+#include "BlockJacobiPreconditionerOpenMP.h"
+
+#include "PCGSolverOpenMP.h"
+
+
 // Optimizer 
 #include "BundleOptimizerDefs.h"
 #include "BundleOptimizer.h"
 #include "ParallelBundleOptimizer.h"
+#include "BundleOptimizerOpenMP.h"
 
 
 // Scene generator

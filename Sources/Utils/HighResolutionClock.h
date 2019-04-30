@@ -66,7 +66,7 @@ namespace Utils {
 			double GetLap( __in const uint lapIx ) {
 				_ASSERT_EXPR( lapIx < GetLapCount(), "Lap index out of range" );
 
-				return TimeConverter::Convert< TimeUnits::Microseconds, units >( m_elapsedLaps[ lapIX ] );
+				return TimeConverter::Convert< TimeUnits::Microseconds, units >( m_elapsedLaps[ lapIx ] );
 			}
 
 		protected:

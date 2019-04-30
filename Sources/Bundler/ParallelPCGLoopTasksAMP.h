@@ -157,7 +157,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 
 				const Scalar* pCameraD = d.data( );
 				const Scalar* pPointD = pCameraD + totalCameraParams;
-				const Scalar* pD = Utils::GetPointParamPtr< CameraModel >( startIx + localPointIx[0], localJacobian.GetCameraCount( ), pCameraD );
+				const Scalar* pD = pPointD + ( startIx + localPointIx[0] ) * pointParamCount;
 
 				Scalar* pAd = Ad.data( ) + localPointIx[0] * pointParamCount;
 

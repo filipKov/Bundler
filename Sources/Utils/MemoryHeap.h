@@ -31,10 +31,7 @@ namespace Utils { namespace Containers {
 
 		void Allocate( __in const size_t size, __deref_out void** ppDestination ) {
 			_ASSERT_EXPR( size > 0, L"cannot allocate 0 bytes" );
-
-			if ( size > pageSize ) {
-				throw InvalidArgumentException( GET_VARIABLE_NAME( size ), "requested memory is too big" );
-			}
+			_ASSERT_EXPR( size > pageSize, "Requested memory is too big" );
 
 			size_t requiredCapacity = m_offset + size;
 
@@ -58,7 +55,7 @@ namespace Utils { namespace Containers {
 			_ASSERT_EXPR( elementCount > 0, L"cannot allocate 0 elements" );
 
 			T* pTempDst = NULL;
-			AllocateRaw( elementCount * sizeof( T ), (void**)( &pTempDst ) );
+			Allocate( elementCount * sizeof( T ), (void**)( &pTempDst ) );
 			return pTempDst;
 		}
 

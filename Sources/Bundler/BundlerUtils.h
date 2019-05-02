@@ -55,4 +55,7 @@ namespace Bundler { namespace Utils {
 		return const_cast<Scalar*>( GetPointParamPtr< CameraModel >( pointIndex, cameraCount, ( const Scalar* )pParameterVector ) );
 	}
 
+
+	void CopyBundle( __in const Bundle* pInBundle, __out Bundle* pOutBundle );
+
 } }

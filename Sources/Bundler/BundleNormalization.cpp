@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "BundlerUtils.h"
 #include "BundleNormalization.h"
 
 namespace Bundler { namespace Preprocess {
@@ -147,15 +148,6 @@ namespace Bundler { namespace Preprocess {
 		);
 	}
 
-	void CopyToNewBundle(
-		__in const Bundle* pBundle,
-		__out Bundle* pBundleOut )
-	{
-		pBundleOut->cameras.SetCopy( pBundle->cameras );
-		pBundleOut->points.SetCopy( pBundle->points );
-		pBundleOut->projections.SetCopy( pBundle->projections );
-	}
-
 	void Normalize(
 		__in const Bundle* pBundle,
 		__out Bundle* pBundleOut,
@@ -170,7 +162,7 @@ namespace Bundler { namespace Preprocess {
 
 		if ( pBundleOut != pBundle )
 		{
-			CopyToNewBundle( pBundle, pBundleOut );
+			Bundler::Utils::CopyBundle( pBundle, pBundleOut );
 		}
 
 		ShiftBundle( mean, pBundleOut );

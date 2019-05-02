@@ -46,10 +46,6 @@ namespace Bundler { namespace SceneGenerator {
 	
 	protected:
 	
-		static void CopyGroundTruth(
-			__in const Bundle* pGroundTruth,
-			__out Bundle* pNoisedScene );
-	
 		static void AddNoise(
 			__in const SceneGenRange* pSettings,
 			__in const uint n,

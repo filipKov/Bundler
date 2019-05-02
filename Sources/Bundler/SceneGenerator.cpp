@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "BundlerUtils.h"
 #include "SceneGenerator.h"
 
 namespace Bundler { namespace SceneGenerator {
@@ -47,7 +48,7 @@ namespace Bundler { namespace SceneGenerator {
 		__in const Bundle* pGroundTruth,
 		__out Bundle* pNoisedScene )
 	{
-		CopyGroundTruth( pGroundTruth, pNoisedScene );
+		Bundler::Utils::CopyBundle( pGroundTruth, pNoisedScene );
 	
 		const size_t pointCount = pNoisedScene->points.Length( );
 		for ( size_t ptIx = 0; ptIx < pointCount; ptIx++ )
@@ -68,15 +69,6 @@ namespace Bundler { namespace SceneGenerator {
 				pNoise->cameraSettings.focalLengthNoise.minDelta,
 				pNoise->cameraSettings.focalLengthNoise.maxDelta );
 		}
-	}
-	
-	void SceneGen::CopyGroundTruth(
-		__in const Bundle* pGroundTruth,
-		__out Bundle* pNoisedScene )
-	{
-		pNoisedScene->cameras.SetCopy( pGroundTruth->cameras );
-		pNoisedScene->points.SetCopy( pGroundTruth->points );
-		pNoisedScene->projections.SetCopy( pGroundTruth->projections );
 	}
 	
 	void SceneGen::AddNoise(

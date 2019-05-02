@@ -82,6 +82,35 @@ namespace Bundler { namespace Preprocess {
 		}
 	}
 
+	void RemoveOutliers(
+		__in const BundleAdditionalPayload* pMetadata,
+		__in const Containers::PagedVector< size_t >* pOutliersIndices,
+		__out BundleAdditionalPayload* pOutMetadata )
+	{
+		const size_t originalPointCount = pMetadata->pointColors.Length( );
+		const size_t removedPoints = pOutliersIndices->Length( );
+		const size_t pointsLeft = originalPointCount - removedPoints;
+
+		pOutMetadata->cameraInformation.SetCopy( pMetadata->cameraInformation );
+		pOutMetadata->pointColors.Allocate( pointsLeft );
+
+		size_t removedIx = 0;
+		size_t pointDstIx = 0;
+
+		for ( size_t sourceIx = 0; sourceIx < originalPointCount; sourceIx++ )
+		{
+			if ( ( removedIx < removedPoints ) && ( ( *pOutliersIndices )[removedIx] == sourceIx ) )
+			{
+				removedIx++;
+			}
+			else
+			{
+				pOutMetadata->pointColors[pointDstIx] = pMetadata->pointColors[sourceIx];
+				pointDstIx++;
+			}
+		}
+	}
+
 	void CheckFilteredBundle( __in const Bundle* pBundle )
 	{
 		const size_t cameraCount = pBundle->cameras.Length( );
@@ -107,6 +136,8 @@ namespace Bundler { namespace Preprocess {
 		__in_ecount( 3 ) const Scalar* pCenter,
 		__in const Scalar radius,
 		__out Bundle* pOutBundle,
+		__in_opt const BundleAdditionalPayload* pMedatada,
+		__out_opt BundleAdditionalPayload* pOutMedatada,
 		__out_opt FilteringStatistics* pStats )
 	{
 		_ASSERT_EXPR( pBundle != pOutBundle, "Cannot filter bundle in-place" );
@@ -115,6 +146,12 @@ namespace Bundler { namespace Preprocess {
 		GetOutliers( pBundle, pCenter, radius, &outlierIndices );
 
 		RemoveOutliers( pBundle, &outlierIndices, pOutBundle );
+
+		if ( pMedatada && pOutMedatada )
+		{
+			_ASSERT_EXPR( pMedatada != pOutMedatada, "Cannot filter bundle metadata in-place" );
+			RemoveOutliers( pMedatada, &outlierIndices, pOutMedatada );
+		}
 
 		#if FILTER_SAFE
 			CheckFilteredBundle( pOutBundle );

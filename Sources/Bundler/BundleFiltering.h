@@ -16,6 +16,8 @@ namespace Bundler { namespace Preprocess {
 		__in_ecount( 3 ) const Scalar* pCenter,
 		__in const Scalar radius,
 		__out Bundle* pOutBundle,
+		__in_opt const BundleAdditionalPayload* pMedatada,
+		__out_opt BundleAdditionalPayload* pOutMedatada,
 		__out_opt FilteringStatistics* pStats );
 
 } }

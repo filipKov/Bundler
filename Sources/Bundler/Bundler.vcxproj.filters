@@ -216,6 +216,7 @@
     <ClCompile Include="BundleFiltering.cpp">
       <Filter>Preprocessing</Filter>
     </ClCompile>
+    <ClCompile Include="BundlerUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Import">

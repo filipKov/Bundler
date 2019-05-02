@@ -57,7 +57,7 @@ namespace BundlerTest {
 			proj.cameraIndex = camIx;
 			proj.pointIndex = ptIx;
 			
-			CameraModel3DoF camModel;
+			CameraModel3DoF_Translation camModel;
 			camModel.Initialize( pCameras + camIx );
 
 			Scalar ft[ 2 ] = { 0 };

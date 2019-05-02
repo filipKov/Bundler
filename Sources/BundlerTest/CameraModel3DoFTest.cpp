@@ -9,37 +9,21 @@ namespace BundlerTest {
 
 	TEST_CLASS( CameraModel3DoFTest ) {
 
-		TEST_METHOD( TestCamPtrSet ) {
-			class CamModelMockup : public CameraModel3DoF {
-			public:
-				Camera* GetCamPtr() {
-					return m_pCamera;
-				}
-			};
-
-			Camera cam;
-
-			CamModelMockup camModel;
-			camModel.Initialize( &cam );
-
-			Assert::AreEqual( (void*)(&cam), (void*)camModel.GetCamPtr() );
-		}
-
 		TEST_METHOD( TestParamsUpdate_0 ) {
 
 			Camera cam;
 			cam.t[ 0 ] = 12.0f;
 			cam.t[ 1 ] = 3.14f;
 
-			CameraModel3DoF camModel;
+			CameraModel3DoF_Translation camModel;
 			camModel.Initialize( &cam );
 
 			Scalar deltas[ 3 ] = { 1, 5, 9 };
 
-			( ( ICameraModel<6>* )&camModel )->UpdateCamera( deltas );
+			camModel.UpdateCamera( deltas );
 
 			Scalar expected[ 3 ] = { 13.0f, 8.14f, 9.0f };
-			AssertAreEqual( 3, expected, cam.t.Elements() );
+			AssertAreEqual( 3, expected, camModel.t.Elements() );
 		}
 
 		TEST_METHOD( TestProjectPoint_0 ) {
@@ -48,7 +32,7 @@ namespace BundlerTest {
 			cam.r = Matrix3x3( { 1,0,0, 0,1,0, 0,0,1 } );
 			cam.focalLength = 1;
 
-			CameraModel3DoF camModel;
+			CameraModel3DoF_Translation camModel;
 			camModel.Initialize( &cam );
 
 			Scalar pt[ 3 ] = { 2, 4, 6 };

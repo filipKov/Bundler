@@ -22,16 +22,6 @@ namespace NumericOptimizationTest {
 			}
 		}
 
-		TEST_METHOD( InitializerListConstructorThrowsRows ) {
-			TestThrowsException<InvalidArgumentException>( [] {
-				Matrix<float, 2, 3> base = { {1,2,3,4}, {5,6,7,8} };
-			} );
-
-			TestThrowsException<InvalidArgumentException>( [] {
-				Matrix<float, 2, 3> base = { {1,2,3}, {1,2,4}, {1,2,5} };
-			} );
-		}
-
 		TEST_METHOD( CopyConstructor ) {
 			Matrix< int, 2, 3> base1 = { {1,2,3}, {4,5,6} };
 			auto base2( base1 );
@@ -54,23 +44,6 @@ namespace NumericOptimizationTest {
 			}
 		}
 
-		TEST_METHOD( GetterThrows ) {
-			Matrix< int, 2, 3> base = { {1,2,3}, {4,5,6} };
-
-			TestThrowsException<IndexOutOfRangeException>( [&base] {
-				base.Get( 3, 0 );
-			} );
-
-			TestThrowsException<IndexOutOfRangeException>( [&base] {
-				base.Get( 1, 14 );
-			} );
-
-			TestThrowsException<IndexOutOfRangeException>( [&base] {
-				base.Get( 321, 14 );
-			} );
-
-		}
-
 		TEST_METHOD( Setter ) {
 			Matrix<int, 2, 3> base = { {1,2,3}, {4,5,6} };
 			
@@ -79,23 +52,6 @@ namespace NumericOptimizationTest {
 			
 			Assert::AreEqual( 123, base.Get( 0, 1 ) );
 			Assert::AreEqual( 456, base.Get( 1, 2 ) );
-		}
-
-		TEST_METHOD( SetterThrows ) {
-			Matrix<int, 2, 3> base = { { 1,2,3 }, { 4,5,6 } };
-
-			TestThrowsException< IndexOutOfRangeException >( [&base] {
-				base.Set( 4, 1, 9 );
-			} );
-
-			TestThrowsException< IndexOutOfRangeException >( [&base] {
-				base.Set( 0, 12, 98 );
-			} );
-
-			TestThrowsException< IndexOutOfRangeException >( [&base] {
-				base.Set( 87, 242, 987 );
-			} );
-
 		}
 
 		TEST_METHOD( Accessor ) {
@@ -109,19 +65,6 @@ namespace NumericOptimizationTest {
 
 			Assert::AreEqual( 12, base[1][2] );
 			Assert::AreEqual( 34, base[0][0] );
-		}
-
-		TEST_METHOD( AccessorThrows ) {
-			Matrix<int, 2, 3> base = { { 1,2,3 }, { 4,5,6 } };
-
-			TestThrowsException<IndexOutOfRangeException>( [&base] {
-				base[4];
-			} );
-
-			TestThrowsException<IndexOutOfRangeException>( [&base] {
-				base[21];
-			} );
-
 		}
 
 		TEST_METHOD( AssignOperator ) {

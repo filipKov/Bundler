@@ -12,7 +12,7 @@ namespace BundlerTest {
 		class CameraModelMockup : public CameraModel6DoF< 10 > {
 		public:
 			const Camera* GetCamera() {
-				return m_pCamera;
+				return this;
 			}
 			
 			const int GetRotationCount() {
@@ -45,8 +45,6 @@ namespace BundlerTest {
 			CameraModelMockup camModel;
 			camModel.Initialize( &camera );
 
-			Assert::AreEqual( (void*)&camera, (void*)camModel.GetCamera() );
-			
 			Assert::AreEqual( 1u, camModel.GetCurrentRotationCount() );
 		}
 
@@ -56,8 +54,6 @@ namespace BundlerTest {
 
 			CameraModelMockup camModel;
 			camModel.Initialize( &camera );
-
-			Assert::AreEqual( (void*)&camera, (void*)camModel.GetCamera() );
 
 			Assert::AreEqual( 1u, camModel.GetCurrentRotationCount() );
 
@@ -78,7 +74,7 @@ namespace BundlerTest {
 			Scalar updateParams[ 7 ] = { 0.436f, 0.0f, 1.0f, 0.0f, 4.3f, 2.1f, 5.8f };
 			camModel.UpdateCamera( updateParams );
 
-			AssertAreEqual( { Scalar( 5.3 ), Scalar( 4.1 ), Scalar( 8.8 ) }, camera.t.Elements(), Scalar( 10e-5f ) );
+			AssertAreEqual( { Scalar( 5.3 ), Scalar( 4.1 ), Scalar( 8.8 ) }, camModel.t.Elements(), Scalar( 10e-5f ) );
 
 			Assert::AreEqual( 2u, camModel.GetCurrentRotationCount() );
 		}

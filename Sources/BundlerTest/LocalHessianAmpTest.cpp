@@ -8,7 +8,7 @@ using namespace Bundler::CameraModels;
 
 namespace BundlerTest {
 
-using CamModel = CameraModelAMP6DoF< 5 >;
+using CamModel = CameraModel6DoF< 5 >;
 
 TEST_CLASS( LocalHessianAmpTest )
 {

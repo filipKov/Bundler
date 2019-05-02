@@ -8,7 +8,7 @@ using namespace Bundler::CameraModels;
 
 namespace BundlerTest {
 
-	using CamModel = CameraModelAMP6DoF< 5 >;
+	using CamModel = CameraModel6DoF< 5 >;
 
 	TEST_CLASS( NormalizationTest )
 	{
@@ -86,7 +86,7 @@ namespace BundlerTest {
 			GetResiduals( &globalJacobian, projCount, expectedProjections.Data( ) );
 			GetResiduals( &normalizedJacobian, projCount, actualProjections.Data( ) );
 
-			AssertAreEqual( projCount * 2, expectedProjections.Data( ), actualProjections.Data( ), Scalar( 10e-14 ) );
+			AssertAreEqual( projCount * 2, expectedProjections.Data( ), actualProjections.Data( ), Scalar( 10e-6 ) );
 		}
 	
 	};

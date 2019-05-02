@@ -8,7 +8,7 @@ using namespace Bundler::CameraModels;
 
 namespace BundlerTest {
 	
-	using CameraModel = CameraModels::CameraModelAMP6DoF< 10 >;
+	using CameraModel = CameraModels::CameraModel6DoF< 10 >;
 
 	void JtfNegSubtractX_Local_Cams(
 		__in const uint localCameraIx,

@@ -17,7 +17,7 @@ struct NoiseMaskToCameraModel< SceneGenAutoNoiseMask::POINTS >
 };
 
 template < class CameraModel, uint maxIterations >
-void OptimizeBundle( __inout Bundle* pBundle, __out OptimizerStatistics* pStats )
+void OptimizeBundle( __in const Bundle* pBundle, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
 {
 	OptimizerSettings settings;
 	settings.errorTolerance = Scalar( 0.01 );
@@ -30,11 +30,17 @@ void OptimizeBundle( __inout Bundle* pBundle, __out OptimizerStatistics* pStats 
 
 	BundleOptimizer< CameraModel, LinearSolver::BlockJacobiPreconditioner > optimizer;
 	optimizer.Initialize( settings );
+
+	if ( pBundle != pOptimizedBundle )
+	{
+		Bundler::Utils::CopyBundle( pBundle, pOptimizedBundle );
+	}
+
 	optimizer.Optimize( pBundle, pStats );
 }
 
 template < class CameraModel, uint maxIterations >
-void OptimizeBundleParallel( __inout Bundle* pBundle, __out OptimizerStatistics* pStats )
+void OptimizeBundleParallel( __in const Bundle* pBundle, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
 {
 	OptimizerSettings settings;
 	settings.errorTolerance = Scalar( 0.01 );
@@ -48,5 +54,11 @@ void OptimizeBundleParallel( __inout Bundle* pBundle, __out OptimizerStatistics*
 	Async::WorkerPool wpool;
 	ParallelBundleOptimizer< CameraModel > optimizer2;
 	optimizer2.Initialize( settings, &wpool );
-	optimizer2.Optimize( pBundle, pStats );
+
+	if ( pBundle != pOptimizedBundle )
+	{
+		Bundler::Utils::CopyBundle( pBundle, pOptimizedBundle );
+	}
+
+	optimizer2.Optimize( pOptimizedBundle, pStats );
 }

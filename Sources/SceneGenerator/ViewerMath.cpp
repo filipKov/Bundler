@@ -69,7 +69,7 @@ void M44SetPerspective(
 	ELEMENT( M, 0 ) = 1.0f / ( tan( angle )*aspect_ratio );	ELEMENT( M, 1 ) = 0.0f;					ELEMENT( M, 2 ) = 0.0f;										 ELEMENT( M, 3 ) = 0.0f;
 	ELEMENT( M, 4 ) = 0.0f;									ELEMENT( M, 5 ) = 1.0f / tan( angle );  ELEMENT( M, 6 ) = 0.0f;										 ELEMENT( M, 7 ) = 0.0f;
 	ELEMENT( M, 8 ) = 0.0f;									ELEMENT( M, 9 ) = 0.0f;					ELEMENT( M, 10 ) = -( z_far + z_near ) / ( z_far - z_near ); ELEMENT( M, 11 ) = -1.0f;
-	ELEMENT( M, 12 ) = 0.0f;									ELEMENT( M, 13 ) = 0.0f;				ELEMENT( M, 14 ) = -2.0f*z_far*z_near / ( z_far - z_near );	 ELEMENT( M, 15 ) = 0.0f;
+	ELEMENT( M, 12 ) = 0.0f;								ELEMENT( M, 13 ) = 0.0f;				ELEMENT( M, 14 ) = -2.0f*z_far*z_near / ( z_far - z_near );	 ELEMENT( M, 15 ) = 0.0f;
 }
 
 void M44SetPerspectiveClippingPlanes( __in const float zNear, __in const float zFar, __out_ecount( 16 ) float* M )

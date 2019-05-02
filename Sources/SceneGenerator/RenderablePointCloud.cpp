@@ -67,7 +67,7 @@ void RenderablePointCloud::RenderColored( __in const IRenderingContext* pContext
 
 	BindVertexArrayObject( mPointCloud );
 	glEnable( GL_POINT_SMOOTH );
-	glPointSize( 5.0f );
+	glPointSize( 1.0f );
 	glDrawArrays( GL_POINTS, 0, mVertexCount );
 	UnbindVertexArrayObject();
 }

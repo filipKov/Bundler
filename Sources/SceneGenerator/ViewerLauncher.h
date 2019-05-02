@@ -41,10 +41,10 @@ public:
 
 	static void InitializeEmpty( );
 
-	static void InitializePointCloud (
-		__in const uint pointCount,
-		__in_ecount( pointCount ) const Bundler::Vector3* pPoints,
-		__in_ecount_opt( pointCount ) const uint* pPointColors );
+	static void ShowBundle( 
+		__in const Bundler::Bundle* pBundle,
+		__in_opt const Bundler::BundleAdditionalPayload* pMetadata,
+		__in_ecount_opt( 3 ) float* pPivot );
 
 	static void LaunchViewer();
 	

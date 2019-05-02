@@ -44,6 +44,10 @@ public:
 
 	size_t RegisterRenderable( __in IRenderable* pObject );
 
+	void UnregisterRenderable( __in const size_t ix );
+
+	void ClearRenderables( );
+
 	void RegisterSkybox( __in IRenderable* pSkybox );
 
 

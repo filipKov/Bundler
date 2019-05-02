@@ -60,6 +60,8 @@ protected:
 
 	void PrintDebugInfo();
 
+	void SetRenderable( __in const size_t renderableIx );
+
 
 protected:
 
@@ -91,6 +93,9 @@ protected:
 	// ----------------------
 	Scene mScene;
 	CameraController mCameraController;
+
+	std::mutex mDataLock;
+	bool mInitialized;
 
 };
 

@@ -97,24 +97,35 @@ void ViewerApplication::Release() {
 }
 
 ViewerApplication::ViewerApplication() {
+	mInitialized = false;
 }
 
-ViewerApplication::~ViewerApplication() {
+ViewerApplication::~ViewerApplication() 
+{
+	std::unique_lock< std::mutex > autoLock( mDataLock );
 	Clear();
 }
 
-void ViewerApplication::Initialize( __in int argc, __in char **argv ) {
-	Clear();
+void ViewerApplication::Initialize( __in int argc, __in char **argv ) 
+{	
+	std::unique_lock< std::mutex > autoLock( mDataLock );
 
-	mProgressBar.BeginSection( AlgID_ViewerInitialization, 1.0f );
-	InitializeOpenGL( argc, argv );
-	mProgressBar.EndSection( S_OK, NULL );
+	if ( !mInitialized )
+	{
+		Clear( );
 
-	printf( "Viewer initialized:\n\tGLEW %s\n\tOpenGL %s\n", glewGetString( GLEW_VERSION ), glGetString( GL_VERSION ) );
+		mProgressBar.BeginSection( AlgID_ViewerInitialization, 1.0f );
+		InitializeOpenGL( argc, argv );
+		mProgressBar.EndSection( S_OK, NULL );
 
-	mProgressBar.BeginSection( AlgID_ViewerDefaultSceneLoad, 1.0f );
-	LoadDefaults();
-	mProgressBar.EndSection( S_OK, NULL );
+		printf( "Viewer initialized:\n\tGLEW %s\n\tOpenGL %s\n", glewGetString( GLEW_VERSION ), glGetString( GL_VERSION ) );
+
+		mProgressBar.BeginSection( AlgID_ViewerDefaultSceneLoad, 1.0f );
+		LoadDefaults( );
+		mProgressBar.EndSection( S_OK, NULL );
+
+		mInitialized = true;
+	}
 }
 
 void ViewerApplication::Start() {
@@ -144,6 +155,8 @@ void ViewerApplication::RenderScene() {
 
 	TimeGroup& simulationStopwatch = mTimer.GetTimeGroup( STOPWATCH_SIMULATION );
 	simulationStopwatch.SaveElapsed();
+
+	std::unique_lock< std::mutex > autoLock( mDataLock );
 
 	float frameTime = (float)simulationStopwatch.GetLast() / 1000.0f;
 	mCameraController.Update( frameTime );
@@ -214,10 +227,46 @@ void ViewerApplication::OnKeyPressed( __in const byte key, __in const int x, __i
 			break;
 
 		case ( KEY_1 ):
-			mRenderer.SwitchShadowsState();
+			SetRenderable( 0 );
 			break;
 
 		case ( KEY_2 ):
+			SetRenderable( 1 );
+			break;
+
+		case ( KEY_3 ):
+			SetRenderable( 2 );
+			break;
+
+		case ( KEY_4 ):
+			SetRenderable( 3 );
+			break;
+
+		case ( KEY_5 ):
+			SetRenderable( 4 );
+			break;
+
+		case ( KEY_6 ):
+			SetRenderable( 5 );
+			break;
+
+		case ( KEY_7 ):
+			SetRenderable( 6 );
+			break;
+
+		case ( KEY_8 ):
+			SetRenderable( 7 );
+			break;
+
+		case ( KEY_9 ):
+			SetRenderable( 8 );
+			break;
+
+		case ( KEY_P ):
+			mRenderer.SwitchShadowsState();
+			break;
+
+		case ( KEY_O ):
 			mRenderer.SwitchSSAOState();
 			break;
 
@@ -245,28 +294,25 @@ void ViewerApplication::OnKeyReleased( __in const byte key, __in const int x, __
 	}
 }
 
-void ViewerApplication::ShowPointCloud( __in ScenePointCloud* pPointCloud ) {
-	
-	mScene.objects.push_back( pPointCloud );
-
+void ViewerApplication::ShowPointCloud( __in ScenePointCloud* pPointCloud ) 
+{
 	pPointCloud->MoveTo( Vector3f( { 0, 0, 0 } ) );
-
 	pPointCloud->Rotate( 90.0f, Vector3f( { -1, 0, 0 } ) );
+	// 
+	// const BoundingBox& bbox = pPointCloud->GetBoundingBox();
+	// const float objSize = bbox.maxVert.Distance( bbox.minVert );
+	// if ( objSize > MAX_OBJ_SIZE ) {
+	// 	float scale = MAX_OBJ_SIZE / objSize;
+	// 	pPointCloud->Scale( scale );
+	// }
 
-	const BoundingBox& bbox = pPointCloud->GetBoundingBox();
-	const float objSize = bbox.maxVert.Distance( bbox.minVert );
-	if ( objSize > MAX_OBJ_SIZE ) {
-		float scale = MAX_OBJ_SIZE / objSize;
-		pPointCloud->Scale( scale );
-	}
-
-	mRenderer.RegisterRenderable( pPointCloud );
+	std::unique_lock< std::mutex > autoLock( mDataLock );
+	mScene.objects.push_back( pPointCloud );
+	SetRenderable( mScene.objects.size( ) - 1 );
 }
 
-void ViewerApplication::ShowMesh( __in SceneMesh* pMesh ) {
-
-	mScene.objects.push_back( pMesh );
-
+void ViewerApplication::ShowMesh( __in SceneMesh* pMesh ) 
+{
 	pMesh->MoveTo( Vector3f( { 0,0,0 } ) );
 
 	pMesh->Rotate( 90.0f, Vector3f( { -1, 0, 0 } ) );
@@ -279,6 +325,9 @@ void ViewerApplication::ShowMesh( __in SceneMesh* pMesh ) {
 		pMesh->Scale( scale );
 	}
 
+	std::unique_lock< std::mutex > autoLock( mDataLock );
+
+	mScene.objects.push_back( pMesh );
 	mRenderer.RegisterRenderable( pMesh );
 }
 
@@ -292,7 +341,8 @@ ProgressBar& ViewerApplication::GetProgressBar() {
 	return mProgressBar;
 }
 
-void ViewerApplication::Clear() {
+void ViewerApplication::Clear() 
+{
 	mRenderer.Release();
 	mTextureCache.Clear();
 	mTimer.Clear();
@@ -450,4 +500,13 @@ void ViewerApplication::PrintDebugInfo() {
 	mScene.camera.PrintAvgTimes();
 	
 	printf( "\n" );
+}
+
+void ViewerApplication::SetRenderable( __in const size_t renderableIx )
+{
+	if ( renderableIx < mScene.objects.size( ) )
+	{
+		mRenderer.ClearRenderables( );
+		mRenderer.RegisterRenderable( mScene.objects[renderableIx]->GetRenderable( ) );
+	}
 }

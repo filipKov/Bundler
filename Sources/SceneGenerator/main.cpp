@@ -5,15 +5,6 @@
 
 #include "ViewerLauncher.h"
 
-void LaunchViewer( 
-	__in const uint count,
-	__in_ecount( count ) const Vector3* pVertices,
-	__in_ecount_opt( count ) const uint* pVertexColors )
-{
-	ViewerLauncher::InitializePointCloud( count, pVertices, pVertexColors );
-	ViewerLauncher::LaunchViewer( );
-}
-
 void PrintBundle( __in const Bundle* pBundle, __in std::ostream* pStream )
 {
 	( *pStream ) << pBundle->points[0][0];
@@ -48,7 +39,7 @@ int main( int argc, char **argv )
 	Bundle bundle;
 	BundleAdditionalPayload metadata;
 
-	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "schwimmy.out" ), &bundle, &metadata );
+	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "fountain.out" ), &bundle, &metadata );
 	if ( SUCCEEDED( hr ) )
 	{
 		Scalar mean[3];
@@ -66,7 +57,8 @@ int main( int argc, char **argv )
 		MatrixCast< double, Scalar, 3, 1 >( center, filterCenter );
 
 		Bundle filteredBundle;
-		Preprocess::FilterAroundCenter( &normalizedBundle, filterCenter, filterRadius, &filteredBundle, NULL );
+		BundleAdditionalPayload filteredMetadata;
+		Preprocess::FilterAroundCenter( &normalizedBundle, filterCenter, filterRadius, &filteredBundle, &metadata, &filteredMetadata, NULL );
 
 
 		constexpr uint noiseMask = SceneGenAutoNoiseMask::POINTS;
@@ -81,16 +73,31 @@ int main( int argc, char **argv )
 		Bundle noisyBundle;
 		SceneGen::AddNoise( &noise, &filteredBundle, &noisyBundle );
 		
-		// //std::thread viewerThread( LaunchViewer, ( uint )bundle2.points.Length( ), bundle2.points.Data( ), metadata.pointColors.Data( ) );
-		 
-		OptimizerStatistics optimizerStats;
+		// std::thread viewerThread( LaunchViewer, &bundle, &metadata );
+		// Bundler::BundleAdditionalPayload* pMeta = NULL;
+		// std::thread viewerThread( LaunchViewer, &filteredBundle, pMeta );
+
+		
 		// // std::thread optimizerThread( OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 10 >, 10 >, &bundle2, &optimizerStats );
 		// //optimizerThread.join( );
 		
-		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
-		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats );
+		Bundle optimizedBundle;
+		OptimizerStatistics optimizerStats;
+		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats, &optimizedBundle );
+		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &noisyBundle, &optimizerStats, &optimizedBundle );
 		
-		// //viewerThread.join( );
+		// viewerThread.join( );
+
+
+		ViewerLauncher::InitializeEmpty( );
+
+		ViewerLauncher::ShowBundle( &normalizedBundle, &metadata, filterCenter );
+		ViewerLauncher::ShowBundle( &filteredBundle, &filteredMetadata, filterCenter );
+		ViewerLauncher::ShowBundle( &noisyBundle, &filteredMetadata, filterCenter );
+		ViewerLauncher::ShowBundle( &optimizedBundle, &filteredMetadata, filterCenter );
+
+
+		ViewerLauncher::LaunchViewer( );
 	}
 
 	// if ( SUCCEEDED( hr ) )

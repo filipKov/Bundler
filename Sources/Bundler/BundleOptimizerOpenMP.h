@@ -245,11 +245,11 @@ namespace Bundler {
 			return totalNorm.GetValue( ) * Scalar( 0.0000001 );
 		}
 
-		void SetOptimizedCameras( __out Bundle* pBundle ) const
+		void SetOptimizedCameras( __out Bundle* pBundle )
 		{
 			const size_t cameraCount = pBundle->cameras.Length( );
 
-			const CameraModel* pSrcCamera = m_cameraModels.Data( );
+			CameraModel* pSrcCamera = m_cameraModels.Data( );
 			Camera* pDstCamera = pBundle->cameras.Data( );
 
 			for ( size_t i = 0; i < cameraCount; i++ )

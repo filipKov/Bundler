@@ -157,7 +157,7 @@ namespace Bundler { namespace CameraModels {
 			DScalar< totalParamCount > tmp2[9];
 
 			ShallowCopy( m_incrementalRotations[0].Elements( ), 9, tmp1 );
-			for ( uint i = 1; i < m_incrementalRotations; i++ )
+			for ( uint i = 1; i < m_currentRotationCount; i++ )
 			{
 				M33MulM33( tmp1, m_incrementalRotations[i].Elements( ), tmp2 );
 				ShallowCopy( tmp2, 9, tmp1 );

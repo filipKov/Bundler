@@ -34,12 +34,14 @@ int main( int argc, char **argv )
 	UNREFERENCED_PARAMETER( argc );
 	UNREFERENCED_PARAMETER( argv );
 
+	_ASSERT_EXPR( argc > 1, "Missing path to bundle" );
+
 	Async::ListAccelerators( [ ] ( accelerator ac ) { return true; } );
 
 	Bundle bundle;
 	BundleAdditionalPayload metadata;
 
-	HRESULT hr = BundleImporter::Import( GET_RESOURCE_PATH( "fountain.out" ), &bundle, &metadata );
+	HRESULT hr = BundleImporter::Import( argv[1], &bundle, &metadata );
 	if ( SUCCEEDED( hr ) )
 	{
 		Scalar mean[3];
@@ -68,8 +70,6 @@ int main( int argc, char **argv )
 		noise.pointSettings.minDelta = -noiseStrength;
 		noise.pointSettings.maxDelta = noiseStrength;
 
-		// SceneGen::GetAutoNoise( &normalizedBundle, noiseMask, &noise );		
-		
 		Bundle noisyBundle;
 		SceneGen::AddNoise( &noise, &filteredBundle, &noisyBundle );
 		
@@ -84,7 +84,7 @@ int main( int argc, char **argv )
 		Bundle optimizedBundle;
 		OptimizerStatistics optimizerStats;
 		// OptimizeBundle< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats, &optimizedBundle );
-		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 11 >, 10 >( &noisyBundle, &optimizerStats, &optimizedBundle );
+		OptimizeBundleParallel< NoiseMaskToCameraModel< noiseMask >::CameraModel< 5 >, 4 >( &noisyBundle, &optimizerStats, &optimizedBundle );
 		
 		// viewerThread.join( );
 

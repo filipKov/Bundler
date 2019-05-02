@@ -13,7 +13,7 @@ template < >
 struct NoiseMaskToCameraModel< SceneGenAutoNoiseMask::POINTS >
 {
 	template < uint maxIters >
-	using CameraModel = typename CameraModels::CameraModelAMP6DoF< maxIters >;
+	using CameraModel = typename CameraModels::CameraModel6DoF< maxIters >;
 };
 
 template < class CameraModel, uint maxIterations >

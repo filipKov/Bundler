@@ -6,28 +6,16 @@
     <ClInclude Include="BundleImporter.h">
       <Filter>Import</Filter>
     </ClInclude>
-    <ClInclude Include="ICameraModel.h">
-      <Filter>CameraModels</Filter>
-    </ClInclude>
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="BundlerLib.h" />
-    <ClInclude Include="CameraModel3DoF.h">
-      <Filter>CameraModels</Filter>
-    </ClInclude>
     <ClInclude Include="Bundler.h">
       <Filter>OldPrototype</Filter>
     </ClInclude>
     <ClInclude Include="ReprojectionResiudal.h">
       <Filter>OldPrototype</Filter>
     </ClInclude>
-    <ClInclude Include="BasicCameraModel.h">
-      <Filter>CameraModels</Filter>
-    </ClInclude>
     <ClInclude Include="RodriguesRotation.h">
       <Filter>CameraModels\Rotation</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraModel6DoF.h">
-      <Filter>CameraModels</Filter>
     </ClInclude>
     <ClInclude Include="HessianBlockProvider.h">
       <Filter>JacobianAndHessian</Filter>
@@ -132,9 +120,6 @@
     <ClInclude Include="LocalHessianMultiplicationEngineAMP.h">
       <Filter>JacobianAndHessian\Local\AMP</Filter>
     </ClInclude>
-    <ClInclude Include="CameraModelAMP6DoF.h">
-      <Filter>CameraModels</Filter>
-    </ClInclude>
     <ClInclude Include="ParallelPCGInitTasksCPU.h">
       <Filter>LinearSolver\Parallel\Tasks\CPU</Filter>
     </ClInclude>
@@ -177,14 +162,23 @@
     <ClInclude Include="CachingHessianBlockProvider.h">
       <Filter>JacobianAndHessian\Caching</Filter>
     </ClInclude>
+    <ClInclude Include="CameraModel3DoF_Rotation.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel3DoF_Translation.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModelFixed.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel6DoF.h">
+      <Filter>CameraModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="BundleImporter.cpp">
       <Filter>Import</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraModel3DoF.cpp">
-      <Filter>CameraModels</Filter>
     </ClCompile>
     <ClCompile Include="Bundler.cpp">
       <Filter>OldPrototype</Filter>

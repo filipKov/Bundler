@@ -3,58 +3,57 @@
 namespace Bundler { namespace CameraModels {
 
 	template < uint maxRotations >
-	class CameraModelAMP6DoF : public Camera
+	class CameraModel3DoF_Rotation : public Camera
 	{
 	public:
 	
-		static constexpr const uint rotationParamStartIx = 0;
-		
-		static constexpr const uint translationParamStartIx = RodriguesRotation::rotationParameterCount;
-		
-		static constexpr const uint cameraParameterCount = RodriguesRotation::rotationParameterCount + 3;
-
+		static constexpr const uint cameraParameterCount = RodriguesRotation::rotationParameterCount;
+	
 		static constexpr const uint totalParamCount = cameraParameterCount + POINT_PARAM_COUNT;
-
+	
 		static constexpr const uint pointParamStartIx = cameraParameterCount;
-
+	
 	public:
 	
-		CameraModelAMP6DoF( ) __CPU_ONLY
+		CameraModel3DoF_Rotation( ) __CPU_ONLY
 		{
 			m_currentRotationCount = 0;
 		}
-
-		CameraModelAMP6DoF( __in const Camera* pCamera ) __CPU_ONLY
+	
+		CameraModel3DoF_Rotation( __in const Camera* pCamera ) __CPU_ONLY
 		{
 			Initialize( pCamera );
 		}
-
-		void Initialize( __in Camera* pCamera ) __CPU_ONLY
+	
+		void Initialize( __in const Camera* pCamera ) __CPU_ONLY
 		{
 			ShallowCopy< Camera >( pCamera, 1, this );
 			m_currentRotationCount = 0;
 	
 			AddInitialRotation( r.Elements( ) );
 		}
-
-		CameraModelAMP6DoF< maxRotations >& operator=( __in const CameraModelAMP6DoF< maxRotations >& src ) __CPU_ONLY = default;
-
-		void SetCopy( __in const CameraModelAMP6DoF< maxRotations >* pSource ) __CPU_ONLY
+	
+		CameraModel3DoF_Rotation< maxRotations >& operator=( __in const CameraModel3DoF_Rotation< maxRotations >& src ) __CPU_ONLY = default;
+	
+		void SetCopy( __in const CameraModel3DoF_Rotation< maxRotations >* pSource ) __CPU_ONLY
 		{
 			*this = *pSource;
 		}
-	
-		void UpdateCamera( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) __CPU_ONLY
+
+		void CopyToCamera( __out Camera* pCamera )
 		{
-			AddRotation< false >( ELEMENT( pDeltaParams, rotationParamStartIx + 0 ), pDeltaParams + rotationParamStartIx + 1 );
-	
-			V3AddV3( t.Elements( ), pDeltaParams + translationParamStartIx, t.Elements( ) );
+			ExtractRotation( r.Elements( ) );
+			ShallowCopy< Camera >( this, 1, pCamera );
 		}
 	
-		void ResetLastUpdate( __in_ecount( cameraParamCount ) const Scalar* pDeltaParams ) __CPU_ONLY
+		void UpdateCamera( __in_ecount( cameraParameterCount ) const Scalar* pDeltaParams ) __CPU_ONLY
+		{
+			AddRotation< false >( *pDeltaParams, pDeltaParams + 1 );
+		}
+	
+		void ResetLastUpdate( __in_ecount( cameraParameterCount ) const Scalar* pDeltaParams ) __CPU_ONLY
 		{
 			m_currentRotationCount--;
-			V3SubV3( t.Elements( ), pDeltaParams + translationParamStartIx, t.Elements( ) );
 		}
 	
 		void ProjectPoint(
@@ -64,9 +63,9 @@ namespace Bundler { namespace CameraModels {
 		{
 			DScalar< totalParamCount > pt1[3] =
 			{
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 0 ), cameraParameterCount + 0 ),
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 1 ), cameraParameterCount + 1 ),
-				DScalar< totalParamCount >( ELEMENT( pPointCoords, 2 ), cameraParameterCount + 2 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 0 ), pointParamStartIx + 0 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 1 ), pointParamStartIx + 1 ),
+				DScalar< totalParamCount >( ELEMENT( pPointCoords, 2 ), pointParamStartIx + 2 ),
 			};
 	
 			DScalar< totalParamCount > pt2[3];
@@ -94,7 +93,7 @@ namespace Bundler { namespace CameraModels {
 			for ( uint i = 0; i < m_currentRotationCount; i++ )
 			{
 				M33MulV3( m_incrementalRotations[i].Elements( ), pt1, pt2 );
-				
+	
 				auto tmp = pt1;
 				pt1 = pt2;
 				pt2 = tmp;
@@ -108,16 +107,7 @@ namespace Bundler { namespace CameraModels {
 	
 		void TranslatePoint( __inout_ecount( 3 ) DScalar< totalParamCount >* pPoint ) const __GPU
 		{
-			const Scalar* pT = t.Elements( );
-	
-			DScalar< totalParamCount > translation[3] =
-			{
-				DScalar< totalParamCount >( ELEMENT( pT, 0 ), translationParamStartIx + 0 ),
-				DScalar< totalParamCount >( ELEMENT( pT, 1 ), translationParamStartIx + 1 ),
-				DScalar< totalParamCount >( ELEMENT( pT, 2 ), translationParamStartIx + 2 ),
-			};
-	
-			V3AddV3( pPoint, translation, pPoint );
+			V3AddV3( pPoint, t.Elements(), pPoint );
 		}
 	
 		void MultiplyByCalibration(
@@ -141,12 +131,30 @@ namespace Bundler { namespace CameraModels {
 		template < bool isFirst = false >
 		void AddRotation( __in const Scalar angle, __in_ecount( 3 ) const Scalar* pAxis ) __CPU_ONLY
 		{
-			RodriguesRotation::GetRotation< totalParamCount, rotationParamStartIx, isFirst >( angle, pAxis, m_incrementalRotations[m_currentRotationCount].Elements( ) );
+			RodriguesRotation::GetRotation< totalParamCount, 0, isFirst >( angle, pAxis, m_incrementalRotations[m_currentRotationCount].Elements( ) );
 			m_currentRotationCount++;
 		}
 	
-	protected:
+		void ExtractRotation( __out_ecount( 9 ) Scalar* pRot )
+		{
+			DScalar< totalParamCount > tmp1[9];
+			DScalar< totalParamCount > tmp2[9];
 
+			ShallowCopy( m_incrementalRotations[0].Elements( ), 9, tmp1 );
+			for ( uint i = 1; i < m_incrementalRotations; i++ )
+			{
+				M33MulM33( tmp1, m_incrementalRotations[i].Elements( ), tmp2 );
+				ShallowCopy( tmp2, 9, tmp1 );
+			}
+
+			for ( uint i = 0; i < 9; i++ )
+			{
+				ELEMENT( pRot, i ) = ELEMENT( tmp1, i ).GetFx( );
+			}
+		}
+
+	protected:
+	
 		DMatrix3x3< totalParamCount > m_incrementalRotations[maxRotations];
 		uint m_currentRotationCount;
 	

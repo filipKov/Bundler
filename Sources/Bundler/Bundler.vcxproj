@@ -121,7 +121,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AMPUtils.h" />
-    <ClInclude Include="BasicCameraModel.h" />
     <ClInclude Include="BlockJacobiPreconditioner.h" />
     <ClInclude Include="BlockJacobiPreconditionerOpenMP.h" />
     <ClInclude Include="BundleFiltering.h" />
@@ -137,9 +136,10 @@
     <ClInclude Include="BundleStructureMapping.h" />
     <ClInclude Include="CachedJacobiPreconditioner.h" />
     <ClInclude Include="CachingHessianBlockProvider.h" />
-    <ClInclude Include="CameraModel3DoF.h" />
+    <ClInclude Include="CameraModel3DoF_Rotation.h" />
+    <ClInclude Include="CameraModel3DoF_Translation.h" />
     <ClInclude Include="CameraModel6DoF.h" />
-    <ClInclude Include="CameraModelAMP6DoF.h" />
+    <ClInclude Include="CameraModelFixed.h" />
     <ClInclude Include="IProjectionProviderData.h" />
     <ClInclude Include="ITaskSizeEstimator.h" />
     <ClInclude Include="InterlockedVariable.h" />
@@ -158,7 +158,6 @@
     <ClInclude Include="LocalProjectionProviderCPU.h" />
     <ClInclude Include="LocalProjectionProviderDataAMP.h" />
     <ClInclude Include="NumericTypes.h" />
-    <ClInclude Include="ICameraModel.h" />
     <ClInclude Include="ParallelBundleOptimizer.h" />
     <ClInclude Include="ParallelPCGDefs.h" />
     <ClInclude Include="ParallelPCGInitTasksAMP.h" />
@@ -193,7 +192,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="BundlerUtils.cpp" />
-    <ClCompile Include="CameraModel3DoF.cpp" />
     <ClCompile Include="ReprojectionResiudal.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

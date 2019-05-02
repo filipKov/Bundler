@@ -30,6 +30,8 @@ namespace Bundler {
 			}
 
 			OptimizeLoop( &jacobian, pBundle, pStats );
+
+			SetOptimizedCameras( pBundle );
 		}
 
 	protected:
@@ -207,6 +209,21 @@ namespace Bundler {
 			}
 
 			return totalNorm * Scalar( 0.0000001 );
+		}
+
+		void SetOptimizedCameras( __out Bundle* pBundle ) const
+		{
+			const size_t cameraCount = pBundle->cameras.Length( );
+
+			const CameraModel* pSrcCamera = m_cameraModels.Data( );
+			Camera* pDstCamera = pBundle->cameras.Data( );
+
+			for ( size_t i = 0; i < cameraCount; i++ )
+			{
+				pSrcCamera->CopyToCamera( pDstCamera );
+				pSrcCamera++;
+				pDstCamera++;
+			}
 		}
 
 	protected:

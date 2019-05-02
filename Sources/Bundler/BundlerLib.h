@@ -22,11 +22,10 @@
 
 
 // Camera models
-#include "ICameraModel.h"
-#include "BasicCameraModel.h"
-#include "CameraModel3DoF.h"
+#include "CameraModelFixed.h"
+#include "CameraModel3DoF_Rotation.h"
+#include "CameraModel3DoF_Translation.h"
 #include "CameraModel6DoF.h"
-#include "CameraModelAMP6DoF.h"
 
 #include "BundlerUtils.h" // TODO: move up when done( it's here because intellisense has a mental breakdown otherwise )
 

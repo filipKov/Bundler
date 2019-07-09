@@ -14,7 +14,7 @@ namespace Bundler {
 	using Matrix4x4 = LinearAlgebra::Matrix< Scalar, 4, 4 >;
 
 	template < uint parameterCount >
-	using DScalar = NumericOptimization::AutomaticDifferentiation::DiffNum< Scalar, parameterCount >;
+	using DScalar = AutomaticDifferentiation::DiffNum< Scalar, parameterCount >;
 
 	template < uint parameterCount >
 	using DVector2 = LinearAlgebra::Vector< DScalar< parameterCount >, 2 >;

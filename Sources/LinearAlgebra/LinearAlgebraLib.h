@@ -36,3 +36,5 @@
 	#include "MatrixInvertGaussJordanAMP.h"
 
 #endif
+
+#include "DiffNum.h"

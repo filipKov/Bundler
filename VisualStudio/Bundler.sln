@@ -12,16 +12,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SceneGenerator", "..\Source
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "..\Sources\Utils\Utils.vcxproj", "{6B3885A0-666B-4E5F-BBE9-46261EFB59AC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NumericOptimization", "..\Sources\NumericOptimization\NumericOptimization.vcxproj", "{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6D15BC33-EA80-476E-8FA9-E323C1AC208D} = {6D15BC33-EA80-476E-8FA9-E323C1AC208D}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bundler", "..\Sources\Bundler\Bundler.vcxproj", "{C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6D15BC33-EA80-476E-8FA9-E323C1AC208D} = {6D15BC33-EA80-476E-8FA9-E323C1AC208D}
 		{6B3885A0-666B-4E5F-BBE9-46261EFB59AC} = {6B3885A0-666B-4E5F-BBE9-46261EFB59AC}
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B} = {4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearAlgebra", "..\Sources\LinearAlgebra\LinearAlgebra.vcxproj", "{6D15BC33-EA80-476E-8FA9-E323C1AC208D}"
@@ -31,14 +25,21 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BundlerTest", "..\Sources\B
 		{6D15BC33-EA80-476E-8FA9-E323C1AC208D} = {6D15BC33-EA80-476E-8FA9-E323C1AC208D}
 		{6B3885A0-666B-4E5F-BBE9-46261EFB59AC} = {6B3885A0-666B-4E5F-BBE9-46261EFB59AC}
 		{C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41} = {C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41}
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B} = {4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearAlgebraTest", "..\Sources\LinearAlgebraTest\LinearAlgebraTest.vcxproj", "{3E4AB665-0838-4EDC-8393-4E7F2BC7DFA0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestingUtils", "..\Sources\TestingUtils\TestingUtils.vcxproj", "{E10E40BE-A9CE-4792-9B48-52455C222D78}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05FB41BC-2196-4176-A200-EF6F08BC473B}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -62,14 +63,6 @@ Global
 		{6B3885A0-666B-4E5F-BBE9-46261EFB59AC}.Release|x64.Build.0 = Release|x64
 		{6B3885A0-666B-4E5F-BBE9-46261EFB59AC}.Release|x86.ActiveCfg = Release|Win32
 		{6B3885A0-666B-4E5F-BBE9-46261EFB59AC}.Release|x86.Build.0 = Release|Win32
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Debug|x64.ActiveCfg = Debug|x64
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Debug|x64.Build.0 = Debug|x64
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Debug|x86.ActiveCfg = Debug|Win32
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Debug|x86.Build.0 = Debug|Win32
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Release|x64.ActiveCfg = Release|x64
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Release|x64.Build.0 = Release|x64
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Release|x86.ActiveCfg = Release|Win32
-		{4752DDD7-CD67-4240-A1D5-1DE68FF47A7B}.Release|x86.Build.0 = Release|Win32
 		{C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41}.Debug|x64.ActiveCfg = Debug|x64
 		{C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41}.Debug|x64.Build.0 = Debug|x64
 		{C4CDE5C9-DEAE-482F-A7AA-9CA1DAB85E41}.Debug|x86.ActiveCfg = Debug|Win32

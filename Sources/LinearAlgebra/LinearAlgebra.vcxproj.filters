@@ -78,6 +78,7 @@
     <ClInclude Include="MatrixInvertGaussJordanAMP.h">
       <Filter>FastAlgebraAMP</Filter>
     </ClInclude>
+    <ClInclude Include="DiffNum.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Matrix">

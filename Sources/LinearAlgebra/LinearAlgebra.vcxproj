@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DiffNum.h" />
     <ClInclude Include="DynamicMatrix.h" />
     <ClInclude Include="DynamicMatrixOperators.h" />
     <ClInclude Include="DynamicVector.h" />

@@ -22,12 +22,10 @@
 using namespace Utils;
 
 #define IMPORT_AMP_LINEAR_ALGEBRA
+#define IMPORT_AMP_DIFFNUM
 #include "..\LinearAlgebra\LinearAlgebraLib.h"
 using namespace LinearAlgebra;
-
-#define IMPORT_AMP_DIFFNUM
-#include "..\NumericOptimization\DiffNum.h"
-using namespace NumericOptimization::AutomaticDifferentiation;
+using namespace AutomaticDifferentiation;
 
 #include "..\TestingUtils\TestingUtilsLib.h"
 using namespace TestingUtils;

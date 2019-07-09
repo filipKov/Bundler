@@ -246,4 +246,7 @@ GitHubVS.sln.DotSettings
 
 *.VC.db
 *.VC.opendb
-/Resources/dragon.out
+
+*.out
+*.iml
+*.bmp

@@ -13,12 +13,11 @@ namespace Bundler { namespace LinearSolver {
 		{
 			m_maxIterations = maxIterations;
 			m_errorTolerance = errorTolerance;
-			m_pPreconditioner = pPreconditioner;
 		}
 	
 		void Initialize( __in const PCGSolverSettings& settings )
 		{
-			Initialize( settings.maxIterations, settings.errorTolerance, pPreconditioner );
+			Initialize( settings.maxIterations, settings.errorTolerance );
 		}
 	
 		void SolveSystem(

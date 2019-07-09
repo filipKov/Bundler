@@ -8,12 +8,6 @@
     </ClInclude>
     <ClInclude Include="NumericTypes.h" />
     <ClInclude Include="BundlerLib.h" />
-    <ClInclude Include="Bundler.h">
-      <Filter>OldPrototype</Filter>
-    </ClInclude>
-    <ClInclude Include="ReprojectionResiudal.h">
-      <Filter>OldPrototype</Filter>
-    </ClInclude>
     <ClInclude Include="RodriguesRotation.h">
       <Filter>CameraModels\Rotation</Filter>
     </ClInclude>
@@ -180,12 +174,6 @@
     <ClCompile Include="BundleImporter.cpp">
       <Filter>Import</Filter>
     </ClCompile>
-    <ClCompile Include="Bundler.cpp">
-      <Filter>OldPrototype</Filter>
-    </ClCompile>
-    <ClCompile Include="ReprojectionResiudal.cpp">
-      <Filter>OldPrototype</Filter>
-    </ClCompile>
     <ClCompile Include="SnavelyBundleImportWorker.cpp">
       <Filter>Import\Workers</Filter>
     </ClCompile>
@@ -218,9 +206,6 @@
     </Filter>
     <Filter Include="CameraModels">
       <UniqueIdentifier>{3137011a-9286-4f8d-9bff-aa74b6a177e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OldPrototype">
-      <UniqueIdentifier>{3b4db40f-38c9-463d-8484-6683bbbe0547}</UniqueIdentifier>
     </Filter>
     <Filter Include="CameraModels\Rotation">
       <UniqueIdentifier>{5c020c72-9be5-47ff-97a9-64c49a7f3d61}</UniqueIdentifier>

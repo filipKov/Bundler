@@ -2,7 +2,7 @@
 
 namespace Bundler {
 
-	template < class CameraModel, template < class > class Preconditioner >
+	template < class CameraModel >
 	class BundleOptimizerOpenMP
 	{
 	public:

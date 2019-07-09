@@ -22,7 +22,6 @@
     <ProjectGuid>{57BBEF47-26DD-4725-ACE3-5C94F8ECFA4F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SceneGenerator</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -78,12 +77,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>BundlerApp</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>BundlerApp</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -175,6 +177,7 @@
     <ClCompile Include="ApplicationSectionStrings.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="ConsoleArgumentParser.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="GlRenderer.cpp" />
     <ClCompile Include="glslang.cpp" />
@@ -185,6 +188,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="BundlerApp.cpp" />
     <ClCompile Include="RenderableCartoonMesh.cpp" />
     <ClCompile Include="RenderablePointCloud.cpp" />
     <ClCompile Include="RenderToTextureShader.cpp" />
@@ -214,10 +218,13 @@
     <ClInclude Include="AlbedoShader.h" />
     <ClInclude Include="AmbientOcclusionKernel.h" />
     <ClInclude Include="AmbientOcclusionShader.h" />
+    <ClInclude Include="ApplicationContext.h" />
     <ClInclude Include="ApplicationExceptions.h" />
     <ClInclude Include="ApplicationSectionStrings.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ConsoleArgumentParser.h" />
+    <ClInclude Include="ConsoleInputExceptions.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GlRenderer.h" />
     <ClInclude Include="glslang.h" />
@@ -233,6 +240,8 @@
     <ClInclude Include="Optim.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="ProgressBar.h" />
+    <ClInclude Include="BundlerApp.h" />
+    <ClInclude Include="BundlerAppCommands.h" />
     <ClInclude Include="RenderableCartoonMesh.h" />
     <ClInclude Include="RenderablePointCloud.h" />
     <ClInclude Include="RenderingHelpers.h" />

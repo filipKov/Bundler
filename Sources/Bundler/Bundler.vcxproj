@@ -129,7 +129,6 @@
     <ClInclude Include="BundleOptimizer.h" />
     <ClInclude Include="BundleOptimizerDefs.h" />
     <ClInclude Include="BundleOptimizerOpenMP.h" />
-    <ClInclude Include="Bundler.h" />
     <ClInclude Include="BundlerDefs.h" />
     <ClInclude Include="BundlerLib.h" />
     <ClInclude Include="BundlerUtils.h" />
@@ -171,7 +170,6 @@
     <ClInclude Include="PCGStructs.h" />
     <ClInclude Include="Preconditioner.h" />
     <ClInclude Include="ProjectionProvider.h" />
-    <ClInclude Include="ReprojectionResiudal.h" />
     <ClInclude Include="RodriguesRotation.h" />
     <ClInclude Include="SceneGenerator.h" />
     <ClInclude Include="SnavelyBundleImportWorker.h" />
@@ -187,15 +185,7 @@
     <ClCompile Include="BundleFiltering.cpp" />
     <ClCompile Include="BundleImporter.cpp" />
     <ClCompile Include="BundleNormalization.cpp" />
-    <ClCompile Include="Bundler.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="BundlerUtils.cpp" />
-    <ClCompile Include="ReprojectionResiudal.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="SceneGenerator.cpp" />
     <ClCompile Include="SnavelyBundleImportWorker.cpp" />
     <ClCompile Include="stdafx.cpp">

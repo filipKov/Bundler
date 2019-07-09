@@ -42,10 +42,12 @@ namespace Bundler { namespace CameraModels {
 	
 		void UpdateCamera( __in_ecount( cameraParameterCount ) const Scalar* pDeltaParams ) __CPU_ONLY
 		{
+			UNREFERENCED_PARAMETER( pDeltaParams );
 		}
 	
 		void ResetLastUpdate( __in_ecount( cameraParameterCount ) const Scalar* pDeltaParams ) __CPU_ONLY
 		{
+			UNREFERENCED_PARAMETER( pDeltaParams );
 		}
 	
 		void ProjectPoint(

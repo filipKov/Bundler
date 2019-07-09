@@ -298,6 +298,7 @@ void ViewerApplication::ShowPointCloud( __in ScenePointCloud* pPointCloud )
 {
 	pPointCloud->MoveTo( Vector3f( { 0, 0, 0 } ) );
 	pPointCloud->Rotate( 90.0f, Vector3f( { -1, 0, 0 } ) );
+	pPointCloud->Scale( 5 );
 	// 
 	// const BoundingBox& bbox = pPointCloud->GetBoundingBox();
 	// const float objSize = bbox.maxVert.Distance( bbox.minVert );

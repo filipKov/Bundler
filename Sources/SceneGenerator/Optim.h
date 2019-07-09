@@ -16,49 +16,81 @@ struct NoiseMaskToCameraModel< SceneGenAutoNoiseMask::POINTS >
 	using CameraModel = typename CameraModels::CameraModel6DoF< maxIters >;
 };
 
-template < class CameraModel, uint maxIterations >
-void OptimizeBundle( __in const Bundle* pBundle, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
+template < class CameraModel >
+void OptimizeBundleSeq( __in const Bundle* pBundle, __in const OptimizerSettings* pSettings, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
 {
-	OptimizerSettings settings;
-	settings.errorTolerance = Scalar( 0.01 );
-	settings.dampeningUp = Scalar( 10 );
-	settings.dampeningDown = Scalar( 0.1 );
-	settings.initialDampeningFactor = 0;
-	settings.maxIterations = maxIterations;
-	settings.linearSolverSettings.errorTolerance = Scalar( 0.001 );
-	settings.linearSolverSettings.maxIterations = maxIterations * 2;
-
-	BundleOptimizer< CameraModel, LinearSolver::BlockJacobiPreconditioner > optimizer;
-	optimizer.Initialize( settings );
+	BundleOptimizer< CameraModel > optimizer;
+	optimizer.Initialize( *pSettings );
 
 	if ( pBundle != pOptimizedBundle )
 	{
 		Bundler::Utils::CopyBundle( pBundle, pOptimizedBundle );
 	}
 
-	optimizer.Optimize( pBundle, pStats );
+	optimizer.Optimize( pOptimizedBundle, pStats );
 }
 
-template < class CameraModel, uint maxIterations >
-void OptimizeBundleParallel( __in const Bundle* pBundle, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
+template < class CameraModel >
+void OptimizeBundleParallelCPU( __in const Bundle* pBundle, __in const OptimizerSettings* pSettings, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
 {
-	OptimizerSettings settings;
-	settings.errorTolerance = Scalar( 0.01 );
-	settings.dampeningUp = Scalar( 10 );
-	settings.dampeningDown = Scalar( 0.1 );
-	settings.initialDampeningFactor = 0;
-	settings.maxIterations = maxIterations;
-	settings.linearSolverSettings.errorTolerance = Scalar( 0.001 );
-	settings.linearSolverSettings.maxIterations = maxIterations * 2;
-
-	Async::WorkerPool wpool;
-	ParallelBundleOptimizer< CameraModel > optimizer2;
-	optimizer2.Initialize( settings, &wpool );
+	BundleOptimizerOpenMP< CameraModel > optimizer;
+	optimizer.Initialize( *pSettings );
 
 	if ( pBundle != pOptimizedBundle )
 	{
 		Bundler::Utils::CopyBundle( pBundle, pOptimizedBundle );
 	}
 
-	optimizer2.Optimize( pOptimizedBundle, pStats );
+	optimizer.Optimize( pOptimizedBundle, pStats );
+}
+
+template < class CameraModel >
+void OptimizeBundleParallelCombined( __in const Bundle* pBundle, __in const OptimizerSettings* pSettings, __out OptimizerStatistics* pStats, __out Bundle* pOptimizedBundle )
+{
+	Async::WorkerPool wpool;
+	ParallelBundleOptimizer< CameraModel > optimizer;
+	optimizer.Initialize( *pSettings, &wpool );
+
+	if ( pBundle != pOptimizedBundle )
+	{
+		Bundler::Utils::CopyBundle( pBundle, pOptimizedBundle );
+	}
+
+	optimizer.Optimize( pOptimizedBundle, pStats );
+}
+
+template < class CameraModel >
+void InitializeJacobian(
+	__in const Bundle* pBundle,
+	__out CameraModel* pCamModels,
+	__out ProjectionProvider< CameraModel >* pJacobian )
+{
+	const int cameraCount = ( int )pBundle->cameras.Length( );
+
+	#pragma omp parallel for
+	for ( int i = 0; i < cameraCount; i++ )
+	{
+		pCamModels[i].Initialize( &pBundle->cameras[i] );
+	}
+
+	pJacobian->Initialize(
+		cameraCount,
+		pCamModels,
+		pBundle->points.Length( ),
+		pBundle->points.Data( ),
+		pBundle->projections.Length( ),
+		pBundle->projections.Data( )
+	);
+}
+
+template < class CameraModel >
+double GetGeometricError( __in const Bundle* pBundle )
+{
+	Containers::Buffer< CameraModel > camModels;
+	camModels.Allocate( pBundle->cameras.Length( ) );
+	
+	ProjectionProvider< CameraModel > jacobian;
+	InitializeJacobian( pBundle, camModels.Data( ), &jacobian );
+
+	return ParallelBundleOptimizer< CameraModel >::GetGeometricError( &jacobian );
 }

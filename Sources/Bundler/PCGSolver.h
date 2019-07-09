@@ -9,19 +9,16 @@ namespace Bundler { namespace LinearSolver {
 		
 		void Initialize(
 			__in const uint maxIterations,
-			__in const Scalar errorTolerance,
-			__in const Preconditioner< CameraModel >* pPreconditioner ) 
+			__in const Scalar errorTolerance ) 
 		{
 			m_maxIterations = maxIterations;
 			m_errorTolerance = errorTolerance;
-			m_pPreconditioner = pPreconditioner;
 		}
 
 		void Initialize(
-			__in const PCGSolverSettings& settings,
-			__in const Preconditioner< CameraModel >* pPreconditioner )
+			__in const PCGSolverSettings& settings  )
 		{
-			Initialize( settings.maxIterations, settings.errorTolerance, pPreconditioner );
+			Initialize( settings.maxIterations, settings.errorTolerance );
 		}
 
 		void SolveSystem(
@@ -137,7 +134,7 @@ namespace Bundler { namespace LinearSolver {
 			HessianBlockProvider< CameraModel > hessian;
 			hessian.Initialize( pJacobian );
 
-			m_pPreconditioner->Apply( &hessian, vectorSize, pX, pPreconditionedX );
+			m_preconditioner.Apply( &hessian, vectorSize, pX, pPreconditionedX );
 		}
 
 		void GetInitialResidual(
@@ -197,7 +194,7 @@ namespace Bundler { namespace LinearSolver {
 		uint m_maxIterations;
 		Scalar m_errorTolerance;
 
-		const Preconditioner< CameraModel >* m_pPreconditioner;
+		BlockJacobiPreconditioner< CameraModel > m_preconditioner;
 
 	};
 

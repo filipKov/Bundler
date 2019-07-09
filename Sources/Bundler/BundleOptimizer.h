@@ -2,7 +2,7 @@
 
 namespace Bundler {
 
-	template < class CameraModel, template < class > class Preconditioner >
+	template < class CameraModel >
 	class BundleOptimizer
 	{
 	public:
@@ -16,7 +16,7 @@ namespace Bundler {
 			m_dampeningUp = settings.dampeningUp;
 			m_dampeningDown = settings.dampeningDown;
 
-			m_linearSolver.Initialize( settings.linearSolverSettings, &m_preconditioner );
+			m_linearSolver.Initialize( settings.linearSolverSettings );
 		}
 
 		void Optimize( __inout Bundle* pBundle, __out_opt OptimizerStatistics* pStats )
@@ -237,7 +237,6 @@ namespace Bundler {
 
 		Containers::Buffer< CameraModel > m_cameraModels;
 
-		Preconditioner< CameraModel > m_preconditioner;
 		LinearSolver::PCGSolver< CameraModel > m_linearSolver;
 
 	};

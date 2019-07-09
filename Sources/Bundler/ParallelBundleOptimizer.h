@@ -20,6 +20,32 @@ namespace Bundler {
 	
 			m_linearSolver.Initialize( settings.linearSolverSettings, m_pWorkerPool );
 		}
+
+		static double GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian )
+		{
+			Async::InterlockedVariable< double > error = 0;
+
+			const int64 projectionCount = ( int64 )pJacobian->GetProjectionCount( );
+
+			#pragma omp parallel
+			{
+				Scalar residuals[2];
+				double localError = 0;
+
+				#pragma omp for
+				for ( int64 projIx = 0; projIx < projectionCount; projIx++ )
+				{
+					pJacobian->GetProjectionBlock< false, false, true >( projIx, NULL, NULL, residuals );
+
+					localError += residuals[0] * residuals[0];
+					localError += residuals[1] * residuals[1];
+				}
+
+				error += localError;
+			}
+
+			return error.GetValue( );
+		}
 	
 		void Optimize( __inout Bundle* pBundle, __out_opt OptimizerStatistics* pStats )
 		{
@@ -39,7 +65,7 @@ namespace Bundler {
 	protected:
 	
 		void InitializeJacobian(
-			__in Bundle* pBundle,
+			__in const Bundle* pBundle,
 			__out ProjectionProvider< CameraModel >* pJacobian )
 		{
 			const int cameraCount = (int)pBundle->cameras.Length( );
@@ -122,32 +148,6 @@ namespace Bundler {
 		size_t GetTotalPrameterCount( __in const ProjectionProvider< CameraModel >* pJacobian ) const
 		{
 			return pJacobian->GetCameraCount( ) * CameraModel::cameraParameterCount + pJacobian->GetPointCount( ) * POINT_PARAM_COUNT;
-		}
-	
-		double GetGeometricError( __in const ProjectionProvider< CameraModel >* pJacobian ) const
-		{
-			Async::InterlockedVariable< double > error = 0;
-	
-			const int64 projectionCount = (int64)pJacobian->GetProjectionCount( );
-
-			#pragma omp parallel
-			{
-				Scalar residuals[2];
-				double localError = 0;
-
-				#pragma omp for
-				for ( int64 projIx = 0; projIx < projectionCount; projIx++ )
-				{
-					pJacobian->GetProjectionBlock< false, false, true >( projIx, NULL, NULL, residuals );
-
-					localError += residuals[0] * residuals[0];
-					localError += residuals[1] * residuals[1];
-				}
-
-				error += localError;
-			}
-	
-			return error.GetValue();
 		}
 	
 		void InitializeUpdateVector(

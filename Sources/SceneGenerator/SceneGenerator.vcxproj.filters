@@ -106,6 +106,12 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ViewerMath.cpp" />
+    <ClCompile Include="ConsoleArgumentParser.cpp">
+      <Filter>Application\Console\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="BundlerApp.cpp">
+      <Filter>Application\Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros.h" />
@@ -235,6 +241,21 @@
     </ClInclude>
     <ClInclude Include="ViewerMath.h" />
     <ClInclude Include="Optim.h" />
+    <ClInclude Include="ApplicationContext.h">
+      <Filter>Application\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleArgumentParser.h">
+      <Filter>Application\Console\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleInputExceptions.h">
+      <Filter>Application\Console\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="BundlerApp.h">
+      <Filter>Application\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="BundlerAppCommands.h">
+      <Filter>Application\Console</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Application">
@@ -278,6 +299,12 @@
     </Filter>
     <Filter Include="Rendering\Lights">
       <UniqueIdentifier>{4b25a152-adf4-4b84-aa24-d2ea8fe30bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Console">
+      <UniqueIdentifier>{30a81d76-788f-40db-ad30-2f6d83f168cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Console\Input">
+      <UniqueIdentifier>{1448ba73-123e-4a34-ab9a-f7c3d022644a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

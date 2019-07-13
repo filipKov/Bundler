@@ -93,9 +93,35 @@ void BundlerApp::Start( __in const int argCount, __in char** ppArgs )
 				AddNoiseToBundle( &preprocessedBundle, &noisedBundle );
 				if ( mContext.appStages & AppStages::OPTIMIZE )
 				{
-					OptimizeBundle( &noisedBundle, &optimizedBundle );
+					Scalar targetError = Scalar( GetGeometricError< CameraModels::CameraModel6DoF< 1 > >( &preprocessedBundle ) );
+					OptimizeBundle( &noisedBundle, targetError, &optimizedBundle );
 				}
 			}
+		}
+	}
+
+	if ( SUCCEEDED( hr ) )
+	{
+		if ( mContext.appStages & AppStages::FILTER )
+		{
+			printf_s( "Post Filtering\n" );
+			printf_s( "\tCamera Count: %zu\n", preprocessedBundle.cameras.Length( ) );
+			printf_s( "\tPoint Count: %zu\n", preprocessedBundle.points.Length( ) );
+			printf_s( "\tCorresp Count: %zu\n", preprocessedBundle.projections.Length( ) );
+
+			printf_s( "\tModel Error: %f\n", GetGeometricError< CameraModels::CameraModel6DoF< 1 > >( &preprocessedBundle ) );
+		}
+
+		if ( mContext.appStages & AppStages::NOISE )
+		{
+			printf_s( "Post Noise\n" );
+			printf_s( "\tModel Error: %f\n", GetGeometricError< CameraModels::CameraModel6DoF< 1 > >( &noisedBundle ) );
+		}
+
+		if ( mContext.appStages & AppStages::OPTIMIZE )
+		{
+			printf_s( "Post Optimization\n" );
+			printf_s( "\tModel Error: %f\n", GetGeometricError< CameraModels::CameraModel6DoF< 1 > >( &optimizedBundle ) );
 		}
 	}
 
@@ -157,14 +183,14 @@ void BundlerApp::AddNoiseToBundle(
 	__in const Bundler::Bundle* pBundle,
 	__out Bundler::Bundle* pNoisyBundle )
 {
-	uint noiseMask = SceneGenerator::SceneGenAutoNoiseMask::POINTS;
+	// uint noiseMask = SceneGenerator::SceneGenAutoNoiseMask::POINTS;
 	
-	const Scalar noiseStrength = mContext.filteringStrength * mContext.pointNoise;
+	const Scalar noiseStrength = mContext.pointNoise;
 	SceneGenerator::SceneGenNoiseSettings noise = { 0 };
 	noise.pointSettings.minDelta = -noiseStrength;
 	noise.pointSettings.maxDelta = noiseStrength;
 
-	const Scalar cameraStrength = mContext.filteringStrength * mContext.cameraNoise;
+	const Scalar cameraStrength = mContext.cameraNoise;
 	noise.cameraSettings.translationNoise.minDelta = -cameraStrength;
 	noise.cameraSettings.translationNoise.maxDelta = cameraStrength;
 	noise.cameraSettings.rotationNoise.minDelta = -cameraStrength;
@@ -175,20 +201,25 @@ void BundlerApp::AddNoiseToBundle(
 
 void BundlerApp::OptimizeBundle(
 	__in const Bundler::Bundle* pBundle,
+	__in const Bundler::Scalar targetError,
 	__out Bundler::Bundle* pOptimizedBundle )
 {
 	constexpr const uint maxIterations = 16;
+	constexpr const uint maxIterationsSolver = 16;
 
 	OptimizerSettings settings;
-	settings.errorTolerance = Scalar( 0.01 );
+	settings.errorTolerance = targetError; // Scalar( 10e-6 );
 	settings.dampeningUp = Scalar( 100 );
 	settings.dampeningDown = Scalar( 0.1 );
 	settings.initialDampeningFactor = 0;
 	settings.maxIterations = maxIterations;
-	settings.linearSolverSettings.errorTolerance = Scalar( 0.001 );
-	settings.linearSolverSettings.maxIterations = maxIterations * 2;
+	settings.linearSolverSettings.errorTolerance = Scalar( 10e-6 );
+	settings.linearSolverSettings.maxIterations = maxIterationsSolver;
 
-	OptimizerStatistics stats;
+	OptimizerStatistics stats = { 0 };
+
+	HighResolutionClock stopwatch;
+	stopwatch.Start( );
 
 	switch ( mContext.bundlerType )
 	{
@@ -204,4 +235,7 @@ void BundlerApp::OptimizeBundle(
 	default:
 		break;
 	}
+
+	stopwatch.Stop( );
+	printf_s( "Optimization ended in %d iterations (took %fs)\n", stats.iterationCount, stopwatch.GetTotalTime<TimeUnits::Seconds>( ) );
 }

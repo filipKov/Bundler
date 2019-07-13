@@ -70,8 +70,6 @@ namespace Bundler { namespace LinearSolver {
 			__inout ParallelPCGSolverTemp* pTemp )
 		{
 			Vector< Scalar > x( parameterVectorSize, pX );
-	
-			HighResolutionClock stopwatch;
 
 			Scalar minError = m_errorTolerance * pTemp->errSq;
 
@@ -79,8 +77,6 @@ namespace Bundler { namespace LinearSolver {
 			while ( ( iteration < m_maxIterations ) &&
 				( pTemp->errSq > minError ) )
 			{
-				stopwatch.Start( );
-
 				pTemp->dDotAd = 0;
 				LoopPart0Cameras( pJacobian, diagonalDampeningFactor, pTemp );
 				LoopPart0Points( pJacobian, diagonalDampeningFactor, pTemp );
@@ -103,10 +99,6 @@ namespace Bundler { namespace LinearSolver {
 				pTemp->d += pTemp->MInvR;
 
 				iteration++;
-
-				stopwatch.Stop( );
-				printf_s( "(Parallel) PCG loop time: %fms\n", stopwatch.GetTotalTime( ) );
-				stopwatch.Clear( );
 			}
 	
 			return iteration;

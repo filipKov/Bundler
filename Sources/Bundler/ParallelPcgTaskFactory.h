@@ -219,6 +219,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const int64 memoryKB,
 			__out LocalProjectionProviderDataCountsAMP* pTaskSize )
 		{
+			UNREFERENCED_PARAMETER( memoryKB );
 			//constexpr const float memoryFactor = 0.5f;
 			//
 			//const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );
@@ -235,6 +236,7 @@ namespace Bundler { namespace LinearSolver { namespace Internal {
 			__in const int64 memoryKB,
 			__out LocalProjectionProviderDataCountsAMP* pTaskSize )
 		{
+			UNREFERENCED_PARAMETER( memoryKB );
 			// constexpr const float memoryFactor = 0.5f;
 			// 
 			// const int64 jacobianMemoryLimit = int64( memoryKB * memoryFactor );

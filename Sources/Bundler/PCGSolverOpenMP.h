@@ -65,16 +65,12 @@ namespace Bundler { namespace LinearSolver {
 		{
 			Vector< Scalar > x( parameterVectorSize, pX );
 	
-			HighResolutionClock stopwatch;
-	
 			Scalar minError = m_errorTolerance * pTemp->errSq;
 	
 			uint iteration = 0;
 			while ( ( iteration < m_maxIterations ) &&
 				( pTemp->errSq > minError ) )
 			{
-				stopwatch.Start( );
-	
 				MultiplyByHessian( pHessian, parameterVectorSize, pTemp->d.Elements( ), pTemp->Ad.Elements( ) );
 	
 				Scalar alpha = pTemp->errSq / ( pTemp->d.Dot( pTemp->Ad ) );
@@ -90,10 +86,6 @@ namespace Bundler { namespace LinearSolver {
 				pTemp->d += pTemp->MInvR;
 	
 				iteration++;
-	
-				stopwatch.Stop( );
-				printf_s( "PCG loop time: %fms\n", stopwatch.GetTotalTime( ) );
-				stopwatch.Clear( );
 			}
 	
 			return iteration;

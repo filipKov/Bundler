@@ -86,7 +86,7 @@ namespace Bundler { namespace Async {
 	{
 		Containers::Buffer< accelerator > accelerators;
 		accelerators.Allocate( count );
-		GetAccelerators( count, accelerators.Data( ), IsGPU );
+		GetAccelerators( count, accelerators.Data( ), IsGPUWithEnoughMemory< 5000000 > );// IsGPU );
 
 		for ( uint i = 0; i < count; i++ )
 		{
@@ -98,7 +98,7 @@ namespace Bundler { namespace Async {
 	WorkerPool::WorkerPool( )
 	{
 		const uint cpuWorkerCount = GetCpuThreadCount( );
-		const uint gpuWorkerCount = GetAcceleratorCount( IsGPU );
+		const uint gpuWorkerCount = GetAcceleratorCount( IsGPUWithEnoughMemory< 5000000 > ); // IsGPU );
 
 		const uint workerCount = cpuWorkerCount + gpuWorkerCount;
 		m_workerStack.Initialize( workerCount );

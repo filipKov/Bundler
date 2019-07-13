@@ -31,6 +31,7 @@ protected:
 
 	void OptimizeBundle(
 		__in const Bundler::Bundle* pBundle,
+		__in const Bundler::Scalar targetError,
 		__out Bundler::Bundle* pOptimizedBundle );
 
 protected:
